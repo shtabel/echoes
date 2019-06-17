@@ -22,6 +22,11 @@ public class Rotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))    // change rotation direction
+        {
+            rotationDegree = rotationDegree * -1;
+        }
+
         // rotate ray
         transform.Rotate(0.0f, 0.0f, -rotationDegree * Time.deltaTime);
 
@@ -36,6 +41,8 @@ public class Rotate : MonoBehaviour
         Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
         // cast ray
         RaycastHit hit;
+
+        // if hit obstacle
         if (Physics.Raycast(transform.position, upVec, out hit, rayLength, obstacleMask) && Time.time > nextTimeBlink[0])
         {
             //Debug.Log("hit obstacle");
@@ -43,6 +50,8 @@ public class Rotate : MonoBehaviour
 
             nextTimeBlink[0] = Time.time + blinkDelay;
         }
+
+        // if hit mine
         if (Physics.Raycast(transform.position, upVec, out hit, rayLength, mineMask) && Time.time > nextTimeBlink[1])
         {
             float dstToTarget = Vector3.Distance(transform.position, hit.point);
