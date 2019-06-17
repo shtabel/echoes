@@ -7,6 +7,9 @@ public class Rotate : MonoBehaviour
     // PUBLIC INIT
     public float rotationDegree;
 
+    public GameObject blink;
+    public LayerMask obstacleMask;
+
     // private init
     Vector3 direction;    
 
@@ -25,11 +28,18 @@ public class Rotate : MonoBehaviour
         Ray ray = new Ray(transform.position, upVec);
         Debug.DrawRay(transform.position, upVec * 5, Color.green);
 
+        //RaycastHit hit;
+        //if (Physics.Raycast(ray, out hit, 1))
+        //{
+        //    print(hit.collider.name);
+        //    Debug.Log(hit.collider.name);
+        //}
+
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1))
+        if (Physics.Raycast(transform.position, upVec, out hit, 5, obstacleMask))
         {
-            print(hit.collider.name);
-            Debug.Log(hit.collider.name);
+            Debug.Log("hit obstacle");
+            Instantiate(blink, hit.point, transform.rotation);
         }
     }
 }
