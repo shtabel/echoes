@@ -5,41 +5,54 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     // PUBLIC INIT
-    public float rotationDegree;
+    public float rotationDegree;    // величина в градусах на которую вращается радар
+    public float rayLength;         // длина луча
+    public float blinkDelay;        // задержка перед появлением следующего блинка
 
-    public GameObject blink;
-    public LayerMask obstacleMask;
+    public GameObject blink;        // элемент блинк
+    public GameObject mine;         // мина
+
+    public LayerMask obstacleMask;  // маска преград
+    public LayerMask mineMask;      // маска мин
 
     // private init
-    Vector3 direction;    
+    float[] nextTimeBlink = new float[2];            // время след блинка (препятствия, мина)
+      
 
     // Update is called once per frame
     void Update()
     {
+        // rotate ray
         transform.Rotate(0.0f, 0.0f, -rotationDegree * Time.deltaTime);
 
-        Raycast();
+        Raycast();  // cast ray
     }
 
     public void Raycast()
     {
         Vector3 upVec = transform.TransformDirection(Vector3.up);
 
-        Ray ray = new Ray(transform.position, upVec);
-        Debug.DrawRay(transform.position, upVec * 5, Color.green);
-
-        //RaycastHit hit;
-        //if (Physics.Raycast(ray, out hit, 1))
-        //{
-        //    print(hit.collider.name);
-        //    Debug.Log(hit.collider.name);
-        //}
-
+        // draw ray in scene window
+        Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
+        // cast ray
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, upVec, out hit, 5, obstacleMask))
+        if (Physics.Raycast(transform.position, upVec, out hit, rayLength, obstacleMask) && Time.time > nextTimeBlink[0])
         {
-            Debug.Log("hit obstacle");
-            Instantiate(blink, hit.point, transform.rotation);
+            //Debug.Log("hit obstacle");
+            Instantiate(blink, hit.point, Quaternion.Euler(0, 0, 0));
+
+            nextTimeBlink[0] = Time.time + blinkDelay;
+        }
+        if (Physics.Raycast(transform.position, upVec, out hit, rayLength, mineMask) && Time.time > nextTimeBlink[1])
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hit.point);
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask)) // если препятствие не перекрывает
+            {
+                //Debug.Log("hit mine");
+                Instantiate(mine, hit.point, Quaternion.Euler(0, 0, 0));
+
+                nextTimeBlink[1] = Time.time + blinkDelay * 2f;
+            }           
         }
     }
 }
