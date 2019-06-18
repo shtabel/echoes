@@ -19,7 +19,12 @@ public class DestroyWithDelay : MonoBehaviour
         //StartCoroutine("FadeTo");
         // currentColor = rend.material.color;
 
-        Fade(false, 2f);//Fade Out
+        Fade(false, lifeTime);//Fade Out
+    }
+
+    public void NewStart()
+    {
+        Fade(false, lifeTime);//Fade Out
     }
 
     IEnumerator FadeTo(bool fadeIn, float duration)
@@ -54,7 +59,7 @@ public class DestroyWithDelay : MonoBehaviour
         {
             counter += Time.deltaTime;
             float alpha = Mathf.Lerp(a, b, counter / duration);
-            Debug.Log(alpha);
+            //Debug.Log(alpha);
 
             rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, alpha);
             yield return null;

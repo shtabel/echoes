@@ -6,6 +6,7 @@ public class Rotate : MonoBehaviour
 {
     // PUBLIC INIT
     public int additionBlinks;      // блинки которые следуют за первым
+    public int poolOfBlinks;        // количество блинков в пуле
     public float blinksSpacing;     // разница между лучами в градусах
 
     public float rotationDegree;    // величина в градусах на которую вращается радар
@@ -21,6 +22,10 @@ public class Rotate : MonoBehaviour
     // private init
     float[] nextTimeBlink = new float[2];            // время след блинка (препятствия, мина)
       
+    void Start()
+    {
+        PoolManager.instance.CreatePool(blink, poolOfBlinks);
+    }
 
     // Update is called once per frame
     void Update()
@@ -61,7 +66,10 @@ public class Rotate : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
         {
-            Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+            //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+            PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+
+            // перезапустить блинк, конкретно - затухание
         }
     }
 
