@@ -45,7 +45,7 @@ public class Rotate : MonoBehaviour
 
         // if hit obstacle
         HandleObstacleBlink(upVec);
-        Vector3 vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
+        Vector3 vec = upVec;// = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
         for (int i = 0; i < additionBlinks; i++)
         {
             vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * vec;
@@ -56,7 +56,7 @@ public class Rotate : MonoBehaviour
         nextTimeBlink[1] = GetNextTimeToBlink(upVec, mineMask, mine, blinkDelay[1], nextTimeBlink[1], true);
     }
 
-    void HandleObstacleBlink(Vector3 vector)
+    void HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
     {
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
