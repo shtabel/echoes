@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoolManager : MonoBehaviour
 {
-    Dictionary<int, Queue<GameObject>> poolDictionary = new Dictionary<int, Queue<GameObject>>();
+    Dictionary<int, Queue<ObjectInstance>> poolDictionary = new Dictionary<int, Queue<ObjectInstance>>();
 
     static PoolManager _instance;
 
@@ -24,15 +24,20 @@ public class PoolManager : MonoBehaviour
     {
         int poolKey = prefab.GetInstanceID();
 
+        // object to hold all members
+        GameObject poolHolder = new GameObject(prefab.name + " pool");
+        poolHolder.transform.parent = transform;
+
         if (!poolDictionary.ContainsKey(poolKey))
         {
-            poolDictionary.Add(poolKey, new Queue<GameObject>());
+            poolDictionary.Add(poolKey, new Queue<ObjectInstance>());
 
             for (int i = 0; i < poolSize; i++)
             {
-                GameObject newObject = Instantiate(prefab) as GameObject;
-                newObject.SetActive(false);
+                ObjectInstance newObject = new ObjectInstance(Instantiate(prefab) as GameObject);
                 poolDictionary[poolKey].Enqueue(newObject);
+
+                newObject.SetParent(poolHolder.transform);
             }
         }
     }
@@ -43,18 +48,57 @@ public class PoolManager : MonoBehaviour
 
         if (poolDictionary.ContainsKey(poolKey))
         {
-            GameObject objectToReuse = poolDictionary[poolKey].Dequeue();
+            ObjectInstance objectToReuse = poolDictionary[poolKey].Dequeue();
             poolDictionary[poolKey].Enqueue(objectToReuse);
+             
+            objectToReuse.Reuse(position, rotation);
+        }
+    }
 
-            objectToReuse.SetActive(true);
-            objectToReuse.transform.position = position;
-            objectToReuse.transform.rotation = rotation;
+    public class ObjectInstance
+    {
+        GameObject gameObject;
+        Transform transform;
 
-            MeshRenderer rend = objectToReuse.GetComponent<MeshRenderer>();
+        bool hasPoolObjectComponent;
+        PoolObject poolObjectScript;
+
+        public ObjectInstance(GameObject objectInstance)
+        {
+            gameObject = objectInstance;
+            transform = gameObject.transform;
+            //gameObject.SetActive(false);
+
+            if (gameObject.GetComponent<PoolObject>())
+            {
+                hasPoolObjectComponent = true;
+                poolObjectScript = gameObject.GetComponent<PoolObject>();
+
+            }
+        }
+
+        public void Reuse(Vector3 position, Quaternion rotation)
+        {
+            if (hasPoolObjectComponent)
+            {
+                poolObjectScript.OnObjectReuse();
+            }
+
+            gameObject.SetActive(true);
+            transform.position = position;
+            transform.rotation = rotation;
+
+            MeshRenderer rend = gameObject.GetComponent<MeshRenderer>();
             rend.enabled = true;
             Color meshColor = rend.material.color;
             rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 1);
+        }
 
+        public void SetParent(Transform parent)
+        {
+            transform.parent = parent;
         }
     }
+
+    
 }

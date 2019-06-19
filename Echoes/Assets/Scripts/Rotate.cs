@@ -5,13 +5,16 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     // PUBLIC INIT
-    public int additionBlinks;      // блинки которые следуют за первым
-    public int poolOfBlinks;        // количество блинков в пуле
+    public int additionBlinks;      // блинки которые следуют за первым   
     public float blinksSpacing;     // разница между лучами в градусах
 
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
     public float[] blinkDelay = new float[2];        // задержка перед появлением следующего блинка (препятствия, мина)
+
+    // Пулы
+    public int poolOfBlinks;        // количество блинков в пуле
+    public int poolOfMines;        // количество мин в пуле
 
     public GameObject blink;        // элемент блинк
     public GameObject mine;         // мина
@@ -24,7 +27,11 @@ public class Rotate : MonoBehaviour
       
     void Start()
     {
+        // create pool of blinks
         PoolManager.instance.CreatePool(blink, poolOfBlinks);
+
+        // create pool of mines
+        PoolManager.instance.CreatePool(mine, poolOfMines);
     }
 
     // Update is called once per frame
@@ -68,8 +75,6 @@ public class Rotate : MonoBehaviour
         {
             //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
             PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
-
-            // перезапустить блинк, конкретно - затухание
         }
     }
 
@@ -84,13 +89,15 @@ public class Rotate : MonoBehaviour
                 float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
                 if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // если препятствие не перекрывает
                 {
-                    Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                    //Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                    PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                     return timeToBlink = Time.time + bDelay;
                 }
             }
             else
             {
-                Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                //Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                 return timeToBlink = Time.time + bDelay;
             }
             

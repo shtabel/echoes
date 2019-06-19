@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyWithDelay : MonoBehaviour
+public class DestroyWithDelay : PoolObject
 {
     // PUBLIC INIT
     public float lifeTime;
@@ -12,6 +12,8 @@ public class DestroyWithDelay : MonoBehaviour
     MeshRenderer rend;
     Color currentColor = Color.clear;
 
+    Color meshColor;
+
     void Start()
     {
         rend = GetComponent<MeshRenderer>();
@@ -20,12 +22,19 @@ public class DestroyWithDelay : MonoBehaviour
         // currentColor = rend.material.color;
 
         Fade(false, lifeTime);//Fade Out
+
+        meshColor = rend.material.color;
     }
 
-    public void NewStart()
+    public override void OnObjectReuse()
     {
-        Fade(false, lifeTime);//Fade Out
+        //transform.localScale = Vector3.one;
+        rend.enabled = true;
+        rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 1);
+
+        Fade(false, lifeTime);
     }
+
 
     IEnumerator FadeTo(bool fadeIn, float duration)
     {
@@ -44,7 +53,6 @@ public class DestroyWithDelay : MonoBehaviour
             a = 1;
             b = 0;
         }
-
 
         //Enable MyRenderer component
         if (!rend.enabled)
@@ -72,18 +80,7 @@ public class DestroyWithDelay : MonoBehaviour
         }
         fading = false; //So that we can call this function next time
     }
-
-
-    void Update()
-    {
-        //Destroy(gameObject, lifeTime);
-
-        //Color color = rend.material.color; 
-        //color.a = alpha;
-        //rend.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
-        //Debug.Log(alpha);
-    }
-
+    
     void Fade(bool fadeIn, float duration)
     {
         if (fading)
@@ -107,34 +104,5 @@ public class DestroyWithDelay : MonoBehaviour
         rend.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
         rend.material.renderQueue = 3000;
     }
-
-    // Define an enumerator to perform our fading.
-    // Pass it the material to fade, the opacity to fade to (0 = transparent, 1 = opaque),
-    // and the number of seconds to fade over.
-    //IEnumerator FadeTo()
-    //{
-    //    // Cache the current color of the material, and its initiql opacity.
-    //    Color color = mat.color;
-    //    float startOpacity = color.a;
-
-    //    // Track how many seconds we've been fading.
-    //    float t = 0;
-
-    //    while (t < lifeTime)
-    //    {
-    //        // Step the fade forward one frame.
-    //        t += Time.deltaTime;
-    //        // Turn the time into an interpolation factor between 0 and 1.
-    //        float blend = Mathf.Clamp01(t / lifeTime);
-
-    //        // Blend to the corresponding opacity between start & target.
-    //        color.a = Mathf.Lerp(startOpacity, 0f, blend);
-
-    //        // Apply the resulting color to the material.
-    //        mat.color = color;
-
-    //        // Wait one frame, and repeat.
-    //        yield return null;
-    //    }
-    //}
+    
 }
