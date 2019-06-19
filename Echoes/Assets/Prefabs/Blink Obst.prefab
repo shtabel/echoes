@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7756940512947985345}
   - component: {fileID: 4711598635517143270}
   - component: {fileID: 2938742503184765879}
-  - component: {fileID: 7012972845322369645}
+  - component: {fileID: 3173173404174984033}
   m_Layer: 0
   m_Name: Blink Obst
   m_TagString: Untagged
@@ -78,7 +78,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &7012972845322369645
+--- !u!114 &3173173404174984033
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5732109874682516054}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6958b4fb0d456ef4fb78ff705a645fbc, type: 3}
+  m_Script: {fileID: 11500000, guid: 071314df818330348a7490021c9d36ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 1.7

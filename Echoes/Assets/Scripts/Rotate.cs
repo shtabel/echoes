@@ -14,7 +14,7 @@ public class Rotate : MonoBehaviour
 
     // Пулы
     public int poolOfBlinks;        // количество блинков в пуле
-    public int poolOfMines;        // количество мин в пуле
+    //public int poolOfMines;        // количество мин в пуле
 
     public GameObject blink;        // элемент блинк
     public GameObject mine;         // мина
@@ -30,8 +30,8 @@ public class Rotate : MonoBehaviour
         // create pool of blinks
         PoolManager.instance.CreatePool(blink, poolOfBlinks);
 
-        // create pool of mines
-        PoolManager.instance.CreatePool(mine, poolOfMines);
+        //// create pool of mines
+        //PoolManager.instance.CreatePool(mine, poolOfMines);
     }
 
     // Update is called once per frame
@@ -89,15 +89,15 @@ public class Rotate : MonoBehaviour
                 float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
                 if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // если препятствие не перекрывает
                 {
-                    //Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                    PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                    Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                    //PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                     return timeToBlink = Time.time + bDelay;
                 }
             }
             else
             {
-                //Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                 return timeToBlink = Time.time + bDelay;
             }
             
