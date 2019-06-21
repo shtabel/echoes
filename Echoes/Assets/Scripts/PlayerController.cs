@@ -13,12 +13,14 @@ public class PlayerController : MonoBehaviour
     float speed;
     Vector3 mousePos;
     Vector3 direction;
-    
+
+    Vector3 velocity;
+
     void Start()
     {
         direction = Vector3.up;
     }
-    
+
     void Update()
     {
         // get mouse position
@@ -27,17 +29,29 @@ public class PlayerController : MonoBehaviour
 
         FaceMouse(mousePos); // face mouse direction
 
-        if (Input.GetMouseButton(0)) // move towards mouse
+        // if player controlles with mouse - move towards mouse
+        if (Input.GetMouseButton(0)) 
         {
             speed += startMaxSpeed.y * Time.deltaTime;
             speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
 
             transform.position += transform.up * Time.deltaTime * speed;
-        } else
+        }
+        // if player controlles with keyboard - move according to keuboard
+        else if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        {
+            speed += startMaxSpeed.y * Time.deltaTime;
+            speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
+
+            velocity = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized * speed;
+            transform.position += velocity * Time.deltaTime * speed;
+        }
+        // if not moving
+        else
         {
             speed = startMaxSpeed.x;
+            velocity = new Vector3(0, 0, 0);
         }
-
     }
 
     void FaceMouse(Vector3 mousePosition)

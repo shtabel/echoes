@@ -11,7 +11,6 @@ public class FadeWithDelay : PoolObject
     bool fading = false;
     MeshRenderer rend;
     Color currentColor = Color.clear;
-
     Color meshColor;
 
     void Start()
@@ -59,8 +58,7 @@ public class FadeWithDelay : PoolObject
             rend.enabled = true;
 
         //Get original Mesh Color
-        Color meshColor = rend.material.color;
-
+        //Color meshColor = rend.material.color;
 
         //Do the actual fading
         while (counter < duration)
