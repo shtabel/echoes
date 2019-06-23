@@ -88,10 +88,15 @@ public class PoolManager : MonoBehaviour
             transform.position = position;
             transform.rotation = rotation;
 
+            // делаем объект обратно непрозрачным
             MeshRenderer rend = gameObject.GetComponent<MeshRenderer>();
-            rend.enabled = true;
-            Color meshColor = rend.material.color;
-            rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 1);
+            if (rend != null)
+            {
+                rend.enabled = true;
+                Color meshColor = rend.material.color;
+                rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 1);
+            }
+            
         }
 
         public void SetParent(Transform parent)
