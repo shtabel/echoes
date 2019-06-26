@@ -15,14 +15,17 @@ public class FadeWithDelay : PoolObject
 
     void Start()
     {
-        rend = GetComponent<MeshRenderer>();
-
-        //StartCoroutine("FadeTo");
-        // currentColor = rend.material.color;
-
-        Fade(false, lifeTime);//Fade Out
+        rend = GetComponent<MeshRenderer>();        
 
         meshColor = rend.material.color;
+        rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 0);
+
+        if (gameObject.tag == "mine")   // если это мина (она не в пуле), то сразу запускаем fading 
+        {
+            Fade(false, lifeTime);//Fade Out
+        }
+        
+        
     }
 
     public override void OnObjectReuse()

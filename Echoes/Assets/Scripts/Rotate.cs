@@ -8,6 +8,8 @@ public class Rotate : MonoBehaviour
     public int additionBlinks;      // блинки которые следуют за первым   
     public float blinksSpacing;     // разница между лучами в градусах
 
+    public float distanceBetweenBlinks; // расстояние между блинками
+
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
     public float[] blinkDelay = new float[2];        // задержка перед появлением следующего блинка (препятствия, мина)
@@ -24,9 +26,12 @@ public class Rotate : MonoBehaviour
 
     // private init
     float[] nextTimeBlink = new float[2];            // время след блинка (препятствия, мина)
-      
+    Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
+    Vector3 lastMinePosition;       // хранит позицию последнего блинка мины
+
     void Start()
     {
+        //poolOfBlinks = additionBlinks * 100 + 100;
         // create pool of blinks
         PoolManager.instance.CreatePool(blink, poolOfBlinks);
 
@@ -56,16 +61,18 @@ public class Rotate : MonoBehaviour
         //Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
 
         // if hit obstacle
-        HandleObstacleBlink(upVec);
+        //HandleObstacleBlink(upVec);
         Vector3 vec = upVec;// = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
-        for (int i = 0; i < additionBlinks; i++)
+        for (int i = 0; i <= additionBlinks; i++)
         {
-            vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * vec;
             HandleObstacleBlink(vec);
+            vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * vec;
+            //HandleObstacleBlink(vec);
         }
 
         // if hit mine
-        nextTimeBlink[1] = GetNextTimeToBlink(upVec, mineMask, mine, blinkDelay[1], nextTimeBlink[1], true);
+        nextTimeBlink[1] = HandleMineBlink(upVec, nextTimeBlink[1], blinkDelay[1]);
+        //nextTimeBlink[1] = GetNextTimeToBlink(upVec, mineMask, mine, blinkDelay[1], nextTimeBlink[1], true);
     }
 
     void HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
@@ -73,9 +80,33 @@ public class Rotate : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
         {
-            //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
-            PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+            float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
+            if (dstToLastBlink >= distanceBetweenBlinks)
+            {
+                //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                lastBlinkPosition = hitInfo.point;
+            }
+           
         }
+    }
+
+    float HandleMineBlink(Vector3 vector, float timeToBlink, float bDelay)
+    {
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, mineMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+            float dstToLastMineBlink = Vector3.Distance(lastMinePosition, hitInfo.point);
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastMineBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
+            {
+                Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                lastMinePosition = hitInfo.point;
+                return timeToBlink = Time.time + bDelay;
+            }
+        }
+        return timeToBlink;
     }
 
     // метод отображает блинки в зависимости от маски с определенной задержкой и возвращает служующее время для блинка
@@ -87,10 +118,12 @@ public class Rotate : MonoBehaviour
             if (invisibleZaStenoy)  // если объект невидим за препятствиями
             {
                 float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-                if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // если препятствие не перекрывает
+                float dstToLastBlink = Vector3.Distance(lastMinePosition, hitInfo.point);
+                if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && (dstToLastBlink >= distanceBetweenBlinks * 3)) // если препятствие не перекрывает
                 {
                     Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                     //PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                    lastMinePosition = hitInfo.point;
                     return timeToBlink = Time.time + bDelay;
                 }
             }

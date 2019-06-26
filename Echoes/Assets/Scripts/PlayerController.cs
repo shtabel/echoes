@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour
     Vector3 direction;
 
     Vector3 velocity;
+        
+    GameObject[] arrObstacles;
+    GameObject[] arrMines;
+    bool objectsVisible;
 
     void Start()
     {
@@ -29,8 +33,15 @@ public class PlayerController : MonoBehaviour
 
         FaceMouse(mousePos); // face mouse direction
 
+        HandleInput();
+
+        MovePlayer();
+    }
+
+    void MovePlayer()
+    {
         // if player controlles with mouse - move towards mouse
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(0))
         {
             speed += startMaxSpeed.y * Time.deltaTime;
             speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
@@ -52,6 +63,34 @@ public class PlayerController : MonoBehaviour
             speed = startMaxSpeed.x;
             velocity = new Vector3(0, 0, 0);
         }
+    }
+
+    void HandleInput()
+    {
+        // make obstacles visible/invisible
+        if (Input.GetKeyDown(KeyCode.V))    
+        {
+            if (arrObstacles == null)
+                arrObstacles = GameObject.FindGameObjectsWithTag("obstacle");
+
+            if (arrMines == null)
+                arrMines = GameObject.FindGameObjectsWithTag("mine");
+
+            objectsVisible = !objectsVisible;
+
+            foreach (GameObject obstacle in arrObstacles)
+            {                
+                obstacle.GetComponent<MeshRenderer>().enabled = objectsVisible;
+            }
+
+            foreach (GameObject mine in arrMines)
+            {
+                mine.GetComponent<MeshRenderer>().enabled = objectsVisible;
+            }
+            //Debug.Log("V is pressed");
+        }
+
+
     }
 
     void FaceMouse(Vector3 mousePosition)
