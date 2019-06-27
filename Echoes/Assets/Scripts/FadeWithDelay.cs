@@ -15,7 +15,7 @@ public class FadeWithDelay : PoolObject
 
     void Start()
     {
-        rend = GetComponent<MeshRenderer>();        
+        rend = GetComponent<MeshRenderer>(); 
 
         meshColor = rend.material.color;
         rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 0);

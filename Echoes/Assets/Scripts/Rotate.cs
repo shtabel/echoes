@@ -58,7 +58,7 @@ public class Rotate : MonoBehaviour
         Vector3 upVec = transform.TransformDirection(Vector3.up);
 
         // draw ray in scene window
-        //Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
+        Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
 
         // if hit obstacle
         //HandleObstacleBlink(upVec);
@@ -83,7 +83,7 @@ public class Rotate : MonoBehaviour
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
             if (dstToLastBlink >= distanceBetweenBlinks)
             {
-                //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0)); 
                 PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
                 lastBlinkPosition = hitInfo.point;
             }
