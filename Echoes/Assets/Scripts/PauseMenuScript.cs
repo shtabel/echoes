@@ -8,6 +8,7 @@ public class PauseMenuScript : MonoBehaviour
     // PUBLIC INIT
     //public string newGameScene;
     public GameObject pauseMenu;
+    public GameObject startMenu;
     public bool isPaused;
     
 
@@ -51,5 +52,12 @@ public class PauseMenuScript : MonoBehaviour
             pauseMenu.SetActive(true);
             Time.timeScale = 0f;
         }
+    }
+
+    public void StartGame()
+    {
+        isPaused = false;
+        startMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 }

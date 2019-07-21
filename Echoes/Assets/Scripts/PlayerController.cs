@@ -5,24 +5,32 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // PUBLIC INIT
-    public float duration;
-    public Vector2 startMaxSpeed;
+    public float duration;              // время на разгон
+    public Vector2 startMaxSpeed;       // стартовая и максимальная скорости
+
+    public GameObject startMenu;        // ссылка на start menu
+    public GameObject endMenu;          // ссылка на end menu
 
 
     // PRIVATE INIT
-    float speed;
-    Vector3 mousePos;
-    Vector3 direction;
+    float speed;        // скорость в настоящий момент
+    Vector3 mousePos;   // координаты мыши
+    Vector3 direction;  // направление куда смотрит игрок
 
-    Vector3 velocity;
+    Vector3 velocity;   // скорость
         
-    GameObject[] arrObstacles;
-    GameObject[] arrMines;
-    bool objectsVisible;
+    GameObject[] arrObstacles;  // массив препядствий
+    GameObject[] arrMines;      // массив мин
+    bool objectsVisible;        // видно/не видно объекты
 
     void Start()
     {
         direction = Vector3.up;
+        
+        VisibleObjects(false);
+
+        startMenu.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     void Update()
@@ -40,8 +48,11 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
+        // считаем расстояние от камеры до игрока, чтоб перемещаться только если курсор внутри ИКО
+        float dst = Vector3.Distance(mousePos, transform.position) - Mathf.Abs(Camera.main.transform.position.z);
+
         // if player controlles with mouse - move towards mouse
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && dst < 1.3)
         {
             speed += startMaxSpeed.y * Time.deltaTime;
             speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
@@ -70,31 +81,47 @@ public class PlayerController : MonoBehaviour
         // make obstacles visible/invisible
         if (Input.GetKeyDown(KeyCode.V))    
         {
-            if (arrObstacles == null)
-                arrObstacles = GameObject.FindGameObjectsWithTag("obstacle");
-
-            if (arrMines == null)
-                arrMines = GameObject.FindGameObjectsWithTag("mine");
-
-            objectsVisible = !objectsVisible;
-
-            foreach (GameObject obstacle in arrObstacles)
-            {                
-                obstacle.GetComponent<MeshRenderer>().enabled = objectsVisible;
-            }
-
-            foreach (GameObject mine in arrMines)
-            {
-                mine.GetComponent<MeshRenderer>().enabled = objectsVisible;
-            }
+            VisibleObjects(!objectsVisible);
             //Debug.Log("V is pressed");
         }
 
 
     }
 
+    void VisibleObjects(bool makeVisible)
+    {
+        if (arrObstacles == null)
+            arrObstacles = GameObject.FindGameObjectsWithTag("obstacle");
+
+        if (arrMines == null)
+            arrMines = GameObject.FindGameObjectsWithTag("mine");
+
+        objectsVisible = makeVisible;
+
+        foreach (GameObject obstacle in arrObstacles)
+        {
+            obstacle.GetComponent<MeshRenderer>().enabled = objectsVisible;
+        }
+
+        foreach (GameObject mine in arrMines)
+        {
+            mine.GetComponent<MeshRenderer>().enabled = objectsVisible;
+        }
+    }
+
     void FaceMouse(Vector3 mousePosition)
     {
         transform.up = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "end")
+        {
+            Debug.Log("Level completed!");
+            endMenu.SetActive(true);
+            Time.timeScale = 0f;
+        }
+        
     }
 }
