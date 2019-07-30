@@ -5,32 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // PUBLIC INIT
-    public float duration;              // время на разгон
-    public Vector2 startMaxSpeed;       // стартовая и максимальная скорости
-
-    public GameObject startMenu;        // ссылка на start menu
-    public GameObject endMenu;          // ссылка на end menu
-
+    public float thrust;                // приложенная сила  
 
     // PRIVATE INIT
-    float speed;        // скорость в настоящий момент
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
-
-    Vector3 velocity;   // скорость
-        
-    GameObject[] arrObstacles;  // массив препядствий
-    GameObject[] arrMines;      // массив мин
-    bool objectsVisible;        // видно/не видно объекты
+    
+    Rigidbody rb;
+    LevelManager lvlManager;
 
     void Start()
     {
-        direction = Vector3.up;
-        
-        VisibleObjects(false);
+        rb = GetComponent<Rigidbody>();
+        lvlManager = FindObjectOfType<LevelManager>();
 
-        startMenu.SetActive(true);
-        Time.timeScale = 0f;
+        direction = Vector3.up;        
     }
 
     void Update()
@@ -40,9 +29,7 @@ public class PlayerController : MonoBehaviour
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
         FaceMouse(mousePos); // face mouse direction
-
-        HandleInput();
-
+        
         MovePlayer();
     }
 
@@ -54,59 +41,19 @@ public class PlayerController : MonoBehaviour
         // if player controlles with mouse - move towards mouse
         if (Input.GetMouseButton(0) && dst < 1.3)
         {
-            speed += startMaxSpeed.y * Time.deltaTime;
-            speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
-
-            transform.position += transform.up * Time.deltaTime * speed;
+            Vector3 force = transform.up * thrust;
+            rb.AddForce(force);
+            //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
         // if player controlles with keyboard - move according to keuboard
         else if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
-            speed += startMaxSpeed.y * Time.deltaTime;
-            speed = Mathf.Clamp(speed, startMaxSpeed.x, startMaxSpeed.y);
-
-            velocity = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0).normalized * speed;
-            transform.position += velocity * Time.deltaTime * speed;
+            float inputX = Input.GetAxisRaw("Horizontal");
+            float inputY = Input.GetAxisRaw("Vertical");
+            Vector3 force = new Vector3(inputX, inputY, 0f);
+            rb.AddForce(force * thrust);
         }
-        // if not moving
-        else
-        {
-            speed = startMaxSpeed.x;
-            velocity = new Vector3(0, 0, 0);
-        }
-    }
-
-    void HandleInput()
-    {
-        // make obstacles visible/invisible
-        if (Input.GetKeyDown(KeyCode.V))    
-        {
-            VisibleObjects(!objectsVisible);
-            //Debug.Log("V is pressed");
-        }
-
-
-    }
-
-    void VisibleObjects(bool makeVisible)
-    {
-        if (arrObstacles == null)
-            arrObstacles = GameObject.FindGameObjectsWithTag("obstacle");
-
-        if (arrMines == null)
-            arrMines = GameObject.FindGameObjectsWithTag("mine");
-
-        objectsVisible = makeVisible;
-
-        foreach (GameObject obstacle in arrObstacles)
-        {
-            obstacle.GetComponent<MeshRenderer>().enabled = objectsVisible;
-        }
-
-        foreach (GameObject mine in arrMines)
-        {
-            mine.GetComponent<MeshRenderer>().enabled = objectsVisible;
-        }
+        
     }
 
     void FaceMouse(Vector3 mousePosition)
@@ -118,9 +65,8 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "end")
         {
-            Debug.Log("Level completed!");
-            endMenu.SetActive(true);
-            Time.timeScale = 0f;
+
+            lvlManager.LevelCompleted();
         }
         
     }

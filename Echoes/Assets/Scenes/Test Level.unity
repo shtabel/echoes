@@ -15260,5 +15260,25 @@ PrefabInstance:
       propertyPath: startMenu
       value: 
       objectReference: {fileID: 1068107717}
+    - target: {fileID: 7349414670351875394, guid: 513825befbca12e4280623bbabeda056,
+        type: 3}
+      propertyPath: thrust
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349414670351875394, guid: 513825befbca12e4280623bbabeda056,
+        type: 3}
+      propertyPath: startMaxSpeed.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349414670351875405, guid: 513825befbca12e4280623bbabeda056,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7349414670351875405, guid: 513825befbca12e4280623bbabeda056,
+        type: 3}
+      propertyPath: m_Drag
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 513825befbca12e4280623bbabeda056, type: 3}
