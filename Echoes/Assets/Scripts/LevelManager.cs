@@ -11,6 +11,8 @@ public class LevelManager : MonoBehaviour
     // PRIVATE INIT
     GameObject[] arrObstacles;  // массив препядствий
     GameObject[] arrMines;      // массив мин
+    GameObject[] arrRockets;    // массив ракет
+
     bool objectsVisible;        // видно/не видно объекты
 
 
@@ -45,16 +47,21 @@ public class LevelManager : MonoBehaviour
         if (arrMines == null)
             arrMines = GameObject.FindGameObjectsWithTag("mine");
 
+        if (arrRockets == null)
+            arrRockets = GameObject.FindGameObjectsWithTag("rocket");
+
         objectsVisible = makeVisible;
 
-        foreach (GameObject obstacle in arrObstacles)
-        {
-            obstacle.GetComponent<MeshRenderer>().enabled = objectsVisible;
-        }
+        SetVisible(arrObstacles);
+        SetVisible(arrMines);
+        SetVisible(arrRockets);
+    }
 
-        foreach (GameObject mine in arrMines)
+    void SetVisible(GameObject[] array)
+    {
+        foreach (GameObject obj in array)
         {
-            mine.GetComponent<MeshRenderer>().enabled = objectsVisible;
+            obj.GetComponent<MeshRenderer>().enabled = objectsVisible;
         }
     }
 

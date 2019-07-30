@@ -63,8 +63,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "end")
-        {
+        if (other.tag == "end")        {
 
             lvlManager.LevelCompleted();
         }

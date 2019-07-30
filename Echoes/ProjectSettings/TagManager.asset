@@ -7,6 +7,7 @@ TagManager:
   - mine
   - obstacle
   - end
+  - rocket
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - 
   - obstacle
   - mine
-  - 
+  - rocket
   - 
   - 
   - 
