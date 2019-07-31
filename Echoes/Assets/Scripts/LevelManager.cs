@@ -39,6 +39,15 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    public void ResetArrays()
+    {
+        arrMines = null;
+        arrRockets = null;
+
+        //arrMines = GameObject.FindGameObjectsWithTag("mine");
+        //arrRockets = GameObject.FindGameObjectsWithTag("rocket");
+    }
+
     void VisibleObjects(bool makeVisible)
     {
         if (arrObstacles == null)

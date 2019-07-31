@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8236053586143307904}
   - component: {fileID: 8236053586143307905}
-  - component: {fileID: 8236053586143307910}
+  - component: {fileID: 289172665664199731}
   m_Layer: 0
-  m_Name: Blink Rocket Sprite
+  m_Name: Blink Rocket Sprite orange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 320e593a2d2962b47ae1398536adf916, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b11118d22e73af94cae6f47253bf37f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8236053586143307910
+--- !u!114 &289172665664199731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,4 +92,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce5ccb809215904a8f43b7c0161021a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 2
+  lifeTime: 2.5

@@ -116,8 +116,8 @@ public class Rotate : MonoBehaviour
             if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastMineBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                PoolManager.instance.ReuseObject(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                lastMinePosition = hitInfo.point;
+                PoolManager.instance.ReuseObject(mine, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                lastMinePosition = hitInfo.transform.position;
                 return timeToBlink = Time.time + bDelay;
             }
         }
@@ -131,11 +131,11 @@ public class Rotate : MonoBehaviour
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
             float dstToLastRocketBlink = Vector3.Distance(lastRocketPosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastRocketBlink >= distanceBetweenBlinks) || (Time.time > timeToBlink))) // если препятствие не перекрывает
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastRocketBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                PoolManager.instance.ReuseObject(rocket, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                lastRocketPosition = hitInfo.point;
+                PoolManager.instance.ReuseObject(rocket, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                lastRocketPosition = hitInfo.transform.position;
                 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
                 hitInfo.collider.gameObject.GetComponent<RocketController>().activate = true;
