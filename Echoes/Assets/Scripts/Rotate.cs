@@ -13,18 +13,7 @@ public class Rotate : MonoBehaviour
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
     public float[] blinkDelay = new float[3];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
-
-    // Пулы
-    public int poolOfBlinks;        // количество блинков в пуле
-    public int poolOfMines;        // количество мин в пуле
-    public int poolOfRockets;        // количество ракет в пуле
-    public int poolOfDetectionBlinks;        // количество детекционных блинков в пуле
-
-    public GameObject blink;        // элемент блинк
-    public GameObject mine;         // мина
-    public GameObject rocket;         // ракета
-    public GameObject detectionBlink;   // объект который указывает точку назначения ракеты
-
+    
     public LayerMask obstacleMask;  // маска преград
     public LayerMask mineMask;      // маска мин
     public LayerMask rocketMask;      // маска ракет
@@ -35,20 +24,11 @@ public class Rotate : MonoBehaviour
     Vector3 lastMinePosition;       // хранит позицию последнего блинка мины
     Vector3 lastRocketPosition;       // хранит позицию последнего блинка ракеты
 
+    BlinkManager bm;            // blink manager для создания блинков
+
     void Start()
     {
-        //poolOfBlinks = additionBlinks * 100 + 100;
-        // create pool of blinks
-        PoolManager.instance.CreatePool(blink, poolOfBlinks);
-
-        // create pool of mines
-        PoolManager.instance.CreatePool(mine, poolOfMines);
-
-        // create pool of rockets
-        PoolManager.instance.CreatePool(rocket, poolOfRockets);
-
-        // create pool of detection blinks
-        PoolManager.instance.CreatePool(detectionBlink, poolOfDetectionBlinks);
+        bm = FindObjectOfType<BlinkManager>();       
     }
 
     // Update is called once per frame
@@ -99,7 +79,9 @@ public class Rotate : MonoBehaviour
             if (dstToLastBlink >= distanceBetweenBlinks)
             {
                 //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0)); 
-                PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
+                bm.CreateBlink(bm.blink, hitInfo.point);
+
                 lastBlinkPosition = hitInfo.point;
             }
            
@@ -116,7 +98,9 @@ public class Rotate : MonoBehaviour
             if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastMineBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                PoolManager.instance.ReuseObject(mine, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(mine, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                bm.CreateBlink(bm.mine, hitInfo.transform.position);
+
                 lastMinePosition = hitInfo.transform.position;
                 return timeToBlink = Time.time + bDelay;
             }
@@ -134,16 +118,20 @@ public class Rotate : MonoBehaviour
             if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastRocketBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
-                PoolManager.instance.ReuseObject(rocket, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(rocket, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
+                bm.CreateBlink(bm.rocket, hitInfo.transform.position);
+
                 lastRocketPosition = hitInfo.transform.position;
                 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
-                hitInfo.collider.gameObject.GetComponent<RocketController>().activate = true;
                 Vector3 targetPosition = transform.position;
-                hitInfo.collider.gameObject.GetComponent<RocketController>().targetPos = targetPosition;
+                //hitInfo.collider.gameObject.GetComponent<RocketController>().activate = true;
+                //hitInfo.collider.gameObject.GetComponent<RocketController>().targetPos = targetPosition;
+                hitInfo.collider.gameObject.GetComponent<RocketController>().BeginChasing(targetPosition);
 
                 // используем детекционный блинк, чтобы игрок видел куда направляется ракета
-                PoolManager.instance.ReuseObject(detectionBlink, targetPosition, Quaternion.Euler(0, 0, 0));
+                //PoolManager.instance.ReuseObject(detectionBlink, targetPosition, Quaternion.Euler(0, 0, 0));
+                bm.CreateBlink(bm.detectionBlink, targetPosition);
 
                 return timeToBlink = Time.time + bDelay;
             }

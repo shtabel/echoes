@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     
     Rigidbody rb;
     LevelManager lvlManager;
+    BlinkManager bm;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         lvlManager = FindObjectOfType<LevelManager>();
+        bm = FindObjectOfType<BlinkManager>();
 
         direction = Vector3.up;        
     }
@@ -63,10 +65,32 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "end")        {
+        if (other.tag == "end")
+        {
 
             lvlManager.LevelCompleted();
         }
-        
+
+        if (other.tag == "mine")
+        {
+            bm.CreateBlink(bm.mineBlown, transform.position);
+
+            bm.CreateBlink(bm.mineBlown, other.transform.position);
+            Destroy(other.gameObject);
+            Debug.Log("Mine explode!");
+            //lvlManager.PlayerDead();
+        }
+
+        if (other.tag == "rocket")
+        {
+            bm.CreateBlink(bm.mineBlown, transform.position);
+
+            bm.CreateBlink(bm.rocketBlown, other.transform.position);
+            Destroy(other.gameObject);
+            Debug.Log("Rocket explode!");
+            //lvlManager.PlayerDead();
+        }
+
+        lvlManager.ResetArrays();
     }
 }

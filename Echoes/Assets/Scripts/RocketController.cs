@@ -17,16 +17,20 @@ public class RocketController : MonoBehaviour
     // PRIVATE INIT
     Transform player;
     LevelManager lvlManager;
+    BlinkManager bm;
 
     void Start()
     {
-        PoolManager.instance.CreatePool(mineOr, 10);
-        PoolManager.instance.CreatePool(rocketOr, 10);
-
         player = FindObjectOfType<PlayerController>().transform;
         lvlManager = FindObjectOfType<LevelManager>();
+        bm = FindObjectOfType<BlinkManager>();
     }
     
+    public void BeginChasing(Vector3 targetPosition)
+    {
+        activate = true;
+        targetPos = targetPosition;
+    }
 
     // Update is called once per frame
     void Update()
@@ -50,10 +54,11 @@ public class RocketController : MonoBehaviour
 
     }
 
-    void BlowUpRocket()
+    public void BlowUpRocket()
     {
         // сначала отображаем взрыв
-        PoolManager.instance.ReuseObject(rocketOr, transform.position, Quaternion.Euler(0, 0, 0));
+        bm.CreateBlink(bm.rocketBlown, transform.position);
+        
         // потом уничтожаем саму ракету
         Destroy(gameObject);
     }
@@ -61,7 +66,8 @@ public class RocketController : MonoBehaviour
     void BlowUpMine(GameObject m)
     {
         // сначала отображаем взрыв
-        PoolManager.instance.ReuseObject(mineOr, m.transform.position, Quaternion.Euler(0, 0, 0));
+        bm.CreateBlink(bm.mineBlown, m.transform.position);
+
         // потом уничтожаем саму мину
         Destroy(m);
     }
@@ -76,7 +82,7 @@ public class RocketController : MonoBehaviour
         {
             BlowUpRocket();
             BlowUpMine(other.gameObject);
-            
+
         }
         else if (other.tag == "rocket")
         {

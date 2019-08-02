@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour
     // PUBLIC INIT
     public GameObject startMenu;        // ссылка на start menu
     public GameObject endMenu;          // ссылка на end menu
+    public GameObject deadMenu;         // ссылка на dead menu
 
     // PRIVATE INIT
     GameObject[] arrObstacles;  // массив препядствий
@@ -31,6 +32,12 @@ public class LevelManager : MonoBehaviour
         HandleInput();
     }
 
+    public void PlayerDead()
+    {
+        deadMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
     public void LevelCompleted()
     {
         Debug.Log("Level completed!");
@@ -43,9 +50,6 @@ public class LevelManager : MonoBehaviour
     {
         arrMines = null;
         arrRockets = null;
-
-        //arrMines = GameObject.FindGameObjectsWithTag("mine");
-        //arrRockets = GameObject.FindGameObjectsWithTag("rocket");
     }
 
     void VisibleObjects(bool makeVisible)
