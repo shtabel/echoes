@@ -7,18 +7,22 @@ public class PlayerController : MonoBehaviour
     // PUBLIC INIT
     public float thrust;                // приложенная сила  
 
+    public GameObject radarRay;
+
     // PRIVATE INIT
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
     
     Rigidbody rb;
     LevelManager lvlManager;
+    MenuManager menuManager;
     BlinkManager bm;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         lvlManager = FindObjectOfType<LevelManager>();
+        menuManager = FindObjectOfType<MenuManager>();
         bm = FindObjectOfType<BlinkManager>();
 
         direction = Vector3.up;        
@@ -67,30 +71,32 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "end")
         {
-
-            lvlManager.LevelCompleted();
+            menuManager.LevelCompleted();
         }
 
         if (other.tag == "mine")
         {
-            bm.CreateBlink(bm.mineBlown, transform.position);
-
             bm.CreateBlink(bm.mineBlown, other.transform.position);
-            Destroy(other.gameObject);
-            Debug.Log("Mine explode!");
-            //lvlManager.PlayerDead();
+            DestroyPlayer(other);
         }
 
         if (other.tag == "rocket")
         {
-            bm.CreateBlink(bm.mineBlown, transform.position);
-
             bm.CreateBlink(bm.rocketBlown, other.transform.position);
-            Destroy(other.gameObject);
-            Debug.Log("Rocket explode!");
-            //lvlManager.PlayerDead();
+            DestroyPlayer(other);
         }
 
         lvlManager.ResetArrays();
+    }
+
+    void DestroyPlayer(Collider col)
+    {
+        bm.CreateBlink(bm.mineBlown, transform.position);
+        Destroy(col.gameObject);
+
+        radarRay.SetActive(false);
+
+        menuManager.PlayerDead();
+        gameObject.SetActive(false);
     }
 }

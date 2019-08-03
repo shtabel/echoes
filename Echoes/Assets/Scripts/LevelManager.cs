@@ -5,9 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     // PUBLIC INIT
-    public GameObject startMenu;        // ссылка на start menu
-    public GameObject endMenu;          // ссылка на end menu
-    public GameObject deadMenu;         // ссылка на dead menu
+
 
     // PRIVATE INIT
     GameObject[] arrObstacles;  // массив препядствий
@@ -21,30 +19,14 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         VisibleObjects(false);
-
-        startMenu.SetActive(true);
-        Time.timeScale = 0f;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleInput();
-    }
-
-    public void PlayerDead()
-    {
-        deadMenu.SetActive(true);
-        Time.timeScale = 0f;
-    }
-
-    public void LevelCompleted()
-    {
-        Debug.Log("Level completed!");
-
-        endMenu.SetActive(true);
-        Time.timeScale = 0f;
-    }
+    }    
 
     public void ResetArrays()
     {

@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenuScript : MonoBehaviour
+public class MenuManager : MonoBehaviour
 {
     // PUBLIC INIT
-    //public string newGameScene;
     public GameObject pauseMenu;
     public GameObject startMenu;
+    public GameObject endMenu;          // ссылка на end menu
+    public GameObject deadMenu;         // ссылка на dead menu
+
     public bool isPaused;
-    
 
-    // Update is called once per frame
-    void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OpenPauseMenu();
-        }
+        //startMenu.SetActive(true);
+        //Time.timeScale = 0f;
     }
-
     public void NewGame()
     {
         ResumeGame();
@@ -32,7 +30,6 @@ public class PauseMenuScript : MonoBehaviour
         isPaused = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
-
     }
 
     public void QuitGame()
@@ -59,5 +56,28 @@ public class PauseMenuScript : MonoBehaviour
         isPaused = false;
         startMenu.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    public void PlayerDead()
+    {
+        deadMenu.SetActive(true);
+        //Time.timeScale = 0f;
+    }
+
+    public void LevelCompleted()
+    {
+        Debug.Log("Level completed!");
+
+        endMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OpenPauseMenu();
+        }
     }
 }
