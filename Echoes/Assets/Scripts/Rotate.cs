@@ -8,18 +8,19 @@ public class Rotate : MonoBehaviour
     public int additionBlinks;      // блинки которые следуют за первым   
     public float blinksSpacing;     // разница между лучами в градусах
 
-    public float distanceBetweenBlinks; // расстояние между блинками
+    public static int typesOfObjects = 3;          // виды объектов для детектирования (препядствия, мины, ракеты)
+    public float[] distanceBetweenBlinks = new float[typesOfObjects]; // расстояние между блинками
 
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
-    public float[] blinkDelay = new float[3];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
+    public float[] blinkDelay = new float[typesOfObjects];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
     
     public LayerMask obstacleMask;  // маска преград
     public LayerMask mineMask;      // маска мин
     public LayerMask rocketMask;      // маска ракет
 
     // private init
-    float[] nextTimeBlink = new float[3];            // время след блинка (препятствия, мина)
+    float[] nextTimeBlink = new float[typesOfObjects];            // время след блинка (препятствия, мина)
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
     Vector3 lastMinePosition;       // хранит позицию последнего блинка мины
     Vector3 lastRocketPosition;       // хранит позицию последнего блинка ракеты
@@ -76,7 +77,7 @@ public class Rotate : MonoBehaviour
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
         {
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
-            if (dstToLastBlink >= distanceBetweenBlinks)
+            if (dstToLastBlink >= distanceBetweenBlinks[0])
             {
                 //Instantiate(blink, hitInfo.point, Quaternion.Euler(0, 0, 0)); 
                 //PoolManager.instance.ReuseObject(blink, hitInfo.point, Quaternion.Euler(0, 0, 0));
@@ -95,7 +96,7 @@ public class Rotate : MonoBehaviour
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
             float dstToLastMineBlink = Vector3.Distance(lastMinePosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastMineBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastMineBlink >= distanceBetweenBlinks[1]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
                 //PoolManager.instance.ReuseObject(mine, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
@@ -115,7 +116,7 @@ public class Rotate : MonoBehaviour
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
             float dstToLastRocketBlink = Vector3.Distance(lastRocketPosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastRocketBlink >= distanceBetweenBlinks * 3) || (Time.time > timeToBlink))) // если препятствие не перекрывает
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && ((dstToLastRocketBlink >= distanceBetweenBlinks[2]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
             {
                 //Instantiate(mine, hitInfo.point, Quaternion.Euler(0, 0, 0));
                 //PoolManager.instance.ReuseObject(rocket, hitInfo.transform.position, Quaternion.Euler(0, 0, 0));
@@ -149,7 +150,7 @@ public class Rotate : MonoBehaviour
             {
                 float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
                 float dstToLastBlink = Vector3.Distance(lastMinePosition, hitInfo.point);
-                if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && (dstToLastBlink >= distanceBetweenBlinks * 3)) // если препятствие не перекрывает
+                if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) && (dstToLastBlink >= distanceBetweenBlinks[0])) // если препятствие не перекрывает
                 {
                     Instantiate(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));
                     //PoolManager.instance.ReuseObject(gameObj, hitInfo.point, Quaternion.Euler(0, 0, 0));

@@ -12,6 +12,7 @@ public class BlinkManager : MonoBehaviour
     public int poolOfDetectionBlinks;        // количество детекционных блинков в пуле
     public int poolOfMinesBlown;        // количество взорванных мин в пуле
     public int poolOfRocketsBlown;        // количество взорванных ракет в пуле
+    public int poolOfCircleBlown;        // количество взорванных кругов в пуле
 
     public GameObject blink;        // элемент блинк
     public GameObject mine;         // мина
@@ -19,6 +20,7 @@ public class BlinkManager : MonoBehaviour
     public GameObject detectionBlink;   // объект который указывает точку назначения ракеты
     public GameObject mineBlown;        // взорванная мина
     public GameObject rocketBlown;      // взорванная ракета
+    public GameObject circleBlown;      // взорванный игрок
 
     // PRIVATE INIT
 
@@ -39,6 +41,8 @@ public class BlinkManager : MonoBehaviour
         PoolManager.instance.CreatePool(mineBlown, poolOfMinesBlown);
         // create pool of blown rockets
         PoolManager.instance.CreatePool(rocketBlown, poolOfRocketsBlown);
+        // create pool of blown rockets
+        PoolManager.instance.CreatePool(circleBlown, poolOfCircleBlown);
 
     }
 

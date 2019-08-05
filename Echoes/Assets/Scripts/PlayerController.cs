@@ -51,6 +51,10 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(force);
             //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
+        else if (Input.GetMouseButtonDown(1) && dst < 1.3)
+        {
+            transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z);            
+        }
         // if player controlles with keyboard - move according to keuboard
         else if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
@@ -72,31 +76,38 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "end")
         {
             menuManager.LevelCompleted();
+            Debug.Log("Level completed!");
         }
 
         if (other.tag == "mine")
         {
             bm.CreateBlink(bm.mineBlown, other.transform.position);
-            DestroyPlayer(other);
+            Destroy(other.gameObject);
+
+            DestroyPlayer();
         }
 
         if (other.tag == "rocket")
         {
             bm.CreateBlink(bm.rocketBlown, other.transform.position);
-            DestroyPlayer(other);
+            Destroy(other.gameObject);
+
+            DestroyPlayer();
         }
 
         lvlManager.ResetArrays();
     }
 
-    void DestroyPlayer(Collider col)
+    void DestroyPlayer()
     {
-        bm.CreateBlink(bm.mineBlown, transform.position);
-        Destroy(col.gameObject);
-
-        radarRay.SetActive(false);
-
+        bm.CreateBlink(bm.circleBlown, transform.position);
+        MakeVisible(false);     
         menuManager.PlayerDead();
-        gameObject.SetActive(false);
+    }
+
+    public void MakeVisible(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
+        radarRay.SetActive(isVisible);
     }
 }

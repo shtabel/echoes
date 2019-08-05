@@ -11,11 +11,17 @@ public class MenuManager : MonoBehaviour
     public GameObject endMenu;          // ссылка на end menu
     public GameObject deadMenu;         // ссылка на dead menu
 
+    public string nextLevel;
+
     public bool isPaused;
+
+    // PRIVATE INIT
+    PlayerController thePlayer;
 
     // Start is called before the first frame update
     void Start()
     {
+        thePlayer = FindObjectOfType<PlayerController>();
         //startMenu.SetActive(true);
         //Time.timeScale = 0f;
     }
@@ -30,6 +36,8 @@ public class MenuManager : MonoBehaviour
         isPaused = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
+
+        thePlayer.MakeVisible(true);
     }
 
     public void QuitGame()
@@ -45,6 +53,8 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
+            thePlayer.MakeVisible(false);
+
             isPaused = true;
             pauseMenu.SetActive(true);
             Time.timeScale = 0f;
@@ -68,8 +78,10 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Level completed!");
 
-        endMenu.SetActive(true);
-        Time.timeScale = 0f;
+        //endMenu.SetActive(true);
+        //Time.timeScale = 0f;
+
+        SceneManager.LoadScene(nextLevel);
     }
 
     // Update is called once per frame
