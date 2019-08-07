@@ -16,14 +16,16 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     LevelManager lvlManager;
     MenuManager menuManager;
-    BlinkManager bm;
+    BlinkManager blinkManager;
+    AudioManager audioManager;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         lvlManager = FindObjectOfType<LevelManager>();
         menuManager = FindObjectOfType<MenuManager>();
-        bm = FindObjectOfType<BlinkManager>();
+        blinkManager = FindObjectOfType<BlinkManager>();
+        audioManager = FindObjectOfType<AudioManager>();
 
         direction = Vector3.up;        
     }
@@ -81,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.tag == "mine")
         {
-            bm.CreateBlink(bm.mineBlown, other.transform.position);
+            blinkManager.CreateBlink(blinkManager.mineBlown, other.transform.position);
             Destroy(other.gameObject);
 
             DestroyPlayer();
@@ -89,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.tag == "rocket")
         {
-            bm.CreateBlink(bm.rocketBlown, other.transform.position);
+            blinkManager.CreateBlink(blinkManager.rocketBlown, other.transform.position);
             Destroy(other.gameObject);
 
             DestroyPlayer();
@@ -100,7 +102,9 @@ public class PlayerController : MonoBehaviour
 
     void DestroyPlayer()
     {
-        bm.CreateBlink(bm.circleBlown, transform.position);
+        audioManager.Play("explosion");
+
+        blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
         MakeVisible(false);     
         menuManager.PlayerDead();
     }

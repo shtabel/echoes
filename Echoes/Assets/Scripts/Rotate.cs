@@ -7,20 +7,20 @@ public class Rotate : MonoBehaviour
     // PUBLIC INIT
     public int additionBlinks;      // блинки которые следуют за первым   
     public float blinksSpacing;     // разница между лучами в градусах
-
-    public static int typesOfObjects = 3;          // виды объектов для детектирования (препядствия, мины, ракеты)
-    public float[] distanceBetweenBlinks = new float[typesOfObjects]; // расстояние между блинками
+    
+    public float[] distanceBetweenBlinks = new float[amountOfBlinks]; // расстояние между блинками
 
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
-    public float[] blinkDelay = new float[typesOfObjects];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
+    public float[] blinkDelay = new float[amountOfBlinks];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
     
     public LayerMask obstacleMask;  // маска преград
     public LayerMask mineMask;      // маска мин
     public LayerMask rocketMask;      // маска ракет
 
     // private init
-    float[] nextTimeBlink = new float[typesOfObjects];            // время след блинка (препятствия, мина)
+    static int amountOfBlinks = 3;         // количество типов блинков (препдствие, мина, ракета)
+    float[] nextTimeBlink = new float[amountOfBlinks];            // время след блинка (препятствия, мина)
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
     Vector3 lastMinePosition;       // хранит позицию последнего блинка мины
     Vector3 lastRocketPosition;       // хранит позицию последнего блинка ракеты

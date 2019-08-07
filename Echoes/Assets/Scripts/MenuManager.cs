@@ -27,8 +27,8 @@ public class MenuManager : MonoBehaviour
     }
     public void NewGame()
     {
-        ResumeGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        ResumeGame();
     }
 
     public void ResumeGame()

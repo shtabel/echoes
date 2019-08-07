@@ -93,13 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4991197745ba5854eb40fa389e15145f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedOfRocket: 0.6
+  speedOfRocket: 1.1
   targetPos: {x: 0, y: 0, z: 0}
   activate: 0
   activateDistance: 1.4
-  mineOr: {fileID: 8236053586143307911, guid: 2e8f769b1d3420f4aafdfab0446b8777, type: 3}
-  rocketOr: {fileID: 8236053586143307911, guid: 496fb1ecde4df3e4ab64027171ae5484,
-    type: 3}
 --- !u!54 &3321012530986514475
 Rigidbody:
   m_ObjectHideFlags: 0

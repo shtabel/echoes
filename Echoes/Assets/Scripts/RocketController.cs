@@ -11,9 +11,6 @@ public class RocketController : MonoBehaviour
 
     public float activateDistance;
 
-    public GameObject mineOr;
-    public GameObject rocketOr;
-
     // PRIVATE INIT
     Transform player;
     LevelManager lvlManager;
