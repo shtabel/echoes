@@ -5,17 +5,24 @@ using UnityEngine;
 public class FadeSpriteWithDelay : PoolObject
 {
     // PUBLIC INIT
-    public float lifeTime;
-
+    public bool isQuickFading;  // быстро угасет?
+    
     // PRIVATE INIT
     bool fading = false;
+    float lifeTime;
+
     SpriteRenderer rend;
     Color spriteColor;
+
+    BlinkManager blinkManager;
 
     // Start is called before the first frame update
     void Start()
     {
         rend = GetComponent<SpriteRenderer>();
+
+        blinkManager = FindObjectOfType<BlinkManager>();
+        lifeTime = (isQuickFading) ? blinkManager.blinkLifeTimeShort : blinkManager.blinkLifeTimeLong;
 
         spriteColor = rend.color;
         rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 0);
@@ -27,6 +34,7 @@ public class FadeSpriteWithDelay : PoolObject
         rend.enabled = true;
         rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 1);
 
+        lifeTime = (isQuickFading) ? blinkManager.blinkLifeTimeShort : blinkManager.blinkLifeTimeLong;
         Fade(false, lifeTime);
     }
 

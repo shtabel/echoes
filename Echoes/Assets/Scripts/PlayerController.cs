@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public GameObject radarRay;
 
     // PRIVATE INIT
+    bool isRadarOn;
+
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
     
@@ -21,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        isRadarOn = true;
+
         rb = GetComponent<Rigidbody>();
         lvlManager = FindObjectOfType<LevelManager>();
         menuManager = FindObjectOfType<MenuManager>();
@@ -39,6 +43,8 @@ public class PlayerController : MonoBehaviour
         FaceMouse(mousePos); // face mouse direction
         
         MovePlayer();
+
+        OtherInput();
     }
 
     void MovePlayer()
@@ -71,6 +77,16 @@ public class PlayerController : MonoBehaviour
     void FaceMouse(Vector3 mousePosition)
     {
         transform.up = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
+        //Debug.Log("Mouse position (player): " + mousePos.x + "; " + mousePos.y);
+    }
+
+    void OtherInput()
+    {
+        if (Input.GetKeyDown(KeyCode.E))    // turn on/off radar
+        {
+            isRadarOn = !isRadarOn;
+            radarRay.SetActive(isRadarOn);
+        }
     }
 
     void OnTriggerEnter(Collider other)

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8236053586143307905}
   - component: {fileID: 8236053586143307910}
   m_Layer: 0
-  m_Name: Blink Detection Sprite 1
+  m_Name: Blink Detection Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,4 +92,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce5ccb809215904a8f43b7c0161021a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 2
+  isQuickFading: 1

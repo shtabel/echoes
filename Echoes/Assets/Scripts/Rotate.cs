@@ -5,11 +5,12 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     // PUBLIC INIT
-    public int additionBlinks;      // блинки которые следуют за первым   
-    public float blinksSpacing;     // разница между лучами в градусах
+    //public int additionBlinks;      // блинки которые следуют за первым   
+    //public float blinksSpacing;     // разница между лучами в градусах
     
     public float[] distanceBetweenBlinks = new float[amountOfBlinks]; // расстояние между блинками
 
+    [Range(0f, 360f)]
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
     public float[] blinkDelay = new float[amountOfBlinks];        // задержка перед появлением следующего блинка (препятствия, мина, ракета)
@@ -54,14 +55,16 @@ public class Rotate : MonoBehaviour
         Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
 
         // if hit obstacle
-        //HandleObstacleBlink(upVec);
-        Vector3 vec = upVec;// = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
-        for (int i = 0; i <= additionBlinks; i++)
-        {
-            HandleObstacleBlink(vec);
-            vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * vec;
+        HandleObstacleBlink(upVec);
+        
+        // это можно использовать если использую additional blinks и blink spacing между ними
+        //Vector3 vec = upVec;// = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
+        //for (int i = 0; i <= additionBlinks; i++)
+        //{
             //HandleObstacleBlink(vec);
-        }
+            //vec = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * vec;
+            //HandleObstacleBlink(vec);
+        //}
 
         // if hit mine
         nextTimeBlink[1] = HandleMineBlink(upVec, nextTimeBlink[1], blinkDelay[1]);

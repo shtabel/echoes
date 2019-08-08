@@ -22,6 +22,9 @@ public class BlinkManager : MonoBehaviour
     public GameObject rocketBlown;      // взорванная ракета
     public GameObject circleBlown;      // взорванный игрок
 
+    public float blinkLifeTimeShort;   // время быстрого угасания блинков
+    public float blinkLifeTimeLong;    // время временного угасания 
+
     // PRIVATE INIT
 
 
