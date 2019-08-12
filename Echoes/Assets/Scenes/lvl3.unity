@@ -325,6 +325,21 @@ PrefabInstance:
       propertyPath: nextLevel
       value: lvl4
       objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908225, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: isPaused
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908225, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: nextLevel
+      value: lvl4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b34f386c7d03ce47ab79caf734d8237, type: 3}
 --- !u!1001 &139172635

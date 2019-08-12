@@ -96,6 +96,12 @@ public class PlayerController : MonoBehaviour
             radarRay.SetActive(isRadarOn);
         }
 
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            menuManager.LevelCompleted();
+        }
+
+        // проверка трясущейся камеры: слабое и сильное трясение
         if (Input.GetKeyDown(KeyCode.Z))    
         {
             camShake.SmallShake();
@@ -126,9 +132,7 @@ public class PlayerController : MonoBehaviour
         {
             blinkManager.CreateBlink(blinkManager.mineBlown, other.transform.position);
             Destroy(other.gameObject);
-
             camShake.Shake();
-
             DestroyPlayer();
         }
 
@@ -136,9 +140,7 @@ public class PlayerController : MonoBehaviour
         {
             blinkManager.CreateBlink(blinkManager.rocketBlown, other.transform.position);
             Destroy(other.gameObject);
-
             camShake.Shake();
-
             DestroyPlayer();
         }
 

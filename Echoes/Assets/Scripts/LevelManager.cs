@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     // PUBLIC INIT
-
+    
 
     // PRIVATE INIT
     GameObject[] arrObstacles;  // массив препядствий
