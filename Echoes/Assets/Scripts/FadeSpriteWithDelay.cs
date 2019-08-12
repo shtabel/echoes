@@ -34,7 +34,8 @@ public class FadeSpriteWithDelay : PoolObject
         rend.enabled = true;
         rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 1);
 
-        lifeTime = (isQuickFading) ? blinkManager.blinkLifeTimeShort : blinkManager.blinkLifeTimeLong;
+        //lifeTime = (isQuickFading) ? blinkManager.blinkLifeTimeShort : blinkManager.blinkLifeTimeLong;
+
         Fade(false, lifeTime);
     }
 
@@ -88,10 +89,5 @@ public class FadeSpriteWithDelay : PoolObject
         }
         fading = false; //So that we can call this function next time
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37472042dc14f1a4298e4a01212d187f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolOfBlinks: 100
-  poolOfMines: 20
+  poolOfBlinks: 80
+  poolOfMines: 100
   poolOfRockets: 20
   poolOfDetectionBlinks: 20
   poolOfMinesBlown: 20
@@ -61,5 +61,5 @@ MonoBehaviour:
     type: 3}
   circleBlown: {fileID: 8236053586143307911, guid: 5836021553491254e8c9b18d4a5c4905,
     type: 3}
-  blinkLifeTimeShort: 2
+  blinkLifeTimeShort: 1.5
   blinkLifeTimeLong: 3

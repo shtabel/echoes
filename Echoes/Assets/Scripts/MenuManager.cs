@@ -22,6 +22,7 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         thePlayer = FindObjectOfType<PlayerController>();
+        
         //startMenu.SetActive(true);
         //Time.timeScale = 0f;
     }

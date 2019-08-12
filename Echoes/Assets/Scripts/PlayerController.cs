@@ -7,10 +7,13 @@ public class PlayerController : MonoBehaviour
     // PUBLIC INIT
     public float thrust;                // приложенная сила  
 
-    public GameObject radarRay;
+    //public GameObject radarRay;
 
     // PRIVATE INIT
     bool isRadarOn;
+    float radarRadius = 1.3f;
+
+    GameObject radarRay;
 
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
@@ -20,12 +23,17 @@ public class PlayerController : MonoBehaviour
     MenuManager menuManager;
     BlinkManager blinkManager;
     AudioManager audioManager;
+    CameraShake camShake;
 
     void Start()
     {
         isRadarOn = true;
 
         rb = GetComponent<Rigidbody>();
+        var radar = FindObjectOfType<Rotate>();
+        radarRay = radar.gameObject;
+
+        camShake = FindObjectOfType<CameraShake>();
         lvlManager = FindObjectOfType<LevelManager>();
         menuManager = FindObjectOfType<MenuManager>();
         blinkManager = FindObjectOfType<BlinkManager>();
@@ -53,13 +61,13 @@ public class PlayerController : MonoBehaviour
         float dst = Vector3.Distance(mousePos, transform.position) - Mathf.Abs(Camera.main.transform.position.z);
 
         // if player controlles with mouse - move towards mouse
-        if (Input.GetMouseButton(0) && dst < 1.3)
+        if (Input.GetMouseButton(0) && dst < radarRadius)
         {
             Vector3 force = transform.up * thrust;
             rb.AddForce(force);
             //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
-        else if (Input.GetMouseButtonDown(1) && dst < 1.3)
+        else if (Input.GetMouseButtonDown(1) && dst < radarRadius)
         {
             transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z);            
         }
@@ -87,6 +95,23 @@ public class PlayerController : MonoBehaviour
             isRadarOn = !isRadarOn;
             radarRay.SetActive(isRadarOn);
         }
+
+        if (Input.GetKeyDown(KeyCode.Z))    
+        {
+            camShake.SmallShake();
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            camShake.Shake();
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "obstacle")
+        {
+            camShake.SmallShake();
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -102,6 +127,8 @@ public class PlayerController : MonoBehaviour
             blinkManager.CreateBlink(blinkManager.mineBlown, other.transform.position);
             Destroy(other.gameObject);
 
+            camShake.Shake();
+
             DestroyPlayer();
         }
 
@@ -109,6 +136,8 @@ public class PlayerController : MonoBehaviour
         {
             blinkManager.CreateBlink(blinkManager.rocketBlown, other.transform.position);
             Destroy(other.gameObject);
+
+            camShake.Shake();
 
             DestroyPlayer();
         }

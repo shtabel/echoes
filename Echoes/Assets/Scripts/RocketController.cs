@@ -13,9 +13,9 @@ public class RocketController : MonoBehaviour
 
     public float activateDistance;  // расстояние на котором ракета сама наводится на цель
 
-    // PRIVATE INIT
-    float distanceToPoint;  // расстояние до точки где был замечен игрок
+    public float diactivateDistance;  // расстояние до точки, где был замечен игрок, на котором на ракету перестает действовать сила
 
+    // PRIVATE INIT
     Transform thePlayer;
     Rigidbody rb;
     LevelManager lvlManager;
@@ -34,9 +34,7 @@ public class RocketController : MonoBehaviour
     {
         isActivate = true;
         targetPos = targetPosition;
-
-        distanceToPoint = Vector3.Distance(targetPos, transform.position);    // расстояние до точки где был замечен игрок
-
+        
         // это чтобы ракета при перестройке не тупила, а сразу меняла направление и нормально двигалась
         rb.velocity = rb.velocity / divInertia;
         //rb.angularVelocity = rb.angularVelocity / divInertia;
@@ -70,7 +68,7 @@ public class RocketController : MonoBehaviour
 
             float curDistancToPoint = Vector3.Distance(targetPos, transform.position); // current distance to point
 
-            if (curDistancToPoint < 0.1f)
+            if (curDistancToPoint < diactivateDistance)
             {
                 isActivate = false;
             }
