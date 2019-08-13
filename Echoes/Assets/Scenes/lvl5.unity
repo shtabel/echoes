@@ -130,11 +130,66 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908224, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5440472171748908225, guid: 4b34f386c7d03ce47ab79caf734d8237,
         type: 3}
       propertyPath: nextLevel
       value: Main menu
       objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908227, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440472171748908227, guid: 4b34f386c7d03ce47ab79caf734d8237,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1131439214}
     - target: {fileID: 3297496460809504506, guid: 4b34f386c7d03ce47ab79caf734d8237,
         type: 3}
       propertyPath: m_Name
@@ -606,12 +661,12 @@ PrefabInstance:
     - target: {fileID: 9095393254052590020, guid: e71f6af4b1bd1304ea11bbce86334bf0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3850098
+      value: 5.93
       objectReference: {fileID: 0}
     - target: {fileID: 9095393254052590020, guid: e71f6af4b1bd1304ea11bbce86334bf0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.949696
+      value: -6.33
       objectReference: {fileID: 0}
     - target: {fileID: 9095393254052590020, guid: e71f6af4b1bd1304ea11bbce86334bf0,
         type: 3}
@@ -1881,6 +1936,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9634a27d7dda47844888be013e345d6a, type: 3}
+--- !u!20 &1131439214 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7044457352816249156, guid: 21ee39a6831e4ac41a049aa52e0f738a,
+    type: 3}
+  m_PrefabInstance: {fileID: 8321736494053667048}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1132149717
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3310,6 +3371,11 @@ PrefabInstance:
     - target: {fileID: 7044457352816249155, guid: 21ee39a6831e4ac41a049aa52e0f738a,
         type: 3}
       propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7044457352816249156, guid: 21ee39a6831e4ac41a049aa52e0f738a,
+        type: 3}
+      propertyPath: m_ForceIntoRT
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7044457354014313095, guid: 21ee39a6831e4ac41a049aa52e0f738a,
