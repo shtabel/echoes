@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrObstacles;  // массив препядствий
     GameObject[] arrMines;      // массив мин
     GameObject[] arrRockets;    // массив ракет
+    GameObject[] arrPersuers;   // массив преследователей
 
     bool objectsVisible;        // видно/не видно объекты
 
@@ -32,6 +33,7 @@ public class LevelManager : MonoBehaviour
     {
         arrMines = null;
         arrRockets = null;
+        arrPersuers = null;
     }
 
     void VisibleObjects(bool makeVisible)
@@ -45,11 +47,16 @@ public class LevelManager : MonoBehaviour
         if (arrRockets == null)
             arrRockets = GameObject.FindGameObjectsWithTag("rocket");
 
+        if (arrPersuers == null)
+            arrPersuers = GameObject.FindGameObjectsWithTag("persuer");
+
         objectsVisible = makeVisible;
 
         SetVisible(arrObstacles);
         SetVisible(arrMines);
         SetVisible(arrRockets);
+        SetVisible(arrPersuers);
+
     }
 
     void SetVisible(GameObject[] array)

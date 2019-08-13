@@ -8,6 +8,7 @@ TagManager:
   - obstacle
   - end
   - rocket
+  - persuer
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - obstacle
   - mine
   - rocket
-  - 
-  - 
+  - player
+  - persuer
   - 
   - 
   - 

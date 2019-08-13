@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8236053586143307905}
   - component: {fileID: 289172665664199731}
   m_Layer: 0
-  m_Name: Blink Player Sprite orange
+  m_Name: Circle Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6e76a990c6850df48beed45b0acd3e7f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 118f29fbd0562504eafed8ee10689100, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,4 +92,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce5ccb809215904a8f43b7c0161021a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 2.5
+  isQuickFading: 1

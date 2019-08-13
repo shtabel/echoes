@@ -364,10 +364,12 @@ MonoBehaviour:
   - 0.35
   - 0.3
   - 0.3
+  - 0.3
   rotationDegree: 120
   rayLength: 5.2
   blinkDelay:
   - 0
+  - 0.4
   - 0.4
   - 0.4
   obstacleMask:
@@ -379,3 +381,6 @@ MonoBehaviour:
   rocketMask:
     serializedVersion: 2
     m_Bits: 1024
+  persuerMask:
+    serializedVersion: 2
+    m_Bits: 4096
