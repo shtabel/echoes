@@ -130,16 +130,19 @@ public class PlayerController : MonoBehaviour
 
         if (other.tag == "mine")
         {
-            blinkManager.CreateBlink(blinkManager.mineBlown, other.transform.position);
-            Destroy(other.gameObject);
+            other.gameObject.GetComponent<EnemyController>().BlowUpMine();
             camShake.Shake();
             DestroyPlayer();
         }
-
         if (other.tag == "rocket")
         {
-            blinkManager.CreateBlink(blinkManager.rocketBlown, other.transform.position);
-            Destroy(other.gameObject);
+            other.gameObject.GetComponent<RocketController>().BlowUpRocket();
+            camShake.Shake();
+            DestroyPlayer();
+        }
+        if (other.tag == "persuer")
+        {
+            other.gameObject.GetComponent<PersuerController>().BlowUpPersuer();
             camShake.Shake();
             DestroyPlayer();
         }

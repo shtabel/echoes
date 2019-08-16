@@ -130,7 +130,7 @@ public class Rotate : MonoBehaviour
                 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
                 Vector3 targetPosition = transform.position;
-                hitInfo.collider.gameObject.GetComponent<RocketController>().BeginChasing(targetPosition);
+                hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
 
                 // используем детекционный блинк, чтобы игрок видел куда направляется ракета
                 bm.CreateBlink(bm.detectionBlink, targetPosition);
@@ -157,7 +157,7 @@ public class Rotate : MonoBehaviour
 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
                 Vector3 targetPosition = transform.position;
-                hitInfo.collider.gameObject.GetComponent<PersuerController>().ChaseToPosition(targetPosition);
+                hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
 
                 // используем детекционный блинк, чтобы игрок видел куда направляется ракета
                 bm.CreateBlink(bm.detectionBlink, targetPosition);

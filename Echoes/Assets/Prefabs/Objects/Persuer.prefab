@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9095393254052590020}
   m_Layer: 0
-  m_Name: Persuer 1
+  m_Name: Persuer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 9095393254881919427}
   - component: {fileID: 9095393254881919424}
   - component: {fileID: 9095393254881919425}
+  - component: {fileID: 1313342847917137172}
   - component: {fileID: 9095393254881919429}
   - component: {fileID: 9095393254881919426}
   m_Layer: 12
@@ -120,10 +121,23 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9095393254881919487}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &1313342847917137172
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9095393254881919487}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.49
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &9095393254881919429
 Rigidbody:
@@ -153,10 +167,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff5a075702976e94dad71a11ecc2625b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 1.6
-  diactivateDistance: 0.2
   startChasing: 0
   targetPosition: {x: 0, y: 0, z: 0}
+  bm: {fileID: 0}
+  rb: {fileID: 0}
+  thrust: 1.6
+  diactivateDistance: 0.2
+  repelRange: 1
 --- !u!1 &9095393255458785852
 GameObject:
   m_ObjectHideFlags: 0

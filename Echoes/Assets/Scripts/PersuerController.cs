@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PersuerController : MonoBehaviour
+public class PersuerController : EnemyController
 {
     // PUBLIC INIT
     public float thrust;
     public float diactivateDistance;
 
-    // PRIVATE INIT
-    bool startChasing;
-    Vector3 targetPosition;
+    public float repelRange;
 
-    Rigidbody rb;
+    // PRIVATE INIT
+    LevelManager lvlManager;
+    BlinkManager bm;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        AssignRBs();
 
+        lvlManager = FindObjectOfType<LevelManager>();
+        bm = FindObjectOfType<BlinkManager>();
     }
 
     // Update is called once per frame
@@ -29,7 +32,21 @@ public class PersuerController : MonoBehaviour
             FaceTarget(targetPosition);
 
             Vector3 force = transform.right * thrust;
-            rb.AddForce(force);
+            //rb.AddForce(force);
+
+            // отталкивание преследователей друг от друга, чтоб не сталкивались
+            Vector3 repelForce = Vector3.zero;
+            foreach (Rigidbody enemy in EnemyRBs)
+            {
+                if (enemy == rb)
+                    continue;
+
+                if (Vector3.Distance(enemy.position, rb.position) <= repelRange)
+                {
+                    repelForce += (rb.position - enemy.position).normalized;
+                }
+            }
+            rb.AddForce(force + repelForce);
 
             float curDistancToPoint = Vector3.Distance(targetPosition, transform.position); // current distance to point
 
@@ -40,18 +57,47 @@ public class PersuerController : MonoBehaviour
         }
     }
 
-    void FaceTarget(Vector3 targetPos)
+    public void BlowUpPersuer()
     {
-        Vector3 difference = targetPos - transform.position;
-        float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+        // сначала отображаем взрыв
+        bm.CreateBlink(bm.circleBlown, transform.position);
+
+        // потом уничтожаем саму ракету
+        Destroy(transform.parent.gameObject);
     }
 
-    public void ChaseToPosition(Vector3 positionToChase)
+    void BlowUpMine(GameObject m)
     {
-        //Debug.Log("Target position: " + targetPosition.x + "; " + targetPosition.y);
+        // сначала отображаем взрыв
+        bm.CreateBlink(bm.mineBlown, m.transform.position);
 
-        startChasing = true;
-        targetPosition = positionToChase;
+        // потом уничтожаем саму мину
+        Destroy(m);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        //if (other.tag == "obstacle")
+        //{
+        //    BlowUpPersuer();
+        //}
+        //else 
+        if (other.tag == "mine")
+        {
+            BlowUpPersuer();
+            BlowUpMine(other.gameObject);
+
+        }
+        else if (other.tag == "rocket")
+        {
+            BlowUpPersuer();
+            other.GetComponent<RocketController>().BlowUpRocket();
+        }
+        if (other.tag == "persuer")
+        {
+            BlowUpPersuer();
+        }
+
+        lvlManager.ResetArrays();
     }
 }

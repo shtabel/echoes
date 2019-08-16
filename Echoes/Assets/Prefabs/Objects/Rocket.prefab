@@ -93,10 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4991197745ba5854eb40fa389e15145f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startChasing: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  rb: {fileID: 0}
   thrust: 2
-  divInertia: 15
-  targetPos: {x: 0, y: 0, z: 0}
-  isActivate: 0
+  divInertia: 5
   activateDistance: 1.4
   diactivateDistance: 0.2
 --- !u!54 &1115823135134464280
