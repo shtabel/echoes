@@ -365,10 +365,12 @@ MonoBehaviour:
   - 0.3
   - 0.3
   - 0.3
+  - 0.3
   rotationDegree: 120
   rayLength: 5.2
   blinkDelay:
   - 0
+  - 0.4
   - 0.4
   - 0.4
   - 0.4
@@ -384,3 +386,6 @@ MonoBehaviour:
   persuerMask:
     serializedVersion: 2
     m_Bits: 4096
+  runawayMask:
+    serializedVersion: 2
+    m_Bits: 8192

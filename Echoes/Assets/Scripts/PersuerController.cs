@@ -19,9 +19,10 @@ public class PersuerController : EnemyController
     void Start()
     {
         AssignRBs();
+        bm = FindObjectOfType<BlinkManager>();
 
         lvlManager = FindObjectOfType<LevelManager>();
-        bm = FindObjectOfType<BlinkManager>();
+        
     }
 
     // Update is called once per frame

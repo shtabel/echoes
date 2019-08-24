@@ -9,6 +9,7 @@ TagManager:
   - end
   - rocket
   - persuer
+  - runaway
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - rocket
   - player
   - persuer
-  - 
+  - runaway
   - 
   - 
   - 

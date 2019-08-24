@@ -21,8 +21,13 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         AssignRBs();
-
+        rb = GetComponent<Rigidbody>();
         bm = FindObjectOfType<BlinkManager>();
+    }
+
+    public void SetKinematic(bool isKinematic)
+    {
+        rb.isKinematic = isKinematic;
     }
 
     public void AssignRBs()
