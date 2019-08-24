@@ -25,9 +25,12 @@ public class MenuManager : MonoBehaviour
     // PRIVATE INIT
     string levelToLoad;
     PlayerController thePlayer;
+    Vector3 playersVelocity;
 
     EnemyController[] enemies;
+    Vector3[] enemiesVelocity;
     
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,7 @@ public class MenuManager : MonoBehaviour
         thePlayer = FindObjectOfType<PlayerController>();
 
         enemies = FindObjectsOfType<EnemyController>();
+        enemiesVelocity = new Vector3[enemies.Length];
 
         if (curLevel == "lvl1")
         {
@@ -134,13 +138,45 @@ public class MenuManager : MonoBehaviour
 
     void SetKinObjects(bool isKinematic)
     {
-        thePlayer.GetComponent<Rigidbody>().isKinematic = isKinematic;
+        if (isKinematic)
+        {
+            playersVelocity = thePlayer.rb.velocity;
+            thePlayer.GetComponent<Rigidbody>().isKinematic = isKinematic;
+        }
+        else
+        {
+            thePlayer.GetComponent<Rigidbody>().isKinematic = isKinematic;
+            thePlayer.rb.AddForce(playersVelocity, ForceMode.VelocityChange);
+        }
+        
 
         if (enemies != null)
         {
-            foreach (EnemyController e in enemies)
+            if (isKinematic) // поставили на паузу
             {
-                e.SetKinematic(isKinematic);
+                int counter = 0;
+                foreach (EnemyController e in enemies)
+                {
+                    // сохранить скорость
+                    enemiesVelocity[counter] = e.rb.velocity;
+                    counter++;
+
+                    // сделать кинематик
+                    e.SetKinematic(isKinematic);
+                }
+            }
+            else
+            {
+                int counter = 0;
+                foreach (EnemyController e in enemies)
+                {
+                    // сделать НЕ кинематик
+                    e.SetKinematic(isKinematic);
+
+                    // добавить силу
+                    e.rb.AddForce(enemiesVelocity[counter], ForceMode.VelocityChange);
+                    counter++;
+                }
             }
         }
     }

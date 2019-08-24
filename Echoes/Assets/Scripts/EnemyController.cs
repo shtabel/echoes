@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     GameObject blinkType;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         AssignRBs();
         rb = GetComponent<Rigidbody>();

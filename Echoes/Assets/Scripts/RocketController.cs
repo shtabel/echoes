@@ -18,10 +18,12 @@ public class RocketController : EnemyController
 
     void Start()
     {
+        base.Start();
+
         lvlManager = FindObjectOfType<LevelManager>();
-        bm = FindObjectOfType<BlinkManager>();
         
-        AssignRBs();
+        //bm = FindObjectOfType<BlinkManager>();        
+        //AssignRBs();
     }
     
     public void BeginChasing(Vector3 targetPos)

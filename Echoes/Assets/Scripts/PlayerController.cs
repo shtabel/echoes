@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float thrust;                // приложенная сила  
 
     //public GameObject radarRay;
+    public Rigidbody rb;
 
     // PRIVATE INIT
     bool isRadarOn;
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
     
-    Rigidbody rb;
+    
     LevelManager lvlManager;
     MenuManager menuManager;
     BlinkManager blinkManager;
