@@ -59,7 +59,7 @@ public class MenuManager : MonoBehaviour
         if (!isPaused)
         {
             isPaused = true;
-            SetKinEnemies(true);
+            SetKinObjects(true);
 
             Time.timeScale = 0f;
 
@@ -86,7 +86,7 @@ public class MenuManager : MonoBehaviour
         infoMenu.SetActive(false);
         Time.timeScale = 1f;
 
-        SetKinEnemies(false);
+        SetKinObjects(false);
 
         thePlayer.MakeVisible(true);
     }
@@ -107,7 +107,7 @@ public class MenuManager : MonoBehaviour
             thePlayer.MakeVisible(false);
 
             isPaused = true;
-            SetKinEnemies(true);
+            SetKinObjects(true);
 
             pauseMenu.SetActive(true);
             Time.timeScale = 0f;
@@ -132,8 +132,10 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(levelToLoad);
     }
 
-    void SetKinEnemies(bool isKinematic)
+    void SetKinObjects(bool isKinematic)
     {
+        thePlayer.GetComponent<Rigidbody>().isKinematic = isKinematic;
+
         if (enemies != null)
         {
             foreach (EnemyController e in enemies)
