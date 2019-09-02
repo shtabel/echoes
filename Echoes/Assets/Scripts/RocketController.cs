@@ -14,15 +14,15 @@ public class RocketController : EnemyController
 
     // PRIVATE INIT   
     LevelManager lvlManager;
-    BlinkManager bm;  
+    new BlinkManager bm;  
 
-    void Start()
+    new void Start()
     {
         base.Start();
 
         lvlManager = FindObjectOfType<LevelManager>();
         
-        //bm = FindObjectOfType<BlinkManager>();        
+        bm = FindObjectOfType<BlinkManager>();        
         //AssignRBs();
     }
     

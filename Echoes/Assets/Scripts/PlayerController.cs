@@ -154,10 +154,15 @@ public class PlayerController : MonoBehaviour
     void DestroyPlayer()
     {
         audioManager.Play("explosion");
+        
+        // deactivate marker
+        EndMarkScript endMark = FindObjectOfType<EndMarkScript>();
+        endMark.SetMarker(false, true);
 
         blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
         MakeVisible(false);     
         menuManager.PlayerDead();
+
     }
 
     public void MakeVisible(bool isVisible)
