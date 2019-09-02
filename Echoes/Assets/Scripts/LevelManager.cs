@@ -76,12 +76,14 @@ public class LevelManager : MonoBehaviour
 
     void HandleInput()
     {
+#if (UNITY_EDITOR)
+
         // make obstacles visible/invisible
         if (Input.GetKeyDown(KeyCode.V))
         {
             VisibleObjects(!objectsVisible);
             //Debug.Log("V is pressed");
         }
-
+#endif
     }
 }

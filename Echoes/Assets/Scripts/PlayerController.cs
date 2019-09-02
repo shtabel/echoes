@@ -68,17 +68,20 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(force);
             //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
+#if (UNITY_EDITOR)
         else if (Input.GetMouseButtonDown(1) && dst < radarRadius)
         {
             transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z);            
         }
+#endif
         // if player controlles with keyboard - move according to keuboard
         else if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             float inputX = Input.GetAxisRaw("Horizontal");
             float inputY = Input.GetAxisRaw("Vertical");
             Vector3 force = new Vector3(inputX, inputY, 0f);
-            rb.AddForce(force * thrust);
+
+            rb.AddForce(Vector3.ClampMagnitude(force, 1) * thrust);
         }
         
     }
@@ -103,6 +106,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // проверка трясущейся камеры: слабое и сильное трясение
+#if (UNITY_EDITOR)
+
         if (Input.GetKeyDown(KeyCode.Z))    
         {
             camShake.SmallShake();
@@ -111,6 +116,7 @@ public class PlayerController : MonoBehaviour
         {
             camShake.Shake();
         }
+#endif
     }
 
     void OnCollisionEnter(Collision collision)
