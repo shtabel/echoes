@@ -119,7 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc1e55ee6f2e0ba4d8dd35c9716de2e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startChasing: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  bm: {fileID: 0}
   rb: {fileID: 0}
+  blinkGap: 1
 --- !u!54 &2834391170712004699
 Rigidbody:
   m_ObjectHideFlags: 0

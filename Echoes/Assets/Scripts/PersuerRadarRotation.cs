@@ -14,7 +14,7 @@ public class PersuerRadarRotation : MonoBehaviour
     public LayerMask obstacleMask;
 
     // PRIVATE INIT
-    float blinkDelay;
+    float blinkDelay = 0.4f;
     float nextTimeBlink;
 
     BlinkManager bm;
@@ -25,8 +25,6 @@ public class PersuerRadarRotation : MonoBehaviour
         bm = FindObjectOfType<BlinkManager>();
 
         nextTimeBlink = Time.time;
-
-        blinkDelay = FindObjectOfType<Rotate>().blinkDelay[3];
     }
 
     // Update is called once per frame
@@ -54,7 +52,7 @@ public class PersuerRadarRotation : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask))
             {
-                bm.CreateBlink(bm.circleBlue, transform.position);
+                bm.CreateBlink(bm.circleRed, transform.position);
                 bm.CreateBlink(bm.detectionBlink, hitInfo.transform.position);
 
                 persuer.ChaseToPosition(hitInfo.transform.position);

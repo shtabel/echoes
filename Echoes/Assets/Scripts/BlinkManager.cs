@@ -24,7 +24,7 @@ public class BlinkManager : MonoBehaviour
     public GameObject mineBlown;        // взорванная мина
     public GameObject rocketBlown;      // взорванная ракета
     public GameObject circleBlown;      // взорванный игрок
-    public GameObject circleBlue;
+    public GameObject circleRed;
     public GameObject circlePink;
 
 
@@ -53,7 +53,7 @@ public class BlinkManager : MonoBehaviour
         // create pool of blown rockets
         PoolManager.instance.CreatePool(circleBlown, poolOfCircleBlown);
         // create pool of persuers
-        PoolManager.instance.CreatePool(circleBlue, poolOfPersuers);
+        PoolManager.instance.CreatePool(circleRed, poolOfPersuers);
         // create pool of runaways
         PoolManager.instance.CreatePool(circlePink, poolOfRunaways);
 

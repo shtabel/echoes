@@ -460,20 +460,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d74bccb942a72c548a423d1c7aaa1b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceBetweenBlinks:
-  - 0.35
-  - 0.3
-  - 0.3
-  - 0.3
-  - 0.3
+  distanceBetweenBlinks: 0.3
   rotationDegree: 120
   rayLength: 5.2
-  blinkDelay:
-  - 0
-  - 0.4
-  - 0.4
-  - 0.4
-  - 0.4
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256

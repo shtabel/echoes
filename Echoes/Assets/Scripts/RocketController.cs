@@ -14,7 +14,7 @@ public class RocketController : EnemyController
 
     // PRIVATE INIT   
     LevelManager lvlManager;
-    new BlinkManager bm;  
+    new BlinkManager blinkManager;  
 
     new void Start()
     {
@@ -22,7 +22,7 @@ public class RocketController : EnemyController
 
         lvlManager = FindObjectOfType<LevelManager>();
         
-        bm = FindObjectOfType<BlinkManager>();        
+        blinkManager = FindObjectOfType<BlinkManager>();        
         //AssignRBs();
     }
     
@@ -63,7 +63,7 @@ public class RocketController : EnemyController
     public void BlowUpRocket()
     {
         // сначала отображаем взрыв
-        bm.CreateBlink(bm.rocketBlown, transform.position);
+        blinkManager.CreateBlink(blinkManager.rocketBlown, transform.position);
         
         // потом уничтожаем саму ракету
         Destroy(gameObject);
@@ -72,7 +72,7 @@ public class RocketController : EnemyController
     void BlowUpMine(GameObject m)
     {       
         // сначала отображаем взрыв
-        bm.CreateBlink(bm.mineBlown, m.transform.position);
+        blinkManager.CreateBlink(blinkManager.mineBlown, m.transform.position);
 
         // потом уничтожаем саму мину
         Destroy(m);

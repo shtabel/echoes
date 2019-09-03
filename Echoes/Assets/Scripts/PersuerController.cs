@@ -12,14 +12,15 @@ public class PersuerController : EnemyController
 
     // PRIVATE INIT
     LevelManager lvlManager;
-    BlinkManager bm;
-    
+    new BlinkManager blinkManager;
+
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        AssignRBs();
-        bm = FindObjectOfType<BlinkManager>();
+        base.Start();
+        
+        blinkManager = FindObjectOfType<BlinkManager>();
 
         lvlManager = FindObjectOfType<LevelManager>();
         
@@ -61,7 +62,7 @@ public class PersuerController : EnemyController
     public void BlowUpPersuer()
     {
         // сначала отображаем взрыв
-        bm.CreateBlink(bm.circleBlown, transform.position);
+        blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
 
         // потом уничтожаем саму ракету
         Destroy(transform.parent.gameObject);
@@ -70,7 +71,7 @@ public class PersuerController : EnemyController
     void BlowUpMine(GameObject m)
     {
         // сначала отображаем взрыв
-        bm.CreateBlink(bm.mineBlown, m.transform.position);
+        blinkManager.CreateBlink(blinkManager.mineBlown, m.transform.position);
 
         // потом уничтожаем саму мину
         Destroy(m);

@@ -14,6 +14,11 @@ public class EnemyController : MonoBehaviour
     public static List<Rigidbody> EnemyRBs;
 
     // PRIVATE INIT
+    float blinkGap = 1;
+    float nextTimeBlink;
+
+    float detectBlinkDelay = 0.4f;
+    float nextTimeDetectBlink;
 
     GameObject blinkType;
 
@@ -23,6 +28,31 @@ public class EnemyController : MonoBehaviour
         AssignRBs();
         rb = GetComponent<Rigidbody>();
         bm = FindObjectOfType<BlinkManager>();
+    }
+
+    public void CreateBlink(string tag)
+    {
+        if (nextTimeBlink < Time.time)
+        {
+            switch (tag)
+            {
+                case "mine":
+                    bm.CreateBlink(bm.mine, transform.position);
+                    break;
+                case "rocket":
+                    bm.CreateBlink(bm.rocket, transform.position);
+                    break;
+                case "persuer":
+                    bm.CreateBlink(bm.circleRed, transform.position);
+                    break;
+                case "runaway":
+                    bm.CreateBlink(bm.circlePink, transform.position);
+                    break;
+            }
+
+            nextTimeBlink = Time.time + blinkGap;
+        }
+        
     }
 
     public void SetKinematic(bool isKinematic)
@@ -52,6 +82,12 @@ public class EnemyController : MonoBehaviour
     {
         startChasing = true;
         targetPosition = positionToChase;
+
+        if (nextTimeDetectBlink < Time.time)
+        {
+            bm.CreateBlink(bm.detectionBlink, positionToChase);
+            nextTimeDetectBlink = Time.time + detectBlinkDelay;
+        }
     }
 
     public void BlowUpMine()

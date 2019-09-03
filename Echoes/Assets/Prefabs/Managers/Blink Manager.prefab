@@ -63,7 +63,7 @@ MonoBehaviour:
     type: 3}
   circleBlown: {fileID: 8236053586143307911, guid: 5836021553491254e8c9b18d4a5c4905,
     type: 3}
-  circleBlue: {fileID: 8236053586143307911, guid: 7dcb75698e82dc7418dbb23bbe69770a,
+  circleRed: {fileID: 8236053586143307911, guid: 7dcb75698e82dc7418dbb23bbe69770a,
     type: 3}
   circlePink: {fileID: 8236053586143307911, guid: 4edf347702af8f5478a32e85e079d34b,
     type: 3}
