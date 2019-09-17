@@ -98,11 +98,26 @@ public class Rotate : MonoBehaviour
             {
                 // создаем блинк 
                 bm.CreateBlink(bm.blink, hitInfo.point);
-
+                
                 lastBlinkPosition = hitInfo.point;
             }
            
         }
+    }
+
+    void ShowInfo(string tag)
+    {
+        //  отображаем информацию про мины если второй уровень
+        if (!mm.infoDisplayed && mm.curLevel == "lvl2" && tag == "mine")
+        {
+            mm.DisplayInfoCor();
+        }
+        //  отображаем информацию про ракеты если 3 уровень
+        else if (!mm.infoDisplayed && mm.curLevel == "lvl3" && tag == "rocket")
+        {
+            mm.DisplayInfoCor();
+        }
+
     }
 
     void HandleBlinks(Vector3 vector, LayerMask layerMask, TypeOfBlink blinkType, bool detection)
@@ -132,6 +147,8 @@ public class Rotate : MonoBehaviour
                 }
                 // создаем блинк
                 hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink(tag);
+
+                ShowInfo(tag);
 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
                 if (detection)
