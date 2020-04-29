@@ -63,5 +63,10 @@ public class BlinkManager : MonoBehaviour
     {
         PoolManager.instance.ReuseObject(blinkType, position, Quaternion.Euler(0, 0, 0));
     }
-    
+
+    public void CreateBlinkFollow(GameObject blinkType, Vector3 position, GameObject tempParent)
+    {
+        PoolManager.instance.ReuseObjectFollow(blinkType, position, Quaternion.Euler(0, 0, 0), tempParent);
+    }
+
 }

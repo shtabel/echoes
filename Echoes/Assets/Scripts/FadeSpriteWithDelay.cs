@@ -29,6 +29,12 @@ public class FadeSpriteWithDelay : PoolObject
         //Fade(false, lifeTime);
     }
 
+    void LateUpdate()
+    {
+        transform.rotation = Quaternion.identity;
+
+    }
+
     public override void OnObjectReuse()
     {
         rend.enabled = true;
@@ -86,6 +92,8 @@ public class FadeSpriteWithDelay : PoolObject
         {
             //Disable Mesh Renderer
             rend.enabled = false;
+
+            transform.parent = null;
         }
         fading = false; //So that we can call this function next time
     }

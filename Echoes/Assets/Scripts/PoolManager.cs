@@ -50,8 +50,21 @@ public class PoolManager : MonoBehaviour
         {
             ObjectInstance objectToReuse = poolDictionary[poolKey].Dequeue();
             poolDictionary[poolKey].Enqueue(objectToReuse);
-             
+
             objectToReuse.Reuse(position, rotation);
+        }
+    }
+
+    public void ReuseObjectFollow(GameObject prefab, Vector3 position, Quaternion rotation, GameObject tempParent)
+    {
+        int poolKey = prefab.GetInstanceID();
+
+        if (poolDictionary.ContainsKey(poolKey))
+        {
+            ObjectInstance objectToReuse = poolDictionary[poolKey].Dequeue();
+            poolDictionary[poolKey].Enqueue(objectToReuse);
+             
+            objectToReuse.ReuseFollow(position, rotation, tempParent);
         }
     }
 
@@ -84,9 +97,37 @@ public class PoolManager : MonoBehaviour
                 poolObjectScript.OnObjectReuse();
             }
 
-            gameObject.SetActive(true);
+            gameObject.SetActive(true);           
+
             transform.position = position;
             transform.rotation = rotation;
+
+            // делаем объект обратно непрозрачным
+            MeshRenderer rend = gameObject.GetComponent<MeshRenderer>();
+            if (rend != null)
+            {
+                rend.enabled = true;
+                Color meshColor = rend.material.color;
+                rend.material.color = new Color(meshColor.r, meshColor.g, meshColor.b, 1);
+            }
+
+        }
+
+        public void ReuseFollow(Vector3 position, Quaternion rotation, GameObject tempParent)
+        {
+            if (hasPoolObjectComponent)
+            {
+                poolObjectScript.OnObjectReuse();
+            }
+
+            gameObject.SetActive(true);
+
+            Quaternion initRot = Quaternion.identity;
+
+            gameObject.transform.parent = tempParent.transform;
+
+            transform.position = tempParent.transform.position;
+            transform.rotation = initRot;
 
             // делаем объект обратно непрозрачным
             MeshRenderer rend = gameObject.GetComponent<MeshRenderer>();

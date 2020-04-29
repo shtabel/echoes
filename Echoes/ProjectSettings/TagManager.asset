@@ -50,3 +50,6 @@ TagManager:
   - name: UI
     uniqueID: 916075483
     locked: 0
+  - name: trail
+    uniqueID: 505618667
+    locked: 0

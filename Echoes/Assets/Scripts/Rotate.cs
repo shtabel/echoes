@@ -122,14 +122,19 @@ public class Rotate : MonoBehaviour
 
     void HandleBlinks(Vector3 vector, LayerMask layerMask, TypeOfBlink blinkType, bool detection)
     {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, layerMask))
+        RaycastHit[] hitInfo;
+
+        hitInfo = Physics.RaycastAll(transform.position, vector, rayLength, layerMask);
+
+        for (int i = 0; i < hitInfo.Length; i++)
         {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+            RaycastHit hit = hitInfo[i];
+
+            float dstToTarget = Vector3.Distance(transform.position, hit.point);
             if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
             {
                 string tag = "";
-                
+
                 switch (blinkType)
                 {
                     case TypeOfBlink.mine:
@@ -146,7 +151,7 @@ public class Rotate : MonoBehaviour
                         break;
                 }
                 // создаем блинк
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink(tag);
+                hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink(tag);
 
                 ShowInfo(tag);
 
@@ -154,11 +159,11 @@ public class Rotate : MonoBehaviour
                 if (detection)
                 {
                     Vector3 targetPosition = transform.position;
-                    hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
+                    hit.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
                 }
             }
         }
-    }
+    }    
 
     void HandleMineBlink(Vector3 vector)
     {

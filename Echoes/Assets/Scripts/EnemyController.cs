@@ -40,7 +40,7 @@ public class EnemyController : MonoBehaviour
                     bm.CreateBlink(bm.mine, transform.position);
                     break;
                 case "rocket":
-                    bm.CreateBlink(bm.rocket, transform.position);
+                    bm.CreateBlinkFollow(bm.rocket, transform.position, gameObject);
                     break;
                 case "persuer":
                     bm.CreateBlink(bm.circleRed, transform.position);
