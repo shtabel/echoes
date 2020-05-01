@@ -7,30 +7,34 @@ public class PlayerController : MonoBehaviour
     // PUBLIC INIT
     public float thrust;                // приложенная сила  
 
-    //public GameObject radarRay;
     public Rigidbody rb;
+
 
     // PRIVATE INIT
     bool isRadarOn;
-    float radarRadius = 1.3f;
+    [SerializeField]
+    float radarRadius;
 
     GameObject radarRay;
 
     Vector3 mousePos;   // координаты мыши
     Vector3 direction;  // направление куда смотрит игрок
-    
-    
+
+    // references
+    CameraShake camShake;
+
+    // managers
     LevelManager lvlManager;
     MenuManager menuManager;
     BlinkManager blinkManager;
     AudioManager audioManager;
-    CameraShake camShake;
+    
 
     void Start()
     {
         isRadarOn = true;
 
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         var radar = FindObjectOfType<Rotate>();
         radarRay = radar.gameObject;
 
@@ -43,7 +47,7 @@ public class PlayerController : MonoBehaviour
         direction = Vector3.up;        
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // get mouse position
         mousePos = Input.mousePosition;
@@ -60,6 +64,7 @@ public class PlayerController : MonoBehaviour
     {
         // считаем расстояние от камеры до игрока, чтоб перемещаться только если курсор внутри ИКО
         float dst = Vector3.Distance(mousePos, transform.position) - Mathf.Abs(Camera.main.transform.position.z);
+        //Debug.Log("dst to click: " + dst);
 
         // if player controlles with mouse - move towards mouse
         if (Input.GetMouseButton(1) && dst < radarRadius)
@@ -71,7 +76,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButton(0) && dst < radarRadius)
         {
             Vector3 force = transform.up * thrust;
-            rb.AddForce(force);
+            rb.AddForce(force) ;
             //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
 #if (UNITY_EDITOR)
@@ -169,7 +174,12 @@ public class PlayerController : MonoBehaviour
         
         // deactivate marker
         EndMarkScript endMark = FindObjectOfType<EndMarkScript>();
-        endMark.SetMarker(false, true);
+
+        if (endMark != null)
+        {
+            endMark.SetMarker(false, true);
+        }
+        
 
         blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
         MakeVisible(false);     

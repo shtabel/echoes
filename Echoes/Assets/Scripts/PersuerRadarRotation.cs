@@ -52,7 +52,7 @@ public class PersuerRadarRotation : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask))
             {
-                bm.CreateBlink(bm.circleRed, transform.position);
+                bm.CreateBlinkFollow(bm.circleRed, transform.position, gameObject);
                 bm.CreateBlink(bm.detectionBlink, hitInfo.transform.position);
 
                 persuer.ChaseToPosition(hitInfo.transform.position);

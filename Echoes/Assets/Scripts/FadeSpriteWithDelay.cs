@@ -93,7 +93,11 @@ public class FadeSpriteWithDelay : PoolObject
             //Disable Mesh Renderer
             rend.enabled = false;
 
-            transform.parent = null;
+            if (tag != "blink_green") // if it is not green blink
+            {
+                transform.parent = null;
+            }
+            
         }
         fading = false; //So that we can call this function next time
     }

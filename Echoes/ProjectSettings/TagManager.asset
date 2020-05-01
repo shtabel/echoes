@@ -10,6 +10,7 @@ TagManager:
   - rocket
   - persuer
   - runaway
+  - blink_green
   layers:
   - Default
   - TransparentFX

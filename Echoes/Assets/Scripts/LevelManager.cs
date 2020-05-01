@@ -14,15 +14,20 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrPersuers;   // массив преследователей
     GameObject[] arrRunaways;   // массив беш=глецов
 
+    [SerializeField]
+    GameObject radarForeground;
+    [SerializeField]
+    GameObject radarLayout;
 
     bool objectsVisible;        // видно/не видно объекты
-
+    bool radarVisible = true;   // видно/не видно перед радара
 
     // Start is called before the first frame update
     void Start()
     {
         VisibleObjects(false);
-        
+        VisibleRadar(radarVisible);
+        radarLayout.SetActive(false);
     }
 
     // Update is called once per frame
@@ -66,6 +71,12 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    void VisibleRadar(bool isVisible)
+    {
+        radarForeground.SetActive(isVisible);
+        radarVisible = isVisible;
+    }
+
     void SetVisible(GameObject[] array)
     {
         foreach (GameObject obj in array)
@@ -83,6 +94,12 @@ public class LevelManager : MonoBehaviour
         {
             VisibleObjects(!objectsVisible);
             //Debug.Log("V is pressed");
+        }
+
+        // make obstacles visible/invisible
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            VisibleRadar(!radarVisible);
         }
 #endif
     }
