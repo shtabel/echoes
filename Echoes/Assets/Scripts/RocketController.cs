@@ -82,7 +82,7 @@ public class RocketController : EnemyController
     {
         if (other.tag == "obstacle")
         {
-            BlowUpRocket();
+            //BlowUpRocket();
         }
         else if (other.tag == "mine")
         {
