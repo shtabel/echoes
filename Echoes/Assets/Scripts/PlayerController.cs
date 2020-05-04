@@ -149,27 +149,28 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "mine")
         {
             other.gameObject.GetComponent<EnemyController>().BlowUpMine();
-            camShake.Shake();
+            
             DestroyPlayer();
         }
         if (other.tag == "rocket")
         {
             other.gameObject.GetComponent<RocketController>().BlowUpRocket();
-            camShake.Shake();
+            
             DestroyPlayer();
         }
         if (other.tag == "persuer")
         {
             other.gameObject.GetComponent<PersuerController>().BlowUpPersuer();
-            camShake.Shake();
+            
             DestroyPlayer();
         }
 
         lvlManager.ResetArrays();
     }
 
-    void DestroyPlayer()
+    public void DestroyPlayer()
     {
+        camShake.Shake();
         audioManager.Play("explosion");
         
         // deactivate marker

@@ -13,12 +13,16 @@ public class Rotate : MonoBehaviour
     [Range(0f, 360f)]
     public float rotationDegree;    // величина в градусах на которую вращается радар
     public float rayLength;         // длина луча
-    
+    public float rayWidth;          // width of the ray
+
     public LayerMask obstacleMask;  // маска преград
     public LayerMask mineMask;      // маска мин
     public LayerMask rocketMask;      // маска ракет
     public LayerMask persuerMask;   // маска преследователя
     public LayerMask runawayMask;   // маска беглеца
+
+    Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
+    LineRenderer rayLineRenderer;
 
     // private init
     enum TypeOfBlink {mine, rocket, persuer, runaway};
@@ -37,32 +41,56 @@ public class Rotate : MonoBehaviour
     {
         mm = FindObjectOfType<MenuManager>();
         bm = FindObjectOfType<BlinkManager>();
+
+        // setting the line renderer
+        rayLineRenderer = GetComponent<LineRenderer>();
+        Vector3[] initRayPositions = new Vector3[2] { Vector3.zero, Vector3.zero };
+        rayLineRenderer.SetPositions(initRayPositions);
+        rayLineRenderer.SetWidth(rayWidth, rayWidth);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))    // change rotation direction
-        {
-            rotationDegree = rotationDegree * -1;
-        }
+        //if (Input.GetKeyDown(KeyCode.R))    // change rotation direction
+        //{
+        //    rotationDegree = rotationDegree * -1;
+        //}
 
         // rotate ray
         transform.Rotate(0.0f, 0.0f, -rotationDegree * Time.deltaTime);
 
-        Raycast();  // cast ray       
+        // crate vector that we will allign our ray to
+        Vector3 upVec = transform.TransformDirection(Vector3.up);
+        endCoord = HandleObstacleBlink(upVec);
+        DetectObjects(upVec);  // cast ray    
+
+        // draw the ray
+        DrawRay(endCoord, transform.position + upVec * rayLength);
     }
 
-    public void Raycast()
+    void DrawRay(Vector3 endCoord1, Vector3 endCoord2)
     {
-        Vector3 upVec = transform.TransformDirection(Vector3.up);
+        // draw the ray
+        rayLineRenderer.SetPosition(0, transform.position); // start coordinates
+        //if (endCoord != Vector3.zero)
+        //{
+        //    rayLineRenderer.SetPosition(1, endCoord1);       // end obstacle hit coords
+        //}
+        //else
+            rayLineRenderer.SetPosition(1, endCoord2); // end of the ray coords
+    }   
+
+    public void DetectObjects(Vector3 vec)
+    {
+        //Vector3 upVec = transform.TransformDirection(Vector3.up);
 
         // draw ray in scene window
-        Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
+        //Debug.DrawRay(transform.position, upVec * rayLength, Color.green);
 
         // if hit obstacle
-        HandleObstacleBlink(upVec);
-        // это можно использовать если использую additional blinks и blink spacing между ними
+        //HandleObstacleBlink(upVec);
+        //// это можно использовать если использую additional blinks и blink spacing между ними
         //Vector3 vec = upVec;// = Quaternion.AngleAxis(blinksSpacing, Vector3.forward) * upVec;        
         //for (int i = 0; i <= additionBlinks; i++)
         //{
@@ -73,22 +101,22 @@ public class Rotate : MonoBehaviour
 
         // if hit mine
         //HandleMineBlink(upVec);
-        HandleBlinks(upVec, mineMask, TypeOfBlink.mine, false);
+        HandleBlinks(vec, mineMask, TypeOfBlink.mine, false);
 
         // if hit rocket
         //HandleRocketBlink(upVec);
-        HandleBlinks(upVec, rocketMask, TypeOfBlink.rocket, true);
+        HandleBlinks(vec, rocketMask, TypeOfBlink.rocket, true);
 
         // if hit persuer
         //HandlePersuerBlink(upVec);
-        HandleBlinks(upVec, persuerMask, TypeOfBlink.persuer, true);
+        HandleBlinks(vec, persuerMask, TypeOfBlink.persuer, true);
 
         // if hit runaway
-        HandleBlinks(upVec, runawayMask, TypeOfBlink.runaway, true);
+        HandleBlinks(vec, runawayMask, TypeOfBlink.runaway, true);
         //HandleRunawayBlink(upVec);
     }
 
-    void HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
+    Vector3 HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
     {
         RaycastHit hitInfo;
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
@@ -101,8 +129,15 @@ public class Rotate : MonoBehaviour
                 
                 lastBlinkPosition = hitInfo.point;
             }
-           
+
+            // if we hited obstacle - return hit's coordinates
+            if (hitInfo.point != null)
+            {
+                return hitInfo.point;
+            }
         }
+
+        return Vector3.zero;
     }
 
     void ShowInfo(string tag)
@@ -163,115 +198,5 @@ public class Rotate : MonoBehaviour
                 }
             }
         }
-    }    
-
-    void HandleMineBlink(Vector3 vector)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, mineMask))
-        {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-            //float dstToLastMineBlink = Vector3.Distance(lastMinePosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))// && ((dstToLastMineBlink >= distanceBetweenBlinks[1]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
-            {
-                // создаем блинк мины
-                //bm.CreateBlink(bm.mine, hitInfo.transform.position);
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink("mine");
-
-                //  отображаем информацию про мины
-                if (!mm.infoDisplayed && mm.curLevel == "lvl2")
-                {
-                    mm.DisplayInfoCor();
-                }
-
-                //lastMinePosition = hitInfo.transform.position;
-                //return timeToBlink = Time.time + bDelay;
-            }
-        }
-        //return timeToBlink;
-    }
-
-    void HandleRocketBlink(Vector3 vector)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, rocketMask))
-        {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-            float dstToLastRocketBlink = Vector3.Distance(lastRocketPosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))// && ((dstToLastRocketBlink >= distanceBetweenBlinks[2]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
-            {
-                // создаем блинк ракеты
-                // bm.CreateBlink(bm.rocket, hitInfo.transform.position);
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink("rocket");
-
-
-                //  отображаем информацию про ракеты
-                if (!mm.infoDisplayed && mm.curLevel == "lvl3")
-                {
-                    mm.DisplayInfoCor();
-                }
-
-                lastRocketPosition = hitInfo.transform.position;
-                
-                // активируем ракету и передаем ей позицию игрока во время детектирования
-                Vector3 targetPosition = transform.position;
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
-
-                // используем детекционный блинк, чтобы игрок видел куда направляется ракета
-                bm.CreateBlink(bm.detectionBlink, targetPosition);
-            }
-        }
-    }
-
-    void HandlePersuerBlink(Vector3 vector)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, persuerMask))
-        {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-            float dstToLastPersuerBlink = Vector3.Distance(lastPersuerPosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))// && ((dstToLastPersuerBlink >= distanceBetweenBlinks[3]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
-            {
-                // создаем блинк ракеты
-                //bm.CreateBlink(bm.circleRed, hitInfo.transform.position);
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink("persuer");
-
-                lastPersuerPosition = hitInfo.transform.position;
-
-                // активируем ракету и передаем ей позицию игрока во время детектирования
-                Vector3 targetPosition = transform.position;
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
-
-                // используем детекционный блинк, чтобы игрок видел куда направляется ракета
-                bm.CreateBlink(bm.detectionBlink, targetPosition);
-            }
-        }
-    }
-      
-    void HandleRunawayBlink(Vector3 vector)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, runawayMask))
-        {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-            float dstToLastRunawayBlink = Vector3.Distance(lastRunawayPosition, hitInfo.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))// && ((dstToLastRunawayBlink >= distanceBetweenBlinks[4]) || (Time.time > timeToBlink))) // если препятствие не перекрывает
-            {
-                // создаем блинк ракеты
-                //bm.CreateBlink(bm.circlePink, hitInfo.transform.position);
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink("runaway");
-
-
-                lastRunawayPosition = hitInfo.transform.position;
-
-                // активируем ракету и передаем ей позицию игрока во время детектирования
-                Vector3 targetPosition = transform.position;
-
-                //hitInfo.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);
-
-                // используем детекционный блинк, чтобы игрок видел куда направляется ракета
-                //bm.CreateBlink(bm.detectionBlink, targetPosition);
-            }
-        }
-    }
+    }        
 }
