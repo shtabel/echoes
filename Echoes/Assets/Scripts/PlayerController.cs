@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     MenuManager menuManager;
     BlinkManager blinkManager;
     AudioManager audioManager;
+    TimerManager timerManager;
     
 
     void Start()
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
         menuManager = FindObjectOfType<MenuManager>();
         blinkManager = FindObjectOfType<BlinkManager>();
         audioManager = FindObjectOfType<AudioManager>();
+        timerManager = FindObjectOfType<TimerManager>();
 
         direction = Vector3.up;        
     }
@@ -127,6 +129,10 @@ public class PlayerController : MonoBehaviour
         {
             camShake.Shake();
         }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            timerManager.StartTimer();
+        }
 #endif
     }
 
@@ -171,6 +177,8 @@ public class PlayerController : MonoBehaviour
     public void DestroyPlayer()
     {
         camShake.Shake();
+        timerManager.StopTimer();
+
         audioManager.Play("explosion");
         
         // deactivate marker

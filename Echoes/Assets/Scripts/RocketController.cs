@@ -14,7 +14,8 @@ public class RocketController : EnemyController
 
     // PRIVATE INIT   
     LevelManager lvlManager;
-    new BlinkManager blinkManager;  
+    new BlinkManager blinkManager;
+    CameraShake camShake;
 
     new void Start()
     {
@@ -22,10 +23,13 @@ public class RocketController : EnemyController
 
         lvlManager = FindObjectOfType<LevelManager>();
         
-        blinkManager = FindObjectOfType<BlinkManager>();        
+        blinkManager = FindObjectOfType<BlinkManager>();
         //AssignRBs();
+
+        camShake = FindObjectOfType<CameraShake>();
+
     }
-    
+
     public void BeginChasing(Vector3 targetPos)
     {
         startChasing = true;
@@ -62,6 +66,8 @@ public class RocketController : EnemyController
 
     public void BlowUpRocket()
     {
+        camShake.MediumShake();
+
         // сначала отображаем взрыв
         blinkManager.CreateBlink(blinkManager.rocketBlown, transform.position);
         

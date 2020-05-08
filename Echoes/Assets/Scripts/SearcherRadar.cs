@@ -15,6 +15,8 @@ public class SearcherRadar : MonoBehaviour
     public LayerMask obstacleMask;
     public LayerMask rocketMask;
 
+    float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
+
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
       
 
@@ -87,15 +89,18 @@ public class SearcherRadar : MonoBehaviour
             {
                 // поисковик засек игрока
                 Debug.Log("Player spottet");
+                DestroySelf();
 
                 thePlayer.DestroyPlayer();
             }
         }
     }
 
-    void Destroy()
+    void DestroySelf()
     {
+        transform.parent.gameObject.SetActive(false);
 
+        bm.CreateBlink(bm.squareOrange, transform.position);
     }
 
     void RaycastRocket(Vector3 upVec)
@@ -110,11 +115,13 @@ public class SearcherRadar : MonoBehaviour
                 // поисковик засек игрока
                 Debug.Log("Rocket spottet");
 
+                DestroySelf();
+
                 hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpRocket();
             }
         }
     }
-
+    
     Vector3 RaycastObstacle(Vector3 upVec)
     {
         // draw ray in scene window
@@ -127,7 +134,7 @@ public class SearcherRadar : MonoBehaviour
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
             if (dstToLastBlink >= distanceBetweenBlinks)
             {
-                if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < 20)) 
+                if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
                 {
                     // создаем блинк 
                     bm.CreateBlink(bm.blink, hitInfo.point);

@@ -28,6 +28,13 @@ public class CameraShake : MonoBehaviour
         Invoke("StopShake", length);
     }
 
+    public void MediumShake()
+    {
+        shakeAmount = amount;
+        InvokeRepeating("DoShake", 0, 0.01f);
+        Invoke("StopShake", length / 2);
+    }
+
     public void SmallShake()
     {
         shakeAmount = amount / 2;
