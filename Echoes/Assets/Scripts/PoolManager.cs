@@ -8,6 +8,8 @@ public class PoolManager : MonoBehaviour
 
     static PoolManager _instance;
 
+    public GameObject poolHolder;
+
     public static PoolManager instance
     {
         get
@@ -25,7 +27,7 @@ public class PoolManager : MonoBehaviour
         int poolKey = prefab.GetInstanceID();
 
         // object to hold all members
-        GameObject poolHolder = new GameObject(prefab.name + " pool");
+        poolHolder = new GameObject(prefab.name + " pool");
         poolHolder.transform.parent = transform;
 
         if (!poolDictionary.ContainsKey(poolKey))

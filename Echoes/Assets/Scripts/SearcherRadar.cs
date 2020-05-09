@@ -14,11 +14,14 @@ public class SearcherRadar : MonoBehaviour
     public LayerMask playerMask;
     public LayerMask obstacleMask;
     public LayerMask rocketMask;
+    public LayerMask sunkenMask;
 
     float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
-      
+
+    [SerializeField]
+    float explosionForce;           // сила отталкивания предметов при взрыве 
 
     // PRIVATE INIT
     //float blinkDelay = 0.4f;
@@ -28,6 +31,7 @@ public class SearcherRadar : MonoBehaviour
     LineRenderer rayLineRenderer;
     BlinkManager bm;                // blink manager
     PlayerController thePlayer;
+    CameraShake camShake;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +39,7 @@ public class SearcherRadar : MonoBehaviour
         bm = FindObjectOfType<BlinkManager>();
         //nextTimeBlink = Time.time;
         thePlayer = FindObjectOfType<PlayerController>();
+        camShake = FindObjectOfType<CameraShake>();
 
         // setting the line renderer
         rayLineRenderer = GetComponent<LineRenderer>();
@@ -63,6 +68,7 @@ public class SearcherRadar : MonoBehaviour
     {
         RaycastPlayer(vector);
         RaycastRocket(vector);
+        RaycastSunken(vector);
     }
 
     void DrawRay(Vector3 endCoord1, Vector3 endCoord2)
@@ -80,7 +86,7 @@ public class SearcherRadar : MonoBehaviour
     void RaycastPlayer(Vector3 upVec)
     {
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, playerMask)) ;
+        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, playerMask))
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
             //Debug.Log("distance to player: " + dstToTarget);
@@ -98,6 +104,8 @@ public class SearcherRadar : MonoBehaviour
 
     void DestroySelf()
     {
+        CreateExplosion(rayLength);
+
         transform.parent.gameObject.SetActive(false);
 
         bm.CreateBlink(bm.squareOrange, transform.position);
@@ -106,7 +114,7 @@ public class SearcherRadar : MonoBehaviour
     void RaycastRocket(Vector3 upVec)
     {
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, rocketMask)) ;
+        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, rocketMask))
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
 
@@ -117,11 +125,51 @@ public class SearcherRadar : MonoBehaviour
 
                 DestroySelf();
 
-                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpRocket();
+                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
             }
         }
     }
-    
+
+    void RaycastSunken(Vector3 upVec)
+    {
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, sunkenMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+            {
+                // поисковик засек игрока
+                Debug.Log("Sunken spottet");             
+
+                DestroySelf();                
+            }
+        }
+    }
+
+    void CreateExplosion(float explosionRadius)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider nearbyObject in colliders)
+        {
+            Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+
+                if (rb.gameObject.GetComponent<EnemyController>() != null)
+                {
+                    bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[1], rb.transform.position, rb.gameObject);
+                }
+
+                if (Vector3.Distance(thePlayer.transform.position, transform.position) < 20)
+                {
+                    camShake.MediumShake();
+                }
+            }
+        }
+    }
+
     Vector3 RaycastObstacle(Vector3 upVec)
     {
         // draw ray in scene window

@@ -93,7 +93,7 @@ public class PersuerController : EnemyController
         else if (other.tag == "rocket")
         {
             BlowUpPersuer();
-            other.GetComponent<RocketController>().BlowUpRocket();
+            other.GetComponent<RocketController>().BlowUpEnemy();
         }
         if (other.tag == "persuer")
         {

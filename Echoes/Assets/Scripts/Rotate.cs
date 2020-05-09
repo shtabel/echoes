@@ -20,19 +20,16 @@ public class Rotate : MonoBehaviour
     public LayerMask rocketMask;      // маска ракет
     public LayerMask persuerMask;   // маска преследователя
     public LayerMask runawayMask;   // маска беглеца
+    public LayerMask sunkenMask;   // маска затопленного
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
     LineRenderer rayLineRenderer;
 
     // private init
-    enum TypeOfBlink {mine, rocket, persuer, runaway};
+    //enum TypeOfBlink {mine, rocket, persuer, runaway, sunken};
        
 
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
-    Vector3 lastMinePosition;       // хранит позицию последнего блинка мины
-    Vector3 lastRocketPosition;       // хранит позицию последнего блинка ракеты
-    Vector3 lastPersuerPosition;
-    Vector3 lastRunawayPosition;
 
     MenuManager mm;
     BlinkManager bm;            // blink manager для создания блинков
@@ -73,6 +70,7 @@ public class Rotate : MonoBehaviour
     {
         // draw the ray
         rayLineRenderer.SetPosition(0, transform.position); // start coordinates
+        
         //if (endCoord != Vector3.zero)
         //{
         //    rayLineRenderer.SetPosition(1, endCoord1);       // end obstacle hit coords
@@ -101,19 +99,22 @@ public class Rotate : MonoBehaviour
 
         // if hit mine
         //HandleMineBlink(upVec);
-        HandleBlinks(vec, mineMask, TypeOfBlink.mine, false);
+        HandleBlinks(vec, mineMask, false);
 
         // if hit rocket
         //HandleRocketBlink(upVec);
-        HandleBlinks(vec, rocketMask, TypeOfBlink.rocket, true);
+        HandleBlinks(vec, rocketMask, true);
 
         // if hit persuer
         //HandlePersuerBlink(upVec);
-        HandleBlinks(vec, persuerMask, TypeOfBlink.persuer, true);
+        HandleBlinks(vec, persuerMask, true);
 
         // if hit runaway
-        HandleBlinks(vec, runawayMask, TypeOfBlink.runaway, true);
+        HandleBlinks(vec, runawayMask, true);
         //HandleRunawayBlink(upVec);
+
+        // if hit sunken
+        HandleBlinks(vec, sunkenMask, false);
     }
 
     Vector3 HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
@@ -155,7 +156,7 @@ public class Rotate : MonoBehaviour
 
     }
 
-    void HandleBlinks(Vector3 vector, LayerMask layerMask, TypeOfBlink blinkType, bool detection)
+    void HandleBlinks(Vector3 vector, LayerMask layerMask, bool chasePlayer)
     {
         RaycastHit[] hitInfo;
 
@@ -170,28 +171,32 @@ public class Rotate : MonoBehaviour
             {
                 string tag = "";
 
-                switch (blinkType)
-                {
-                    case TypeOfBlink.mine:
-                        tag = "mine";
-                        break;
-                    case TypeOfBlink.rocket:
-                        tag = "rocket";
-                        break;
-                    case TypeOfBlink.persuer:
-                        tag = "persuer";
-                        break;
-                    case TypeOfBlink.runaway:
-                        tag = "runaway";
-                        break;
-                }
+                //switch (blinkType)
+                //{
+                //    case TypeOfBlink.mine:
+                //        tag = "mine";
+                //        break;
+                //    case TypeOfBlink.rocket:
+                //        tag = "rocket";
+                //        break;
+                //    case TypeOfBlink.persuer:
+                //        tag = "persuer";
+                //        break;
+                //    case TypeOfBlink.runaway:
+                //        tag = "runaway";
+                //        break;
+                //    case TypeOfBlink.sunken:
+                //        tag = "sunken";
+                //        break;
+                //}
+
                 // создаем блинк
-                hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink(tag);
+                hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
 
                 ShowInfo(tag);
 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
-                if (detection)
+                if (chasePlayer)
                 {
                     Vector3 targetPosition = transform.position;
                     hit.collider.gameObject.GetComponent<EnemyController>().ChaseToPosition(targetPosition);

@@ -16,6 +16,9 @@ public class FadeSpriteWithDelay : PoolObject
 
     BlinkManager blinkManager;
 
+    PoolManager poolManager;
+    GameObject initParent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,9 @@ public class FadeSpriteWithDelay : PoolObject
         spriteColor = rend.color;
         rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 0);
         //Fade(false, lifeTime);
+
+        poolManager = FindObjectOfType<PoolManager>();
+        initParent = poolManager.poolHolder;
     }
 
     void LateUpdate()
@@ -96,6 +102,7 @@ public class FadeSpriteWithDelay : PoolObject
             if (tag != "blink_green") // if it is not green blink
             {
                 transform.parent = null;
+                transform.parent = initParent.transform;
             }
             
         }

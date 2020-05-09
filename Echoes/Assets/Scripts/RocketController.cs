@@ -13,21 +13,10 @@ public class RocketController : EnemyController
     public float diactivateDistance;  // расстояние до точки, где был замечен игрок, на котором на ракету перестает действовать сила
 
     // PRIVATE INIT   
-    LevelManager lvlManager;
-    new BlinkManager blinkManager;
-    CameraShake camShake;
 
     new void Start()
     {
         base.Start();
-
-        lvlManager = FindObjectOfType<LevelManager>();
-        
-        blinkManager = FindObjectOfType<BlinkManager>();
-        //AssignRBs();
-
-        camShake = FindObjectOfType<CameraShake>();
-
     }
 
     public void BeginChasing(Vector3 targetPos)
@@ -62,27 +51,7 @@ public class RocketController : EnemyController
             }
         }
          
-    }   
-
-    public void BlowUpRocket()
-    {
-        camShake.MediumShake();
-
-        // сначала отображаем взрыв
-        blinkManager.CreateBlink(blinkManager.rocketBlown, transform.position);
-        
-        // потом уничтожаем саму ракету
-        Destroy(gameObject);
-    }
-
-    void BlowUpMine(GameObject m)
-    {       
-        // сначала отображаем взрыв
-        blinkManager.CreateBlink(blinkManager.mineBlown, m.transform.position);
-
-        // потом уничтожаем саму мину
-        Destroy(m);
-    }
+    }      
 
     void OnTriggerEnter(Collider other)
     {
@@ -92,17 +61,15 @@ public class RocketController : EnemyController
         }
         else if (other.tag == "mine")
         {
-            BlowUpRocket();
-            BlowUpMine(other.gameObject);
-
+            BlowUpEnemy();
+            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
         }
         else if (other.tag == "rocket")
         {
-            BlowUpRocket();
-
+            BlowUpEnemy();
         }
 
-        lvlManager.ResetArrays();
+        //lvlManager.ResetArrays();
     }
     
 }

@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
     BlinkManager blinkManager;
     AudioManager audioManager;
     TimerManager timerManager;
+
+    float nextTimeblink;
+    float nextTimeblinkSunken;
+    [SerializeField]
+    float blinkDelay = 0.5f;
     
 
     void Start()
@@ -46,7 +51,10 @@ public class PlayerController : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         timerManager = FindObjectOfType<TimerManager>();
 
-        direction = Vector3.up;        
+        direction = Vector3.up;
+
+        nextTimeblink = Time.time;
+        nextTimeblinkSunken = Time.time;
     }
 
     void FixedUpdate()
@@ -136,11 +144,46 @@ public class PlayerController : MonoBehaviour
 #endif
     }
 
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "obstacle")
+        if (collision.gameObject.tag == "obstacle" && (Time.time >= nextTimeblink))
         {
             camShake.SmallShake();
+            
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                blinkManager.CreateBlink(blinkManager.blink, contact.point);
+            }
+
+            nextTimeblink = Time.time + blinkDelay;
+        }
+
+        if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
+        {
+            blinkManager.CreateBlinkFollow(blinkManager.circleGray, collision.transform.position, collision.gameObject);
+            nextTimeblinkSunken = Time.time + blinkDelay;
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "obstacle" && (Time.time >= nextTimeblink))
+        {            
+            camShake.SmallShake();
+
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                blinkManager.CreateBlink(blinkManager.blink, contact.point);
+            }
+
+            nextTimeblink = Time.time + blinkDelay;
+        }
+
+        if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
+        {
+            blinkManager.CreateBlinkFollow(blinkManager.circleGray, collision.transform.position, collision.gameObject);
+            nextTimeblinkSunken = Time.time + blinkDelay;
         }
     }
 
@@ -152,21 +195,9 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Level completed!");
         }
 
-        if (other.tag == "mine")
+        if (other.tag == "mine" || other.tag == "rocket" || other.tag == "persuer")
         {
-            other.gameObject.GetComponent<EnemyController>().BlowUpMine();
-            
-            DestroyPlayer();
-        }
-        if (other.tag == "rocket")
-        {
-            other.gameObject.GetComponent<RocketController>().BlowUpRocket();
-            
-            DestroyPlayer();
-        }
-        if (other.tag == "persuer")
-        {
-            other.gameObject.GetComponent<PersuerController>().BlowUpPersuer();
+            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
             
             DestroyPlayer();
         }

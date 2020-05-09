@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrRockets;    // массив ракет
     GameObject[] arrPersuers;   // массив преследователей
     GameObject[] arrRunaways;   // массив беш=глецов
+    GameObject[] arrSunkens;   // массив беш=глецов
 
     [SerializeField]
     GameObject radarForeground;
@@ -42,6 +43,7 @@ public class LevelManager : MonoBehaviour
         arrRockets = null;
         arrPersuers = null;
         arrRunaways = null;
+        arrSunkens = null;
     }
 
     void VisibleObjects(bool makeVisible)
@@ -61,6 +63,9 @@ public class LevelManager : MonoBehaviour
         if (arrRunaways == null)
             arrRunaways = GameObject.FindGameObjectsWithTag("runaway");
 
+        if (arrSunkens == null)
+            arrSunkens = GameObject.FindGameObjectsWithTag("sunken");
+
         objectsVisible = makeVisible;
 
         SetVisible(arrObstacles);
@@ -68,7 +73,7 @@ public class LevelManager : MonoBehaviour
         SetVisible(arrRockets);
         SetVisible(arrPersuers);
         SetVisible(arrRunaways);
-
+        SetVisible(arrSunkens);
     }
 
     void VisibleRadar(bool isVisible)

@@ -20,39 +20,66 @@ public class EnemyController : MonoBehaviour
     float detectBlinkDelay = 0.4f;
     float nextTimeDetectBlink;
 
-    GameObject blinkType;
+    public GameObject[] blinkType = new GameObject[2];
+
+    [SerializeField]
+    int explosionForce;
+    LevelManager lvlManager;
+
+    CameraShake camShake;
 
     // Start is called before the first frame update
     public void Start()
     {
         AssignRBs();
         rb = GetComponent<Rigidbody>();
+
         bm = FindObjectOfType<BlinkManager>();
+        lvlManager = FindObjectOfType<LevelManager>();        
+        camShake = FindObjectOfType<CameraShake>();
+
+        blinkType = AssignIcon();
     }
 
-    public void CreateBlink(string tag)
+    GameObject[] AssignIcon()
+    {
+        GameObject[] blink = new GameObject[2];
+
+        switch (gameObject.tag)
+        {
+            case "mine":
+                blink[0] = bm.mine;
+                blink[1] = bm.mineBlown;
+                break;
+            case "rocket":
+                blink[0] = bm.rocket;
+                blink[1] = bm.rocketBlown; ;
+                break;
+            case "persuer":
+                blink[0] = bm.circleRed;
+                blink[1] = bm.circleBlown;
+                break;
+            case "runaway":
+                blink[0] = bm.circlePink;
+                blink[1] = bm.circleBlown;
+                break;
+            case "sunken":
+                blink[0] = bm.circleGray;
+                blink[1] = bm.circleGray;
+                break;                
+        }
+
+        return blink;
+    }
+
+    public void CreateBlink()
     {
         if (nextTimeBlink < Time.time)
         {
-            switch (tag)
-            {
-                case "mine":
-                    bm.CreateBlink(bm.mine, transform.position);
-                    break;
-                case "rocket":
-                    bm.CreateBlinkFollow(bm.rocket, transform.position, gameObject);
-                    break;
-                case "persuer":
-                    bm.CreateBlinkFollow(bm.circleRed, transform.position, gameObject);
-                    break;
-                case "runaway":
-                    bm.CreateBlinkFollow(bm.circlePink, transform.position, gameObject);
-                    break;
-            }
+            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
 
             nextTimeBlink = Time.time + blinkGap;
-        }
-        
+        }        
     }
 
     public void SetKinematic(bool isKinematic)
@@ -90,20 +117,52 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void BlowUpMine()
-    {
-        // извлекаем rigidbody из списка
-        EnemyRBs.Remove(rb);
-        
+    public void BlowUpEnemy()
+    {        
         // отображаем взрыв
-        bm.CreateBlink(bm.mineBlown, transform.position);
+        bm.CreateBlink(blinkType[1], transform.position);
 
-        // потом уничтожаем саму ракету
+        camShake.MediumShake();
+
+        // потом уничтожаем сам объект
         Destroy(gameObject);
+
+        lvlManager.ResetArrays();
     }
 
     private void OnDestroy()
     {
         EnemyRBs.Remove(rb);
     }
+
+    void CreateExplosion(float explosionRadius)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider nearbyObject in colliders)
+        {
+            Rigidbody rig = nearbyObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rig.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[2], rig.transform.position, rig.gameObject);
+            }
+        }
+    }
+
+    void ExplodeOther(Collider other, float explosionRadius)
+    {
+        rb.AddExplosionForce(explosionForce, other.transform.position, explosionRadius);
+        bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+        other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
+        lvlManager.ResetArrays();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (gameObject.tag == "sunken" && (other.tag == "mine" || other.tag == "rocket" || other.tag == "persuer"))
+        {
+            ExplodeOther(other, 2);
+        }  
+    }        
+    
 }

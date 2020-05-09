@@ -11,6 +11,7 @@ TagManager:
   - persuer
   - runaway
   - blink_green
+  - sunken
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - player
   - persuer
   - runaway
-  - 
+  - sunken
   - 
   - 
   - 
