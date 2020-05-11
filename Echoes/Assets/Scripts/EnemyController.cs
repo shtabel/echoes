@@ -24,9 +24,6 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     int explosionForce;
-    [SerializeField]
-    int explosionRadius;
-
     LevelManager lvlManager;
 
     CameraShake camShake;
@@ -121,10 +118,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public void BlowUpEnemy()
-    {
-        // создаем взрыв
-        CreateExplosion(explosionRadius);
-
+    {        
         // отображаем взрыв
         bm.CreateBlink(blinkType[1], transform.position);
 
@@ -141,41 +135,34 @@ public class EnemyController : MonoBehaviour
         EnemyRBs.Remove(rb);
     }
 
-    void CreateExplosion(float radiusOfExplosion)
+    void CreateExplosion(float explosionRadius)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radiusOfExplosion);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider nearbyObject in colliders)
         {
-            Rigidbody rigidBody = nearbyObject.GetComponent<Rigidbody>();
-            if (rigidBody != null && (rigidBody.tag == "sunken" || rigidBody.tag == "Player"))
+            Rigidbody rig = nearbyObject.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                // apply explosion force
-                rigidBody.AddExplosionForce(explosionForce, transform.position, radiusOfExplosion);
-
-                // show blinks    
-                if (rigidBody.tag == "sunken")    
-                    bm.CreateBlinkFollow(rigidBody.gameObject.GetComponent<EnemyController>().blinkType[1], rigidBody.transform.position, rigidBody.gameObject);
+                rig.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[2], rig.transform.position, rig.gameObject);
             }
         }
     }
 
+    void ExplodeOther(Collider other, float explosionRadius)
+    {
+        rb.AddExplosionForce(explosionForce, other.transform.position, explosionRadius);
+        bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+        other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
+        lvlManager.ResetArrays();
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        // если обломок сталкивается с другими врагами - взорви их
         if (gameObject.tag == "sunken" && (other.tag == "mine" || other.tag == "rocket" || other.tag == "persuer"))
         {
-            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
-            lvlManager.ResetArrays();
+            ExplodeOther(other, 2);
         }  
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        // если обломок сталкивается с обломком - покажи его
-        if (collision.gameObject.tag == "sunken")
-        {
-            bm.CreateBlinkFollow(blinkType[0], collision.transform.position, collision.gameObject);
-        }
-    }
-
+    }        
+    
 }
