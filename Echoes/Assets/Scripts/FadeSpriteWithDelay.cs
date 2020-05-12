@@ -43,12 +43,18 @@ public class FadeSpriteWithDelay : PoolObject
 
     public override void OnObjectReuse()
     {
-        rend.enabled = true;
-        rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 1);
+        if (rend != null)
+        {
+            rend.enabled = true;
+            rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, 1);
+
+
+            Fade(false, lifeTime);
+        }
+        
 
         //lifeTime = (isQuickFading) ? blinkManager.blinkLifeTimeShort : blinkManager.blinkLifeTimeLong;
 
-        Fade(false, lifeTime);
     }
 
     void Fade(bool fadeIn, float duration)

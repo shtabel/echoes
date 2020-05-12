@@ -12,6 +12,7 @@ TagManager:
   - runaway
   - blink_green
   - sunken
+  - SM
   layers:
   - Default
   - TransparentFX

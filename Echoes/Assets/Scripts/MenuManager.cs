@@ -23,6 +23,9 @@ public class MenuManager : MonoBehaviour
     public bool isPaused;
 
     // PRIVATE INIT
+    [SerializeField]
+    Vector3 startPos;
+
     string levelToLoad;
     PlayerController thePlayer;
     Vector3 playersVelocity;
@@ -73,6 +76,11 @@ public class MenuManager : MonoBehaviour
 
     public void NewGame()
     {
+        //PlayerPrefs.SetFloat("lastCheckpointPosX", startPos.x);
+        //PlayerPrefs.SetFloat("lastCheckpointPosY", startPos.y);
+        //PlayerPrefs.SetFloat("lastCheckpointPosZ", startPos.z);
+
+
         levelToLoad = SceneManager.GetActiveScene().name;
         animator.SetTrigger("fadeOut");
 
