@@ -17,6 +17,8 @@ public class RocketController : EnemyController
     new void Start()
     {
         base.Start();
+
+        gameObject.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void BeginChasing(Vector3 targetPos)
@@ -66,6 +68,11 @@ public class RocketController : EnemyController
         }
         else if (other.tag == "rocket")
         {
+            BlowUpEnemy();
+        }
+        else if (other.tag == "generator")
+        {
+            other.GetComponent<GeneratorController>().DestroyGenerator();
             BlowUpEnemy();
         }
 

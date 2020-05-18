@@ -94,7 +94,7 @@ public class SearcherRadar : MonoBehaviour
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
                 // поисковик засек игрока
-                Debug.Log("Player spottet");
+                //Debug.Log("Player spottet");
                 DestroySelf();
 
                 thePlayer.DestroyPlayer();
@@ -121,7 +121,7 @@ public class SearcherRadar : MonoBehaviour
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
                 // поисковик засек игрока
-                Debug.Log("Rocket spottet");
+                //Debug.Log("Rocket spottet");
 
                 DestroySelf();
 
@@ -140,7 +140,7 @@ public class SearcherRadar : MonoBehaviour
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
                 // поисковик засек игрока
-                Debug.Log("Sunken spottet");             
+                //Debug.Log("Sunken spottet");             
 
                 DestroySelf();                
             }

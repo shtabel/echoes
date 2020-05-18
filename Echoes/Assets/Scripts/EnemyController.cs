@@ -79,7 +79,12 @@ public class EnemyController : MonoBehaviour
     {
         if (nextTimeBlink < Time.time)
         {
-            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+            if (gameObject.tag == "mine")
+            {
+                bm.CreateBlink(blinkType[0], transform.position);
+            }
+            else
+                bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
 
             nextTimeBlink = Time.time + blinkGap;
         }        

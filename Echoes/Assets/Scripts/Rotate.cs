@@ -21,6 +21,7 @@ public class Rotate : MonoBehaviour
     public LayerMask persuerMask;   // маска преследователя
     public LayerMask runawayMask;   // маска беглеца
     public LayerMask sunkenMask;   // маска затопленного
+    public LayerMask beaconMask;   // маска затопленного
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
     LineRenderer rayLineRenderer;
@@ -115,6 +116,8 @@ public class Rotate : MonoBehaviour
 
         // if hit sunken
         HandleBlinks(vec, sunkenMask, false);
+
+        HandleBeacon(vec);
     }
 
     Vector3 HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
@@ -203,5 +206,26 @@ public class Rotate : MonoBehaviour
                 }
             }
         }
-    }        
+    }
+
+    void HandleBeacon(Vector3 vector)
+    {
+        RaycastHit[] hitInfo;
+
+        hitInfo = Physics.RaycastAll(transform.position, vector, rayLength, beaconMask);
+
+        for (int i = 0; i < hitInfo.Length; i++)
+        {
+            RaycastHit hit = hitInfo[i];
+
+            float dstToTarget = Vector3.Distance(transform.position, hit.point);
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
+            {
+                
+                // activate beacon
+                hit.collider.gameObject.GetComponent<BeaconController>().ActivateBeacon();
+                
+            }
+        }
+    }
 }
