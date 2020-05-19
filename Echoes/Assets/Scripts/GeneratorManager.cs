@@ -7,6 +7,9 @@ public class GeneratorManager : MonoBehaviour
     [SerializeField]
     GeneratorController[] generators;   // array of generators
 
+    [SerializeField]
+    DoorController theDoor;
+
     RocketSpawner rs;   // rocket spawner
 
     int counter;        // counter of generators
@@ -32,7 +35,7 @@ public class GeneratorManager : MonoBehaviour
     void PuzzleSolved()
     {
         //Debug.Log("Puzzle Solved");
-
         // OPEN THE DOOR
+        theDoor.OpenTheDoor();
     }
 }

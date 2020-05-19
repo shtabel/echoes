@@ -10,6 +10,8 @@ public class BeaconManager : MonoBehaviour
     int lastBeaconActivated;    // номер последнего активированного маячка
     int counter;                // счетчик активированных маячков
 
+    [SerializeField]
+    DoorController theDoor;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +52,7 @@ public class BeaconManager : MonoBehaviour
         //Debug.Log("Quest Solved!");
 
         // OPEN THE DOOR
+        theDoor.OpenTheDoor();
     }
 
     void Reset()    // обнуляем прогресс

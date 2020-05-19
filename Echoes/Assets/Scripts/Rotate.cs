@@ -9,6 +9,7 @@ public class Rotate : MonoBehaviour
     //public float blinksSpacing;     // разница между лучами в градусах
     
     public float distanceBetweenBlinks; // расстояние между блинками
+    public float dstBetweenBlueBlinks;
 
     [Range(0f, 360f)]
     public float rotationDegree;    // величина в градусах на которую вращается радар
@@ -21,7 +22,8 @@ public class Rotate : MonoBehaviour
     public LayerMask persuerMask;   // маска преследователя
     public LayerMask runawayMask;   // маска беглеца
     public LayerMask sunkenMask;   // маска затопленного
-    public LayerMask beaconMask;   // маска затопленного
+    public LayerMask beaconMask;   // маска маячка
+    public LayerMask doorMask;   // маска двери
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
     LineRenderer rayLineRenderer;
@@ -31,6 +33,7 @@ public class Rotate : MonoBehaviour
        
 
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
+    Vector3 lastBlueBlinkPosition;
 
     MenuManager mm;
     BlinkManager bm;            // blink manager для создания блинков
@@ -118,6 +121,7 @@ public class Rotate : MonoBehaviour
         HandleBlinks(vec, sunkenMask, false);
 
         HandleBeacon(vec);
+        HandleDoor(vec);
     }
 
     Vector3 HandleObstacleBlink(Vector3 vector) // метод нужен для отображени блинков препятствий
@@ -126,7 +130,9 @@ public class Rotate : MonoBehaviour
         if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, obstacleMask))
         {
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
-            if (dstToLastBlink >= distanceBetweenBlinks)
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+
+            if (dstToLastBlink >= distanceBetweenBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, doorMask))
             {
                 // создаем блинк 
                 bm.CreateBlink(bm.blink, hitInfo.point);
@@ -142,6 +148,23 @@ public class Rotate : MonoBehaviour
         }
 
         return Vector3.zero;
+    }
+
+    void HandleDoor(Vector3 vector)
+    {
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, doorMask))
+        {
+            float dstToLastBlueBlink = Vector3.Distance(lastBlueBlinkPosition, hitInfo.point);
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+
+            if (dstToLastBlueBlink >= dstBetweenBlueBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
+            {
+                bm.CreateBlinkFollow(bm.blinkBlue, hitInfo.collider.transform.position, hitInfo.collider.gameObject);
+                lastBlueBlinkPosition = hitInfo.point;
+            }
+        }        
     }
 
     void ShowInfo(string tag)
@@ -228,4 +251,6 @@ public class Rotate : MonoBehaviour
             }
         }
     }
+
+    
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     // PUBLIC INIT
-    
+
 
     // PRIVATE INIT
     GameObject[] arrObstacles;  // массив препядствий
@@ -13,7 +13,8 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrRockets;    // массив ракет
     GameObject[] arrPersuers;   // массив преследователей
     GameObject[] arrRunaways;   // массив беш=глецов
-    GameObject[] arrSunkens;   // массив беш=глецов
+    GameObject[] arrSunkens;   // массив беглецов
+    GameObject[] arrDoors;   // массив беш=глецов
 
     [SerializeField]
     GameObject radarForeground;
@@ -44,6 +45,7 @@ public class LevelManager : MonoBehaviour
         arrPersuers = null;
         arrRunaways = null;
         arrSunkens = null;
+        arrDoors = null;
     }
 
     void VisibleObjects(bool makeVisible)
@@ -66,6 +68,9 @@ public class LevelManager : MonoBehaviour
         if (arrSunkens == null)
             arrSunkens = GameObject.FindGameObjectsWithTag("sunken");
 
+        if (arrDoors == null)
+            arrDoors = GameObject.FindGameObjectsWithTag("door");
+
         objectsVisible = makeVisible;
 
         SetVisible(arrObstacles);
@@ -74,6 +79,7 @@ public class LevelManager : MonoBehaviour
         SetVisible(arrPersuers);
         SetVisible(arrRunaways);
         SetVisible(arrSunkens);
+        SetVisible(arrDoors);
     }
 
     void VisibleRadar(bool isVisible)

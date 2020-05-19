@@ -13,6 +13,7 @@ TagManager:
   - blink_green
   - sunken
   - generator
+  - door
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,7 @@ TagManager:
   - runaway
   - sunken
   - beacon
-  - 
+  - door
   - 
   - 
   - 
