@@ -9,22 +9,34 @@ public class GeneratorController : MonoBehaviour
     [SerializeField]
     float explosRadius; // explosion radius
 
-    GeneratorManager genMng;
+    [SerializeField]
+    GameObject genMng;
     BlinkManager bm;    
 
     // Start is called before the first frame update
     void Start()
     {
-        genMng = FindObjectOfType<GeneratorManager>();
-        bm = FindObjectOfType<BlinkManager>();
+        //genMng = FindObjectOfType<GeneratorManager>();
+        bm = FindObjectOfType<BlinkManager>();        
     }
     
     public void DestroyGenerator()
     {
         CreateExplosion(explosForce, explosRadius);
-        genMng.MinusGenerator();
+        HandleManager();    // tell the particular manager that we've destroyed one generator
         bm.CreateBlink(bm.circleBlown, transform.position);
         Destroy(gameObject);
+    }
+
+    void HandleManager()
+    {
+        if (genMng.GetComponent<GeneratorManager>())
+        {
+            genMng.GetComponent<GeneratorManager>().MinusGenerator();
+        } else if (genMng.GetComponent<BossBatleManager>())
+        {
+            genMng.GetComponent<BossBatleManager>().MinusGenerator();
+        }
     }
 
     void CreateExplosion(float explosionForce, float radiusOfExplosion)

@@ -42,6 +42,11 @@ public class EnemyController : MonoBehaviour
         camShake = FindObjectOfType<CameraShake>();
 
         blinkType = AssignIcon();
+
+        if (tag != "door") // почему то у дверей возникает ошибка
+        {
+            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+        }
     }
 
     GameObject[] AssignIcon()

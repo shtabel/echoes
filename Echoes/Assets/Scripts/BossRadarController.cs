@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SearcherRadar : MonoBehaviour
+public class BossRadarController : MonoBehaviour
 {
     // PUBLIC INIT
     [Range(-360f, 360f)]
@@ -10,13 +10,13 @@ public class SearcherRadar : MonoBehaviour
     public float rayLength;         // length of the ray
     public float rayWidth;          // width of the ray
     public bool showObstacles;      // to show green blinks
-    
+
     public LayerMask playerMask;
     public LayerMask obstacleMask;
     public LayerMask rocketMask;
     public LayerMask sunkenMask;
 
-    float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
+    float showBlinksDst = 20;       // дистанция к игроку, на которой отображаем блинки препятствий
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
 
@@ -33,6 +33,8 @@ public class SearcherRadar : MonoBehaviour
     PlayerController thePlayer;
     CameraShake camShake;
 
+    BossBatleManager bossManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,8 @@ public class SearcherRadar : MonoBehaviour
         Vector3[] initRayPositions = new Vector3[2] { Vector3.zero, Vector3.zero };
         rayLineRenderer.SetPositions(initRayPositions);
         rayLineRenderer.SetWidth(rayWidth, rayWidth);
+
+        bossManager = FindObjectOfType<BossBatleManager>();
     }
 
     // Update is called once per frame
@@ -93,11 +97,6 @@ public class SearcherRadar : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
-                // поисковик засек игрока
-                //Debug.Log("Player spottet");
-
-                DestroySelf();
-
                 thePlayer.DestroyPlayer();
             }
         }
@@ -121,10 +120,7 @@ public class SearcherRadar : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
-                // поисковик засек игрока
-                //Debug.Log("Rocket spottet");
-
-                DestroySelf();
+                bossManager.LaunchNewRocket();
 
                 hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
             }
@@ -140,10 +136,9 @@ public class SearcherRadar : MonoBehaviour
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
-                // поисковик засек игрока
-                //Debug.Log("Sunken spottet");             
+                bossManager.LaunchNewRocket();
 
-                DestroySelf();                
+                DestroySelf();
             }
         }
     }
@@ -183,21 +178,21 @@ public class SearcherRadar : MonoBehaviour
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
             if (dstToLastBlink >= distanceBetweenBlinks)
             {
-                if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
+                if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
                 {
                     // создаем блинк 
                     bm.CreateBlink(bm.blink, hitInfo.point);
 
                     lastBlinkPosition = hitInfo.point;
                 }
-                               
+
             }
 
         }
-        
+
         // if we hited obstacle - return hit's coordinates
-        if (hitInfo.point != null)  
-        {            
+        if (hitInfo.point != null)
+        {
             return hitInfo.point;
         }
 

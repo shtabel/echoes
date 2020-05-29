@@ -10,6 +10,7 @@ public class GeneratorManager : MonoBehaviour
     [SerializeField]
     DoorController theDoor;
 
+    [SerializeField]
     RocketSpawner rs;   // rocket spawner
 
     int counter;        // counter of generators
@@ -21,7 +22,7 @@ public class GeneratorManager : MonoBehaviour
         rs = FindObjectOfType<RocketSpawner>();
     }
 
-    public void MinusGenerator()    // if we have destroyed a generator
+    public virtual void MinusGenerator()    // if we have destroyed a generator
     {
         counter--;
         if (counter <= 0)   // if we have destroyed all generators
