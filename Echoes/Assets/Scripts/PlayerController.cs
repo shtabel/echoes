@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour
             
             foreach (ContactPoint contact in collision.contacts)
             {
-                blinkManager.CreateBlink(blinkManager.blink, contact.point);
+                blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
             }
 
             nextTimeblink = Time.time + blinkDelay;
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
         {
-            blinkManager.CreateBlinkFollow(blinkManager.circleGray, collision.transform.position, collision.gameObject);
+            blinkManager.CreateBlinkFollow(blinkManager.blinkCircleGray, collision.transform.position, collision.gameObject);
             nextTimeblinkSunken = Time.time + blinkDelay;
         }
     }
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
             foreach (ContactPoint contact in collision.contacts)
             {
-                blinkManager.CreateBlink(blinkManager.blink, contact.point);
+                blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
             }
 
             nextTimeblink = Time.time + blinkDelay;
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
         {
-            blinkManager.CreateBlinkFollow(blinkManager.circleGray, collision.transform.position, collision.gameObject);
+            blinkManager.CreateBlinkFollow(blinkManager.blinkCircleGray, collision.transform.position, collision.gameObject);
             nextTimeblinkSunken = Time.time + blinkDelay;
         }
     }
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
         }
         
 
-        blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
+        blinkManager.CreateBlink(blinkManager.blinkCircleOrange, transform.position);
         MakeVisible(false);     
         menuManager.PlayerDead();
 

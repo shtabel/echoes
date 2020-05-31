@@ -56,24 +56,24 @@ public class EnemyController : MonoBehaviour
         switch (gameObject.tag)
         {
             case "mine":
-                blink[0] = bm.mine;
-                blink[1] = bm.mineBlown;
+                blink[0] = bm.blinkCrossRed;
+                blink[1] = bm.blinkCrossOrange;
                 break;
             case "rocket":
-                blink[0] = bm.rocket;
-                blink[1] = bm.rocketBlown; ;
+                blink[0] = bm.blinkTriangleRed;
+                blink[1] = bm.blinkTriangleOrange; ;
                 break;
             case "persuer":
-                blink[0] = bm.circleRed;
-                blink[1] = bm.circleBlown;
+                blink[0] = bm.blinkCircleRed;
+                blink[1] = bm.blinkCircleOrange;
                 break;
             case "runaway":
-                blink[0] = bm.circlePink;
-                blink[1] = bm.circleBlown;
+                blink[0] = bm.blinkCirclePink;
+                blink[1] = bm.blinkCircleOrange;
                 break;
             case "sunken":
-                blink[0] = bm.circleGray;
-                blink[1] = bm.circleGray;
+                blink[0] = bm.blinkCircleGray;
+                blink[1] = bm.blinkCircleGray;
                 break;                
         }
 
@@ -125,7 +125,7 @@ public class EnemyController : MonoBehaviour
 
         if (nextTimeDetectBlink < Time.time)
         {
-            bm.CreateBlink(bm.detectionBlink, positionToChase);
+            bm.CreateBlink(bm.blinkRed, positionToChase);
             nextTimeDetectBlink = Time.time + detectBlinkDelay;
         }
     }
@@ -176,7 +176,15 @@ public class EnemyController : MonoBehaviour
         {
             other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
             lvlManager.ResetArrays();
-        }  
+        }
+
+        // если обломок сталкивается с генератором
+        if (gameObject.tag == "sunken" && other.tag == "generator")
+        {
+            other.GetComponent<GeneratorController>().DestroyGenerator();
+            Debug.Log("обломок сталкивается с генератором ");
+        }
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -186,6 +194,11 @@ public class EnemyController : MonoBehaviour
         {
             bm.CreateBlinkFollow(blinkType[0], collision.transform.position, collision.gameObject);
         }
+
+        //if (gameObject.tag == "sunken")
+        //{
+        //    bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+        //}
     }
 
 }

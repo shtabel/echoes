@@ -19,18 +19,18 @@ public class BlinkManager : MonoBehaviour
     public int poolOfSunkens;
     public int poolOfBlueBlinks;
 
-    public GameObject blink;        // элемент блинк
-    public GameObject mine;         // мина
-    public GameObject rocket;         // ракета
-    public GameObject detectionBlink;   // объект который указывает точку назначения ракеты
-    public GameObject mineBlown;        // взорванная мина
-    public GameObject rocketBlown;      // взорванная ракета
-    public GameObject circleBlown;      // взорванный игрок
-    public GameObject circleRed;
-    public GameObject circlePink;
-    public GameObject squareOrange;
-    public GameObject circleGray;
-    public GameObject blinkBlue;
+    public GameObject blinkGreen;        // элемент блинк
+    public GameObject blinkCrossRed;         // мина
+    public GameObject blinkTriangleRed;         // ракета
+    public GameObject blinkRed;   // объект который указывает точку назначения ракеты
+    public GameObject blinkCrossOrange;        // взорванная мина
+    public GameObject blinkTriangleOrange;      // взорванная ракета
+    public GameObject blinkCircleOrange;      // взорванный игрок
+    public GameObject blinkCircleRed;
+    public GameObject blinkCirclePink;
+    public GameObject blinkSquareOrange;
+    public GameObject blinkCircleGray;
+    public GameObject blinkGray;
 
 
     public float blinkLifeTimeShort;   // время быстрого угасания блинков
@@ -44,29 +44,29 @@ public class BlinkManager : MonoBehaviour
     {    
         // creating pools
         // create pool of blinks
-        PoolManager.instance.CreatePool(blink, poolOfBlinks);
+        PoolManager.instance.CreatePool(blinkGreen, poolOfBlinks);
         // create pool of mines
-        PoolManager.instance.CreatePool(mine, poolOfMines);
+        PoolManager.instance.CreatePool(blinkCrossRed, poolOfMines);
         // create pool of rockets
-        PoolManager.instance.CreatePool(rocket, poolOfRockets);
+        PoolManager.instance.CreatePool(blinkTriangleRed, poolOfRockets);
         // create pool of detection blinks
-        PoolManager.instance.CreatePool(detectionBlink, poolOfDetectionBlinks);
+        PoolManager.instance.CreatePool(blinkRed, poolOfDetectionBlinks);
         // create pool of blown mines
-        PoolManager.instance.CreatePool(mineBlown, poolOfMinesBlown);
+        PoolManager.instance.CreatePool(blinkCrossOrange, poolOfMinesBlown);
         // create pool of blown rockets
-        PoolManager.instance.CreatePool(rocketBlown, poolOfRocketsBlown);
+        PoolManager.instance.CreatePool(blinkTriangleOrange, poolOfRocketsBlown);
         // create pool of blown rockets
-        PoolManager.instance.CreatePool(circleBlown, poolOfCircleBlown);
+        PoolManager.instance.CreatePool(blinkCircleOrange, poolOfCircleBlown);
         // create pool of persuers
-        PoolManager.instance.CreatePool(circleRed, poolOfPersuers);
+        PoolManager.instance.CreatePool(blinkCircleRed, poolOfPersuers);
         // create pool of runaways
-        PoolManager.instance.CreatePool(circlePink, poolOfRunaways);
+        PoolManager.instance.CreatePool(blinkCirclePink, poolOfRunaways);
         // create pool of blown searchers
-        PoolManager.instance.CreatePool(squareOrange, poolOfSearchersBlown);
+        PoolManager.instance.CreatePool(blinkSquareOrange, poolOfSearchersBlown);
         // create pool of gray circles
-        PoolManager.instance.CreatePool(circleGray, poolOfSunkens);
+        PoolManager.instance.CreatePool(blinkCircleGray, poolOfSunkens);
         // create pool of blue blinks
-        PoolManager.instance.CreatePool(blinkBlue, poolOfBlueBlinks);
+        PoolManager.instance.CreatePool(blinkGray, poolOfBlueBlinks);
     }
 
     public void CreateBlink(GameObject blinkType, Vector3 position)

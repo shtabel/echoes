@@ -82,13 +82,13 @@ public class BossBatleManager : MonoBehaviour
             case 1:
                 StartPhase1();
                 break;
-            case 4:
+            case 2:
                 StartPhase2();
                 break;
             case 3:
                 StartPhase3();
                 break;
-            case 2:
+            case 4:
                 StartPhase4();
                 break;
         }
@@ -120,11 +120,11 @@ public class BossBatleManager : MonoBehaviour
 
     public void StartPhase4()
     {
-        LaunchNewRocket();
+        //LaunchNewRocket();
         DeactivateRadars();
-        ActivateRadarWithRotation(5, 120);
-        ActivateRadarWithRotation(6, 120);
-        ActivateRadarWithRotation(7, 120);
+        //ActivateRadarWithRotation(5, 120);
+        //ActivateRadarWithRotation(6, 120);
+        //ActivateRadarWithRotation(7, 120);
         //Debug.Log("You can plant a bomb");
     }
 

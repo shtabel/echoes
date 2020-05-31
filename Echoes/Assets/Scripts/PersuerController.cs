@@ -62,7 +62,7 @@ public class PersuerController : EnemyController
     public void BlowUpPersuer()
     {
         // сначала отображаем взрыв
-        blinkManager.CreateBlink(blinkManager.circleBlown, transform.position);
+        blinkManager.CreateBlink(blinkManager.blinkCircleOrange, transform.position);
 
         // потом уничтожаем саму ракету
         Destroy(transform.parent.gameObject);
@@ -71,7 +71,7 @@ public class PersuerController : EnemyController
     void BlowUpMine(GameObject m)
     {
         // сначала отображаем взрыв
-        blinkManager.CreateBlink(blinkManager.mineBlown, m.transform.position);
+        blinkManager.CreateBlink(blinkManager.blinkCrossOrange, m.transform.position);
 
         // потом уничтожаем саму мину
         Destroy(m);

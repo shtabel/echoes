@@ -24,7 +24,7 @@ public class GeneratorController : MonoBehaviour
     {
         CreateExplosion(explosForce, explosRadius);
         HandleManager();    // tell the particular manager that we've destroyed one generator
-        bm.CreateBlink(bm.circleBlown, transform.position);
+        bm.CreateBlink(bm.blinkCircleOrange, transform.position);
         Destroy(gameObject);
     }
 

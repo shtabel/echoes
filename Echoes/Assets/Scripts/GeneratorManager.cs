@@ -19,11 +19,12 @@ public class GeneratorManager : MonoBehaviour
     void Start()
     {
         counter = generators.Length;
-        rs = FindObjectOfType<RocketSpawner>();
+        //rs = FindObjectOfType<RocketSpawner>();
     }
 
     public virtual void MinusGenerator()    // if we have destroyed a generator
     {
+        Debug.Log("Minus generator");
         counter--;
         if (counter <= 0)   // if we have destroyed all generators
         {

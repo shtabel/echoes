@@ -108,7 +108,7 @@ public class BossRadarController : MonoBehaviour
 
         transform.parent.gameObject.SetActive(false);
 
-        bm.CreateBlink(bm.squareOrange, transform.position);
+        bm.CreateBlink(bm.blinkSquareOrange, transform.position);
     }
 
     void RaycastRocket(Vector3 upVec)
@@ -181,7 +181,7 @@ public class BossRadarController : MonoBehaviour
                 if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
                 {
                     // создаем блинк 
-                    bm.CreateBlink(bm.blink, hitInfo.point);
+                    bm.CreateBlink(bm.blinkGreen, hitInfo.point);
 
                     lastBlinkPosition = hitInfo.point;
                 }

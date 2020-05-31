@@ -24,6 +24,7 @@ public class Rotate : MonoBehaviour
     public LayerMask sunkenMask;   // маска затопленного
     public LayerMask beaconMask;   // маска маячка
     public LayerMask doorMask;   // маска двери
+    public LayerMask emitterMask;   // маска эмиттеров
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
     LineRenderer rayLineRenderer;
@@ -132,10 +133,12 @@ public class Rotate : MonoBehaviour
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
 
-            if (dstToLastBlink >= distanceBetweenBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, doorMask))
+            if (dstToLastBlink >= distanceBetweenBlinks 
+                && (!Physics.Raycast(transform.position, vector, dstToTarget, doorMask) 
+                && !Physics.Raycast(transform.position, vector, dstToTarget, emitterMask)))
             {
                 // создаем блинк 
-                bm.CreateBlink(bm.blink, hitInfo.point);
+                bm.CreateBlink(bm.blinkGreen, hitInfo.point);
                 
                 lastBlinkPosition = hitInfo.point;
             }
@@ -161,7 +164,7 @@ public class Rotate : MonoBehaviour
 
             if (dstToLastBlueBlink >= dstBetweenBlueBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
             {
-                bm.CreateBlinkFollow(bm.blinkBlue, hitInfo.collider.transform.position, hitInfo.collider.gameObject);
+                bm.CreateBlinkFollow(bm.blinkGray, hitInfo.collider.transform.position, hitInfo.collider.gameObject);
                 lastBlueBlinkPosition = hitInfo.point;
             }
         }        
