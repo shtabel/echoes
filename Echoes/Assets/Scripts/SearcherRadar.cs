@@ -13,6 +13,7 @@ public class SearcherRadar : MonoBehaviour
     
     public LayerMask playerMask;
     public LayerMask obstacleMask;
+    public LayerMask mineMask;
     public LayerMask rocketMask;
     public LayerMask sunkenMask;
 
@@ -67,6 +68,7 @@ public class SearcherRadar : MonoBehaviour
     void Raycast(Vector3 vector)
     {
         RaycastPlayer(vector);
+        RaycastMine(vector);
         RaycastRocket(vector);
         RaycastSunken(vector);
     }
@@ -83,6 +85,21 @@ public class SearcherRadar : MonoBehaviour
             rayLineRenderer.SetPosition(1, endCoord2); // end of the ray coords
     }
 
+    void RaycastMine(Vector3 upVec)
+    {
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, mineMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+            //Debug.Log("distance to player: " + dstToTarget);
+
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+            {
+                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();               
+            }
+        }
+    }
+
     void RaycastPlayer(Vector3 upVec)
     {
         RaycastHit hitInfo;
@@ -96,9 +113,10 @@ public class SearcherRadar : MonoBehaviour
                 // поисковик засек игрока
                 //Debug.Log("Player spottet");
 
-                DestroySelf();
+                if (thePlayer.DestroyPlayer()) // if player not in the safe zone - destroy him and searcher
+                    DestroySelf();
 
-                thePlayer.DestroyPlayer();
+                
             }
         }
     }

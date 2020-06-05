@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour
     float nextTimeblinkSunken;
     [SerializeField]
     float blinkDelay = 0.5f;
-    
+
+    bool inSafeZone;    // if player in safe zone
 
     void Start()
     {
@@ -202,29 +203,48 @@ public class PlayerController : MonoBehaviour
             DestroyPlayer();
         }
 
+        if (other.tag == "safe_zone")
+        {
+            inSafeZone = true;
+        }
+
         lvlManager.ResetArrays();
     }
 
-    public void DestroyPlayer()
+    void OnTriggerExit(Collider other)
     {
-        camShake.Shake();
-        timerManager.StopTimer();
-
-        audioManager.Play("explosion");
-        
-        // deactivate marker
-        EndMarkScript endMark = FindObjectOfType<EndMarkScript>();
-
-        if (endMark != null)
+        if (other.tag == "safe_zone")
         {
-            endMark.SetMarker(false, true);
+            inSafeZone = false;
         }
-        
+    }
 
-        blinkManager.CreateBlink(blinkManager.blinkCircleOrange, transform.position);
-        MakeVisible(false);     
-        menuManager.PlayerDead();
+    public bool DestroyPlayer()
+    {
+        if (!inSafeZone)    // if player not in the safe zone - destroy him
+        {
+            camShake.Shake();
+            timerManager.StopTimer();
 
+            audioManager.Play("explosion");
+
+            // deactivate marker
+            EndMarkScript endMark = FindObjectOfType<EndMarkScript>();
+
+            if (endMark != null)
+            {
+                endMark.SetMarker(false, true);
+            }
+
+
+            blinkManager.CreateBlink(blinkManager.blinkCircleOrange, transform.position);
+            MakeVisible(false);
+            menuManager.PlayerDead();
+
+            return true;
+        }
+
+        return false;
     }
 
     public void MakeVisible(bool isVisible)

@@ -25,7 +25,6 @@ public class RocketSpawner : MonoBehaviour
     public void SpawnRocket()
     {
         //Debug.Log("Spawn Rocket");
-
         Instantiate(rocketPrefab, transform.position, Quaternion.identity);
     }
 

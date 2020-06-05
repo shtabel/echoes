@@ -14,6 +14,7 @@ TagManager:
   - sunken
   - generator
   - door
+  - safe_zone
   layers:
   - Default
   - TransparentFX

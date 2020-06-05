@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
     {
         if (nextTimeBlink < Time.time)
         {
-            if (gameObject.tag == "mine")
+            if (gameObject.tag == "mine" && !GetComponent<WaypointMovement>())
             {
                 bm.CreateBlink(blinkType[0], transform.position);
             }

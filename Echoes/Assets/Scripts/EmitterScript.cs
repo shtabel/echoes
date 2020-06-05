@@ -20,6 +20,8 @@ public class EmitterScript : MonoBehaviour
     LayerMask sunkenMask;
     [SerializeField]
     LayerMask playerMask;
+    [SerializeField]
+    LayerMask rocketMask;
 
     // references to objects
     BlinkManager bm;
@@ -70,10 +72,30 @@ public class EmitterScript : MonoBehaviour
                 && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
             {
                 //Debug.Log(gameObject.name + " killed the player!");
-                thePlayer.DestroyPlayer();
+                if(thePlayer.DestroyPlayer());
                 SetRedBlinkPosition(hitInfo2.point);
                 return hitInfo2.point;
 
+            }
+        }
+
+        // check rocket hit
+        if (Physics.Raycast(transform.position, vector, out hitInfo2, rayLength, rocketMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
+
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, sunkenMask)
+                && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
+            {
+                //Debug.Log(gameObject.name + " killed the player!");
+                hitInfo2.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
+
+                if (GetComponent<EmitterToSpawner>())
+                {
+                    GetComponent<EmitterToSpawner>().SpawnNewRocket();
+                }
+
+                return hitInfo2.point;
             }
         }
 

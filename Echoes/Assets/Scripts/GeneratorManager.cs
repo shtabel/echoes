@@ -24,8 +24,9 @@ public class GeneratorManager : MonoBehaviour
 
     public virtual void MinusGenerator()    // if we have destroyed a generator
     {
-        Debug.Log("Minus generator");
+        //Debug.Log("Minus generator");
         counter--;
+        //Debug.Log("Generatoes left:" + counter);
         if (counter <= 0)   // if we have destroyed all generators
         {
             PuzzleSolved();
@@ -37,6 +38,7 @@ public class GeneratorManager : MonoBehaviour
     void PuzzleSolved()
     {
         //Debug.Log("Puzzle Solved");
+        
         // OPEN THE DOOR
         theDoor.OpenTheDoor();
     }

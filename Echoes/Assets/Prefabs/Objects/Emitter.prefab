@@ -300,3 +300,6 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 2048
+  rocketMask:
+    serializedVersion: 2
+    m_Bits: 1024
