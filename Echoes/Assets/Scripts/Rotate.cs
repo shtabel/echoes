@@ -38,11 +38,13 @@ public class Rotate : MonoBehaviour
 
     MenuManager mm;
     BlinkManager bm;            // blink manager для создания блинков
+    ChatManager cm;
 
     void Start()
     {
         mm = FindObjectOfType<MenuManager>();
         bm = FindObjectOfType<BlinkManager>();
+        cm = FindObjectOfType<ChatManager>();
 
         // setting the line renderer
         rayLineRenderer = GetComponent<LineRenderer>();
@@ -221,6 +223,9 @@ public class Rotate : MonoBehaviour
 
                 // создаем блинк
                 hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+
+                if (hit.collider.gameObject.tag == "mine")
+                    cm.DisplayMessage("mine");
 
                 ShowInfo(tag);
 
