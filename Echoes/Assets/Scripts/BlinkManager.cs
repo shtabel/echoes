@@ -17,7 +17,7 @@ public class BlinkManager : MonoBehaviour
     public int poolOfRunaways;      // количество беглецов в пуле
     public int poolOfSearchersBlown;    // количество взорванных поисковиков в пуле
     public int poolOfSunkens;
-    public int poolOfBlueBlinks;
+    public int poolOfDoorBlinks;
 
     public GameObject blinkGreen;        // элемент блинк
     public GameObject blinkCrossRed;         // мина
@@ -66,7 +66,7 @@ public class BlinkManager : MonoBehaviour
         // create pool of gray circles
         PoolManager.instance.CreatePool(blinkCircleGray, poolOfSunkens);
         // create pool of blue blinks
-        PoolManager.instance.CreatePool(blinkGray, poolOfBlueBlinks);
+        PoolManager.instance.CreatePool(blinkGray, poolOfDoorBlinks);
     }
 
     public void CreateBlink(GameObject blinkType, Vector3 position)

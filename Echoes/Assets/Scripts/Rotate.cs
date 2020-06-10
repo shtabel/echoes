@@ -9,7 +9,7 @@ public class Rotate : MonoBehaviour
     //public float blinksSpacing;     // разница между лучами в градусах
     
     public float distanceBetweenBlinks; // расстояние между блинками
-    public float dstBetweenBlueBlinks;
+    public float dstBetweenDoorBlinks;
 
     [Range(0f, 360f)]
     public float rotationDegree;    // величина в градусах на которую вращается радар
@@ -164,7 +164,7 @@ public class Rotate : MonoBehaviour
             float dstToLastBlueBlink = Vector3.Distance(lastBlueBlinkPosition, hitInfo.point);
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
 
-            if (dstToLastBlueBlink >= dstBetweenBlueBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
+            if (dstToLastBlueBlink >= dstBetweenDoorBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
             {
                 bm.CreateBlinkFollow(bm.blinkGray, hitInfo.collider.transform.position, hitInfo.collider.gameObject);
                 lastBlueBlinkPosition = hitInfo.point;
@@ -252,10 +252,13 @@ public class Rotate : MonoBehaviour
             float dstToTarget = Vector3.Distance(transform.position, hit.point);
             if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
             {
-                
+
                 // activate beacon
-                hit.collider.gameObject.GetComponent<BeaconController>().ActivateBeacon();
-                
+                if (hit.collider.gameObject.GetComponent<BeaconController>() != null)
+                    hit.collider.gameObject.GetComponent<BeaconController>().ActivateBeacon();
+                else if (hit.collider.gameObject.GetComponent<Beaconv2Controller>() != null)
+                    hit.collider.gameObject.GetComponent<Beaconv2Controller>().ActivateBeacon();
+
             }
         }
     }
