@@ -52,10 +52,14 @@ public class EmitterScript : MonoBehaviour
 
         //Debug.DrawRay(transform.position, upVec * rayLength, Color.red);
 
-        endCoord = Raycast(upVec);
+        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < 20))
+        {
+            endCoord = Raycast(upVec);
 
-        rayLineRenderer.SetPosition(0, transform.position);
-        rayLineRenderer.SetPosition(1, endCoord);
+            rayLineRenderer.SetPosition(0, transform.position);
+            rayLineRenderer.SetPosition(1, endCoord);
+        }
+        
     }
 
     Vector3 Raycast(Vector3 vector)

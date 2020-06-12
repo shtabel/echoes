@@ -55,14 +55,18 @@ public class SearcherRadar : MonoBehaviour
         // rotate ray
         transform.Rotate(0.0f, 0.0f, -rotationDegree * Time.deltaTime);
 
-        // crate vector that we will allign our ray to
-        Vector3 upVec = transform.TransformDirection(Vector3.up);
-        Raycast(upVec);
+        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < 20))
+        {
+            // crate vector that we will allign our ray to
+            Vector3 upVec = transform.TransformDirection(Vector3.up);
+            Raycast(upVec);
 
-        // get coordinates of the obstacle hit
-        endCoord = RaycastObstacle(upVec);
-        // draw the ray
-        DrawRay(endCoord, transform.position + upVec * rayLength);
+            // get coordinates of the obstacle hit
+            endCoord = RaycastObstacle(upVec);
+            // draw the ray
+            DrawRay(endCoord, transform.position + upVec * rayLength);
+        }
+        
     }
 
     void Raycast(Vector3 vector)
@@ -93,7 +97,8 @@ public class SearcherRadar : MonoBehaviour
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
             //Debug.Log("distance to player: " + dstToTarget);
 
-            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength)) 
+               // && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
             {
                 hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();               
             }
@@ -138,6 +143,7 @@ public class SearcherRadar : MonoBehaviour
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+                //&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
             {
                 // поисковик засек игрока
                 //Debug.Log("Rocket spottet");
@@ -157,11 +163,14 @@ public class SearcherRadar : MonoBehaviour
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+                //&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
             {
                 // поисковик засек игрока
                 //Debug.Log("Sunken spottet");             
 
-                DestroySelf();                
+                //DestroySelf();    
+
+                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();            
             }
         }
     }
@@ -201,7 +210,7 @@ public class SearcherRadar : MonoBehaviour
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
             if (dstToLastBlink >= distanceBetweenBlinks)
             {
-                if (showObstacles && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
+                if (showObstacles )//&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
                 {
                     // создаем блинк 
                     bm.CreateBlink(bm.blinkGreen, hitInfo.point);

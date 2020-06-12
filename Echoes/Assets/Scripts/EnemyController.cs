@@ -131,14 +131,17 @@ public class EnemyController : MonoBehaviour
     }
 
     public void BlowUpEnemy()
-    {
-        // создаем взрыв
-        CreateExplosion(explosionRadius);
+    {      
+        if (Vector3.Distance(FindObjectOfType<PlayerController>().transform.position, transform.position) < 20)
+        {
+            // создаем взрыв
+            CreateExplosion(explosionRadius);
 
-        // отображаем взрыв
-        bm.CreateBlink(blinkType[1], transform.position);
+            // отображаем взрыв
+            bm.CreateBlink(blinkType[1], transform.position);
 
-        camShake.MediumShake();
+            camShake.MediumShake();
+        }
 
         // потом уничтожаем сам объект
         Destroy(gameObject);
@@ -190,9 +193,10 @@ public class EnemyController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // если обломок сталкивается с обломком - покажи его
-        if (collision.gameObject.tag == "sunken")
+        if (collision.gameObject.tag == "sunken" && gameObject.tag == "sunken")
         {
-            bm.CreateBlinkFollow(blinkType[0], collision.transform.position, collision.gameObject);
+            //bm.CreateBlinkFollow(blinkType[0], collision.transform.position, collision.gameObject);
+            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
         }
 
         //if (gameObject.tag == "sunken")

@@ -32,7 +32,13 @@ public class GeneratorManager : MonoBehaviour
             PuzzleSolved();
         }
         else
-            rs.SpawnRocket(); // spawn new rocket
+        {
+            if (rs != null)
+            {
+                rs.SpawnRocket(); // spawn new rocket
+            }
+        }
+            
     }
 
     void PuzzleSolved()
