@@ -34,7 +34,6 @@ public class Rotate : MonoBehaviour
        
 
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
-    Vector3 lastBlueBlinkPosition;
 
     MenuManager mm;
     BlinkManager bm;            // blink manager для создания блинков
@@ -157,19 +156,20 @@ public class Rotate : MonoBehaviour
 
     void HandleDoor(Vector3 vector)
     {
-        RaycastHit hitInfo;
+        RaycastHit[] hitDoor;
+        hitDoor = Physics.RaycastAll(transform.position, vector, rayLength, doorMask);
 
-        if (Physics.Raycast(transform.position, vector, out hitInfo, rayLength, doorMask))
+        for (int i = 0; i < hitDoor.Length; i++)
         {
-            float dstToLastBlueBlink = Vector3.Distance(lastBlueBlinkPosition, hitInfo.point);
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+            RaycastHit hit = hitDoor[i];
+            float dstToTarget = Vector3.Distance(transform.position, hit.point);
 
-            if (dstToLastBlueBlink >= dstBetweenDoorBlinks && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, sunkenMask)
+                && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
             {
-                bm.CreateBlinkFollow(bm.blinkGray, hitInfo.collider.transform.position, hitInfo.collider.gameObject);
-                lastBlueBlinkPosition = hitInfo.point;
+                hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
             }
-        }        
+        }      
     }
 
     void ShowInfo(string tag)

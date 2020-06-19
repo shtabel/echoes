@@ -5,7 +5,7 @@ using UnityEngine;
 public class GeneratorManager : MonoBehaviour
 {
     [SerializeField]
-    GeneratorController[] generators;   // array of generators
+    GameObject[] generators;   // array of generators
 
     [SerializeField]
     DoorController theDoor;
@@ -22,7 +22,7 @@ public class GeneratorManager : MonoBehaviour
         //rs = FindObjectOfType<RocketSpawner>();
     }
 
-    public virtual void MinusGenerator()    // if we have destroyed a generator
+    public virtual void MinusGenerator()    // if we have destroyed a generator/запитали генератор
     {
         //Debug.Log("Minus generator");
         counter--;
@@ -37,8 +37,14 @@ public class GeneratorManager : MonoBehaviour
             {
                 rs.SpawnRocket(); // spawn new rocket
             }
-        }
-            
+        }            
+    }
+
+    public virtual void PlusGenerator()    // if we have destroyed a generator
+    {
+        //Debug.Log("Minus generator");
+        counter++;
+        //Debug.Log("Generatoes left:" + counter);
     }
 
     void PuzzleSolved()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GeneratorController : MonoBehaviour
+public class GeneratorController : MonoBehaviour // генератор, который питает закрытую дверь и его нужно уничтожить
 {
     [SerializeField]
     float explosForce;  // explosion force

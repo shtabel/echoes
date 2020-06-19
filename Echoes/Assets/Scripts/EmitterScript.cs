@@ -22,6 +22,10 @@ public class EmitterScript : MonoBehaviour
     LayerMask playerMask;
     [SerializeField]
     LayerMask rocketMask;
+    [SerializeField]
+    LayerMask mineMask;
+    [SerializeField]
+    LayerMask generatorMask;
 
     // references to objects
     BlinkManager bm;
@@ -30,6 +34,13 @@ public class EmitterScript : MonoBehaviour
 
     Vector3 endCoord;   // end coordinate of the line renderer
 
+    [SerializeField]
+    bool showObstacles;
+    Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
+    float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
+
+
+    Transform _selection;   // to deactivate generator
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +63,7 @@ public class EmitterScript : MonoBehaviour
 
         //Debug.DrawRay(transform.position, upVec * rayLength, Color.red);
 
-        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < 20))
+        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
         {
             endCoord = Raycast(upVec);
 
@@ -67,6 +78,25 @@ public class EmitterScript : MonoBehaviour
         RaycastHit hitInfo1; // hit for obstacles
         RaycastHit hitInfo2; // hot for the player and sunkens
 
+        // check obstacles
+        float distanceBetweenBlinks = 0.7f;
+        if (Physics.Raycast(transform.position, vector, out hitInfo2, rayLength, obstacleMask))
+        {
+            float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo2.point);
+            if (dstToLastBlink >= distanceBetweenBlinks)
+            {
+                if (showObstacles)//&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
+                {
+                    // создаем блинк 
+                    bm.CreateBlink(bm.blinkGreen, hitInfo2.point);
+
+                    lastBlinkPosition = hitInfo2.point;
+                }
+
+            }
+
+        }
+
         // check player hit
         if (Physics.Raycast(transform.position, vector, out hitInfo2, rayLength, playerMask))
         {
@@ -80,6 +110,24 @@ public class EmitterScript : MonoBehaviour
                 SetRedBlinkPosition(hitInfo2.point);
                 return hitInfo2.point;
 
+            }
+        }
+
+
+        // check mine hit
+        RaycastHit[] hitMines;
+        hitMines = Physics.RaycastAll(transform.position, vector, rayLength, mineMask);
+
+        for (int i = 0; i < hitMines.Length; i++)
+        {
+            RaycastHit hit = hitMines[i];
+            float dstToTarget = Vector3.Distance(transform.position, hit.point);
+
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, sunkenMask)
+                && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
+            {
+                hit.transform.gameObject.GetComponent<EnemyController>().CreateBlink();
+                //return hitInfo2.point;
             }
         }
 
@@ -99,6 +147,30 @@ public class EmitterScript : MonoBehaviour
                     GetComponent<EmitterToSpawner>().SpawnNewRocket();
                 }
 
+                return hitInfo2.point;
+            }
+        }
+
+        // check generator v2 hit
+        if (_selection != null)
+        {
+            _selection.GetComponent<Generatorv2Controller>().DeactivateGenerator();
+            _selection = null;
+        }
+        if (Physics.Raycast(transform.position, vector, out hitInfo2, rayLength, generatorMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
+
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, sunkenMask)
+                && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
+            {
+                //Debug.Log("Generator hit");
+                SetRedBlinkPosition(hitInfo2.point);
+
+                var selection = hitInfo2.transform;
+                selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
+                _selection = selection;
+                
                 return hitInfo2.point;
             }
         }

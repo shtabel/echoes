@@ -42,11 +42,8 @@ public class EnemyController : MonoBehaviour
         camShake = FindObjectOfType<CameraShake>();
 
         blinkType = AssignIcon();
-
-        if (tag != "door") // почему то у дверей возникает ошибка
-        {
-            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
-        }
+        
+        bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
     }
 
     GameObject[] AssignIcon()
@@ -74,7 +71,11 @@ public class EnemyController : MonoBehaviour
             case "sunken":
                 blink[0] = bm.blinkCircleGray;
                 blink[1] = bm.blinkCircleGray;
-                break;                
+                break;
+            case "door":
+                blink[0] = bm.blinkGray;
+                blink[1] = bm.blinkGray;
+                break;
         }
 
         return blink;
