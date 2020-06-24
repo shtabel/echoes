@@ -15,6 +15,9 @@ public class Generatorv2Controller : MonoBehaviour // генератор, кот
     [SerializeField]
     Sprite spriteYellow;        // желтый спрайт (активный)
 
+    [SerializeField]
+    bool activationBeacon;
+
     bool ignoreActivation;      // игнорирование активации (когда активен или когда решили пазл)
 
     // Start is called before the first frame update

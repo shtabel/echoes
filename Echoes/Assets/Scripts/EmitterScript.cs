@@ -154,7 +154,12 @@ public class EmitterScript : MonoBehaviour
         // check generator v2 hit
         if (_selection != null)
         {
-            _selection.GetComponent<Generatorv2Controller>().DeactivateGenerator();
+            if (_selection.tag == "generator")
+                _selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
+            if (_selection.tag == "BBeaconEmitter")
+                _selection.GetComponent<BBeaconEmitterController>().Deactivate();
+
+            //_selection.GetComponent<Generatorv2Controller>().DeactivateGenerator();
             _selection = null;
         }
         if (Physics.Raycast(transform.position, vector, out hitInfo2, rayLength, generatorMask))
@@ -168,7 +173,12 @@ public class EmitterScript : MonoBehaviour
                 SetRedBlinkPosition(hitInfo2.point);
 
                 var selection = hitInfo2.transform;
-                selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
+
+                if (selection.tag == "generator")
+                    selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
+                if (selection.tag == "BBeaconEmitter")
+                    selection.GetComponent<BBeaconEmitterController>().Activate();
+
                 _selection = selection;
                 
                 return hitInfo2.point;

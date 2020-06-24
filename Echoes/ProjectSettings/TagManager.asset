@@ -15,6 +15,8 @@ TagManager:
   - generator
   - door
   - safe_zone
+  - beacon
+  - BBeaconEmitter
   layers:
   - Default
   - TransparentFX

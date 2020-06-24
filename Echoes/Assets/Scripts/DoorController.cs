@@ -14,14 +14,24 @@ public class DoorController : MonoBehaviour
     [SerializeField]
     float delay;        // delay before opening
 
+    Vector3 initRotation;
+
     void Start()
     {
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
+
+        initRotation = transform.rotation.eulerAngles;
     }
 
     public void OpenTheDoor()
     {
         Sequence mySequence = DOTween.Sequence();
         mySequence.AppendInterval(delay).Append(transform.DORotate(endRotation, duration));
+    }
+
+    public void CloseTheDoor()
+    {
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(transform.DORotate(initRotation, 1));
     }
 }
