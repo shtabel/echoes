@@ -164,8 +164,7 @@ public class Rotate : MonoBehaviour
             RaycastHit hit = hitDoor[i];
             float dstToTarget = Vector3.Distance(transform.position, hit.point);
 
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, sunkenMask)
-                && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет препятсвий
             {
                 hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
             }

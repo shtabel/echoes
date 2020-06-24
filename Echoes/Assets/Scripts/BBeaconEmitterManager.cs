@@ -14,10 +14,13 @@ public class BBeaconEmitterManager : MonoBehaviour
     DoorController theDoor;
 
     bool puzzleSolved;
+    int checkActive;
 
     void Start()
     {
         counter = 0;
+
+        //requiredAmmount = beacons.Length;
         requiredAmmount = CountActivationBeacons(beacons);
     }
 
@@ -44,8 +47,10 @@ public class BBeaconEmitterManager : MonoBehaviour
             {
                 // substruct counter
                 counter--;
+                // check puzzle solved
+                //CheckPuzzleSolved();
             }
-            else if (isActivationBeacon) // если это активационный маячек (!)
+            if (isActivationBeacon) // если это активационный маячек (!)
             {
                 counter++;
                 // check puzzle solved
@@ -53,6 +58,24 @@ public class BBeaconEmitterManager : MonoBehaviour
             }            
         }        
 
+    }
+
+    bool CheckNumberOfActive()      // проверяем столько активных маячков, чтоб открывал только когда (х) не активны
+    {
+        checkActive = 1;  
+
+        for (int i = 0; i < beacons.Length; i++)
+        {
+            if (beacons[i].isActive )
+            {
+                checkActive++;
+            }
+        }
+
+        if (checkActive == requiredAmmount)
+            return true;
+
+        return false;
     }
 
     void CheckPuzzleSolved()
@@ -65,7 +88,7 @@ public class BBeaconEmitterManager : MonoBehaviour
 
         //}
         //else 
-        if (counter == requiredAmmount && !puzzleSolved)
+        if (counter == requiredAmmount && !puzzleSolved && CheckNumberOfActive())
         {
             // open the door
             //Debug.Log("Open the door");

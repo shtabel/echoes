@@ -17,6 +17,8 @@ public class BBeaconEmitterController : MonoBehaviour
 
     SpriteRenderer rend;        // sprite renderer
 
+    public bool isActive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,11 +34,13 @@ public class BBeaconEmitterController : MonoBehaviour
     {
         rend.sprite = spriteActive;
         bm.ActivateBeacon(activationBeacon);
+        isActive = true;
     }
 
     public void Deactivate()
     {
         rend.sprite = spriteNotActive;
         bm.ActivateBeacon(!activationBeacon);
+        isActive = false;
     }
 }
