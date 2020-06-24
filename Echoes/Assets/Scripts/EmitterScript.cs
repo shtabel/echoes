@@ -39,6 +39,8 @@ public class EmitterScript : MonoBehaviour
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
     float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
 
+    [SerializeField]
+    float sunkenDragHold;           // с какой силой удерживаем обломок
 
     Transform _selection;   // to deactivate generator
 
@@ -196,6 +198,10 @@ public class EmitterScript : MonoBehaviour
                 float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
                 if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет препятствий
                 {
+                    var selection = hitInfo2.transform;
+                    selection.GetComponent<Rigidbody>().drag = sunkenDragHold;
+
+
                     hitInfo2.transform.gameObject.GetComponent<EnemyController>().CreateBlink();
                     SetRedBlinkPosition(hitInfo2.point);
                     return hitInfo2.point;

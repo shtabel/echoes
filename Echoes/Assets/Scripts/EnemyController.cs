@@ -31,6 +31,8 @@ public class EnemyController : MonoBehaviour
 
     CameraShake camShake;
 
+    float initDrag;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -44,6 +46,9 @@ public class EnemyController : MonoBehaviour
         blinkType = AssignIcon();
         
         bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+
+        if (gameObject.tag == "sunken")
+            initDrag = GetComponent<Rigidbody>().drag;
     }
 
     GameObject[] AssignIcon()
@@ -197,6 +202,18 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.tag == "sunken" && gameObject.tag == "sunken")
         {
             //bm.CreateBlinkFollow(blinkType[0], collision.transform.position, collision.gameObject);
+            bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+        }
+
+        // если обломок сталкивается с игроком - drag как сначала
+        if (collision.gameObject.tag == "Player" && gameObject.tag == "sunken")
+        {
+            gameObject.GetComponent<Rigidbody>().drag = initDrag;
+        }
+
+        // если обломок сталкивается со стеной - показываем значек
+        if (collision.gameObject.tag == "obstacle" && gameObject.tag == "sunken")
+        {
             bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
         }
 
