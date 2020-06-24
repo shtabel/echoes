@@ -178,6 +178,8 @@ public class EmitterScript : MonoBehaviour
                     selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
                 if (selection.tag == "BBeaconEmitter")
                     selection.GetComponent<BBeaconEmitterController>().Activate();
+                if (selection.tag == "SBeaconMEmitter")
+                    selection.GetComponent<BeaconController>().ActivateBeacon();
 
                 _selection = selection;
                 

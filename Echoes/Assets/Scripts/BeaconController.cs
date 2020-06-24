@@ -20,6 +20,7 @@ public class BeaconController : MonoBehaviour
     Sprite spriteYellow;        // желтый спрайт (активный)
 
     SpriteRenderer rend;    
+    [SerializeField]
     BeaconManager beaconManager;
 
     
@@ -31,7 +32,7 @@ public class BeaconController : MonoBehaviour
         rend.sprite = spriteWhite;
         ignoreActivation = false;
 
-        beaconManager = FindObjectOfType<BeaconManager>();
+        //beaconManager = FindObjectOfType<BeaconManager>();
 
         nextTimeActivate = Time.time;
     }

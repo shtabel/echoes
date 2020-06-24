@@ -17,6 +17,7 @@ TagManager:
   - safe_zone
   - beacon
   - BBeaconEmitter
+  - SBeaconMEmitter
   layers:
   - Default
   - TransparentFX
