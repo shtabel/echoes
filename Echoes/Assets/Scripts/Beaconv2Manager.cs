@@ -93,11 +93,24 @@ public class Beaconv2Manager : MonoBehaviour
         }        
     }
 
+    void BeaconBlink()
+    {
+        for (int i = 0; i < beacons.Length; i++)
+        {
+            if (beacons[i].activationBeacon)
+            {
+                beacons[i].Fade(false);
+            }
+        }
+    }
+
     void PuzzleSolved()
     {
         //Debug.Log("Puzzle solved");
 
         puzzleSolved = true;
+
+        BeaconBlink();
 
         theDoor.OpenTheDoor();
     }

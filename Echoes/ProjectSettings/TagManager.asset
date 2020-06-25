@@ -18,6 +18,7 @@ TagManager:
   - beacon
   - BBeaconEmitter
   - SBeaconMEmitter
+  - BBeaconMEmitter
   layers:
   - Default
   - TransparentFX
