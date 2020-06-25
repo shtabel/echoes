@@ -182,6 +182,9 @@ public class EmitterScript : MonoBehaviour
                     selection.GetComponent<BBeaconEmitterController>().Activate();
                 if (selection.tag == "SBeaconMEmitter")
                     selection.GetComponent<BeaconController>().ActivateBeacon();
+                if (selection.tag == "BBeaconMEmitter")
+                    selection.GetComponent<Beaconv2Controller>().ActivateBeacon();
+                
 
                 _selection = selection;
                 
