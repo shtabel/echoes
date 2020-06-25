@@ -53,5 +53,18 @@ public class GeneratorManager : MonoBehaviour
         
         // OPEN THE DOOR
         theDoor.OpenTheDoor();
+
+        GeneratorBlink();
+    }
+
+    void GeneratorBlink()
+    {
+        for (int i = 0; i < generators.Length; i++)
+        {
+            if (generators[i].GetComponent<Generatorv2Controller>())
+            {
+                generators[i].GetComponent<Generatorv2Controller>().Fade(false);
+            }
+        }
     }
 }

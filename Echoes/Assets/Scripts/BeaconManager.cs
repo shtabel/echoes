@@ -51,6 +51,7 @@ public class BeaconManager : MonoBehaviour
     {
         //Debug.Log("Quest Solved!");
 
+        BeaconBlink();
         // OPEN THE DOOR
         theDoor.OpenTheDoor();
     }
@@ -69,6 +70,14 @@ public class BeaconManager : MonoBehaviour
             {
                 beacons[i].DeactivateBeacon();
             }
+        }
+    }
+
+    void BeaconBlink()
+    {
+        for (int i = 0; i < beacons.Length; i++)
+        {            
+            beacons[i].Fade(false);
         }
     }
 }

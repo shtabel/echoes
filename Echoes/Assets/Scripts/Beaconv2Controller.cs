@@ -28,8 +28,7 @@ public class Beaconv2Controller : MonoBehaviour
     Color spriteColor;
     bool fading = false;
 
-    [SerializeField]
-    float duration;
+    float duration = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +41,6 @@ public class Beaconv2Controller : MonoBehaviour
         //beaconManager = FindObjectOfType<Beaconv2Manager>();
 
         nextTimeActivate = Time.time;
-
 
         // for the blinking animation
         spriteColor = rend.color;
@@ -80,7 +78,6 @@ public class Beaconv2Controller : MonoBehaviour
         fading = false;
 
         StartCoroutine(FadeTo(fadeIn, duration));
-
     }
 
 
@@ -126,5 +123,4 @@ public class Beaconv2Controller : MonoBehaviour
 
         StartCoroutine(FadeTo(!fadeIn, duration));
     }
-
 }

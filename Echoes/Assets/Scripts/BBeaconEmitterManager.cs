@@ -95,7 +95,19 @@ public class BBeaconEmitterManager : MonoBehaviour
             theDoor.OpenTheDoor();
 
             puzzleSolved = true;
+
+            GeneratorBlink();
         }
     }
 
+    void GeneratorBlink()
+    {
+        for (int i = 0; i < beacons.Length; i++)
+        {
+            if (beacons[i].activationBeacon)
+            {
+                beacons[i].Fade(false);
+            }
+        }
+    }
 }
