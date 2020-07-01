@@ -14,6 +14,7 @@ public class GeneratorManager : MonoBehaviour
     RocketSpawner rs;   // rocket spawner
 
     int counter;        // counter of generators
+    
 
     // Start is called before the first frame update
     void Start()
@@ -59,11 +60,22 @@ public class GeneratorManager : MonoBehaviour
 
     void GeneratorBlink()
     {
+        bool generatorDestroyed = false;
+
         for (int i = 0; i < generators.Length; i++)
         {
-            if (generators[i].GetComponent<Generatorv2Controller>())
+            if (generators[i] == null)            
+                generatorDestroyed = true;            
+        }
+
+        if (!generatorDestroyed)
+        {
+            for (int i = 0; i < generators.Length; i++)
             {
-                generators[i].GetComponent<Generatorv2Controller>().Fade(false);
+                if (generators[i].GetComponent<Generatorv2Controller>())
+                {
+                    generators[i].GetComponent<Generatorv2Controller>().Fade(false);
+                }
             }
         }
     }

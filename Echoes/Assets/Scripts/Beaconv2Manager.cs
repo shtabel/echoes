@@ -15,6 +15,11 @@ public class Beaconv2Manager : MonoBehaviour
     [SerializeField]
     DoorController theDoor;
 
+    [SerializeField]
+    GameObject emitterBase;
+    [SerializeField]
+    GameObject emitter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,5 +118,11 @@ public class Beaconv2Manager : MonoBehaviour
         BeaconBlink();
 
         theDoor.OpenTheDoor();
+
+        // отключаем эмиттер
+        if (emitterBase != null)
+            Instantiate(emitterBase, emitter.transform.position, emitter.transform.rotation);
+        if (emitter != null)
+            emitter.SetActive(false);
     }
 }

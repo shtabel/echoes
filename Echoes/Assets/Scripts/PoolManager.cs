@@ -124,12 +124,11 @@ public class PoolManager : MonoBehaviour
 
             gameObject.SetActive(true);
 
-            Quaternion initRot = Quaternion.identity;
-
-            gameObject.transform.parent = tempParent.transform;
-
-            transform.position = tempParent.transform.position;
-            transform.rotation = initRot;
+            // чтобы блинк не вращался с родительским объектом
+            Quaternion initRot = Quaternion.identity;           // сохраняем исходное вращение
+            gameObject.transform.parent = tempParent.transform; // приписываем родительский объект
+            transform.position = tempParent.transform.position; // перемещаемся вслед за ним
+            transform.rotation = initRot;                       // сохраняем исходное вращение
 
             // делаем объект обратно непрозрачным
             MeshRenderer rend = gameObject.GetComponent<MeshRenderer>();

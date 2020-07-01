@@ -151,6 +151,7 @@ public class EnemyController : MonoBehaviour
 
         // потом уничтожаем сам объект
         Destroy(gameObject);
+        //gameObject.SetActive(false);
 
         lvlManager.ResetArrays();
     }

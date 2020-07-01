@@ -157,7 +157,7 @@ public class EmitterScript : MonoBehaviour
         if (_selection != null)
         {
             if (_selection.tag == "generator")
-                _selection.GetComponent<Generatorv2Controller>().ActivateGenerator();
+                _selection.GetComponent<Generatorv2Controller>().DeactivateGenerator();
             if (_selection.tag == "BBeaconEmitter")
                 _selection.GetComponent<BBeaconEmitterController>().Deactivate();
 
