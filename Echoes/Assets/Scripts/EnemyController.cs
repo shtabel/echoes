@@ -33,6 +33,9 @@ public class EnemyController : MonoBehaviour
 
     float initDrag;
 
+    float nextTimeChangeDrag;
+    float dragChangeDelay = 1;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -136,6 +139,20 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void ChangeDrag(float dragValue, bool doChange)
+    {
+        if (doChange)
+        {
+            rb.drag = dragValue;
+
+            nextTimeChangeDrag = Time.time + dragChangeDelay;
+        }
+        else if (Time.time > nextTimeChangeDrag)
+        {
+            rb.drag = dragValue;
+        }
+    }
+
     public void BlowUpEnemy()
     {      
         if (Vector3.Distance(FindObjectOfType<PlayerController>().transform.position, transform.position) < 20)
@@ -209,7 +226,8 @@ public class EnemyController : MonoBehaviour
         // если обломок сталкивается с игроком - drag как сначала
         if (collision.gameObject.tag == "Player" && gameObject.tag == "sunken")
         {
-            gameObject.GetComponent<Rigidbody>().drag = initDrag;
+            //gameObject.GetComponent<Rigidbody>().drag = initDrag;
+            ChangeDrag(initDrag, true);
         }
 
         // если обломок сталкивается со стеной - показываем значек
@@ -224,4 +242,13 @@ public class EnemyController : MonoBehaviour
         //}
     }
 
+    void OnCollisionExit(Collision collision)
+    {
+        // если обломок сталкивается с игроком - drag как сначала
+        if (collision.gameObject.tag == "Player" && gameObject.tag == "sunken")
+        {
+            //gameObject.GetComponent<Rigidbody>().drag = initDrag;
+            ChangeDrag(initDrag, true);
+        }
+    }
 }

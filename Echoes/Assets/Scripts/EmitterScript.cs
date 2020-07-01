@@ -202,7 +202,8 @@ public class EmitterScript : MonoBehaviour
                 if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет препятствий
                 {
                     var selection = hitInfo2.transform;
-                    selection.GetComponent<Rigidbody>().drag = sunkenDragHold;
+                    //selection.GetComponent<Rigidbody>().drag = sunkenDragHold;
+                    selection.GetComponent<EnemyController>().ChangeDrag(sunkenDragHold, false);
 
 
                     hitInfo2.transform.gameObject.GetComponent<EnemyController>().CreateBlink();
