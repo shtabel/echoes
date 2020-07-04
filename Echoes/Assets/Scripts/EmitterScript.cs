@@ -37,7 +37,7 @@ public class EmitterScript : MonoBehaviour
     [SerializeField]
     bool showObstacles;
     Vector3 lastBlinkPosition;      // хранит позицию последнего блинка
-    float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
+    float showBlinksDst = 25;       // дистанция у игроку, на которой отображаем блинки препятствий
 
     [SerializeField]
     float sunkenDragHold;           // с какой силой удерживаем обломок

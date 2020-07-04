@@ -145,13 +145,13 @@ public class PlayerController : MonoBehaviour
 #endif
     }
 
-
-    void OnCollisionEnter(Collision collision)
-    {
+    void HandleObstacleCollision(Collision collision)
+    {    
+        // если игрок сталкивается с препятстием - покажи точку соприкосновение и потряси
         if (collision.gameObject.tag == "obstacle" && (Time.time >= nextTimeblink))
         {
             camShake.SmallShake();
-            
+
             foreach (ContactPoint contact in collision.contacts)
             {
                 blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
@@ -159,7 +159,11 @@ public class PlayerController : MonoBehaviour
 
             nextTimeblink = Time.time + blinkDelay;
         }
+    }
 
+    void HandleSunkenCollision(Collision collision)
+    {
+        // если игрок сталкивается с обломком - покажи его
         if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
         {
             blinkManager.CreateBlinkFollow(blinkManager.blinkCircleGray, collision.transform.position, collision.gameObject);
@@ -167,25 +171,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        HandleObstacleCollision(collision);
+        HandleSunkenCollision(collision);
+    }
+
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "obstacle" && (Time.time >= nextTimeblink))
-        {            
-            camShake.SmallShake();
-
-            foreach (ContactPoint contact in collision.contacts)
-            {
-                blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
-            }
-
-            nextTimeblink = Time.time + blinkDelay;
-        }
-
-        if (collision.gameObject.tag == "sunken" && (Time.time >= nextTimeblinkSunken))
-        {
-            blinkManager.CreateBlinkFollow(blinkManager.blinkCircleGray, collision.transform.position, collision.gameObject);
-            nextTimeblinkSunken = Time.time + blinkDelay;
-        }
+        HandleObstacleCollision(collision);
+        HandleSunkenCollision(collision);
     }
 
     void OnTriggerEnter(Collider other)
@@ -196,7 +191,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Level completed!");
         }
 
-        if (other.tag == "mine" || other.tag == "rocket" || other.tag == "persuer")
+        if (other.tag == "mine"|| other.tag == "mine_boss" || other.tag == "rocket" || other.tag == "persuer")
         {
             other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
             

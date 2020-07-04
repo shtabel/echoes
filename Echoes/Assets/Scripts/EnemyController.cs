@@ -64,6 +64,10 @@ public class EnemyController : MonoBehaviour
                 blink[0] = bm.blinkCrossRed;
                 blink[1] = bm.blinkCrossOrange;
                 break;
+            case "mine_boss":
+                blink[0] = bm.blinkCrossRed;
+                blink[1] = bm.blinkCrossOrange;
+                break;
             case "rocket":
                 blink[0] = bm.blinkTriangleRed;
                 blink[1] = bm.blinkTriangleOrange; ;
@@ -199,18 +203,18 @@ public class EnemyController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // если обломок сталкивается с другими врагами - взорви их
-        if (gameObject.tag == "sunken" && (other.tag == "mine" || other.tag == "rocket" || other.tag == "persuer"))
+        if (gameObject.tag == "sunken" && (other.tag == "mine"))//|| other.tag == "rocket" || other.tag == "persuer"))
         {
             other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
             lvlManager.ResetArrays();
         }
 
-        // если обломок сталкивается с генератором
-        if (gameObject.tag == "sunken" && other.tag == "generator")
-        {
-            other.GetComponent<GeneratorController>().DestroyGenerator();
-            Debug.Log("обломок сталкивается с генератором ");
-        }
+        //// если обломок сталкивается с генератором
+        //if (gameObject.tag == "sunken" && other.tag == "generator")
+        //{
+        //    other.GetComponent<GeneratorController>().DestroyGenerator();
+        //    Debug.Log("обломок сталкивается с генератором ");
+        //}
 
     }
 

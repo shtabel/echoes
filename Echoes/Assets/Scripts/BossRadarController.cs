@@ -137,8 +137,7 @@ public class BossRadarController : MonoBehaviour
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
             {
                 bossManager.LaunchNewRocket();
-
-                DestroySelf();
+                //DestroySelf();
             }
         }
     }

@@ -95,11 +95,11 @@ public class SearcherRadar : MonoBehaviour
         if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, mineMask))
         {
             float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-            //Debug.Log("distance to player: " + dstToTarget);
 
             if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength)) 
                // && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
             {
+                //Debug.Log("покажи мину");
                 hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();               
             }
         }
@@ -180,20 +180,20 @@ public class SearcherRadar : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider nearbyObject in colliders)
         {
+            // собираем rb всех врагов в радиусе взрыва
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
-            if (rb != null)
+            if (rb != null && rb.gameObject.tag != "mine_boss")
             {
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-                if (rb.gameObject.GetComponent<EnemyController>() != null)
-                {
-                    bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[1], rb.transform.position, rb.gameObject);
-                }
+                // если у rb это враг - создаем блинк
+                if (rb.gameObject.GetComponent<EnemyController>() != null)                
+                    bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[1], rb.transform.position, rb.gameObject);                
 
-                if (Vector3.Distance(thePlayer.transform.position, transform.position) < 20)
-                {
+                // если далеко от игрока - не трасем камеру
+                if (Vector3.Distance(thePlayer.transform.position, transform.position) < 20)                
                     camShake.MediumShake();
-                }
+                
             }
         }
     }
