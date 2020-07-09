@@ -197,7 +197,7 @@ public class SearcherRadar : MonoBehaviour
             }
         }
     }
-
+        
     Vector3 RaycastObstacle(Vector3 upVec)
     {
         // draw ray in scene window

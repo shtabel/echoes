@@ -11,13 +11,26 @@ public class GeneratorController : MonoBehaviour // генератор, кото
 
     [SerializeField]
     GameObject genMng;
-    BlinkManager bm;    
+    BlinkManager bm;
+
+    // for the blinking animation
+    SpriteRenderer rend;
+    [SerializeField]
+    Sprite spriteYellow;
+    Color spriteColor;
+    bool fading = false;
+    float duration = 0.5f;
+
 
     // Start is called before the first frame update
     void Start()
     {
         //genMng = FindObjectOfType<GeneratorManager>();
-        bm = FindObjectOfType<BlinkManager>();        
+        bm = FindObjectOfType<BlinkManager>();
+
+        rend = GetComponent<SpriteRenderer>();
+        rend.sprite = spriteYellow;
+        spriteColor = rend.color;
     }
     
     public void DestroyGenerator()
@@ -26,6 +39,12 @@ public class GeneratorController : MonoBehaviour // генератор, кото
         HandleManager();    // tell the particular manager that we've destroyed one generator
         bm.CreateBlink(bm.blinkCircleOrange, transform.position);
         Destroy(gameObject);
+    }
+
+    void Update()
+    {
+        // чтобы не крутились во время битвы с боссом
+        transform.rotation = Quaternion.identity;
     }
 
     void HandleManager()
@@ -55,5 +74,59 @@ public class GeneratorController : MonoBehaviour // генератор, кото
                     bm.CreateBlinkFollow(rigidBody.gameObject.GetComponent<EnemyController>().blinkType[1], rigidBody.transform.position, rigidBody.gameObject);
             }
         }
+    }
+
+    public void Fade(bool fadeIn)
+    {
+        if (fading)
+        {
+            return;
+        }
+        fading = false;
+
+        StartCoroutine(FadeTo(fadeIn, duration));
+    }
+
+    IEnumerator FadeTo(bool fadeIn, float duration)
+    {
+        float counter = 0f;
+
+        //Set Values depending on if fadeIn or fadeOut
+        float a, b;
+        if (fadeIn)
+        {
+            a = 0;
+            b = 1;
+        }
+        else
+        {
+            a = 1;
+            b = 0;
+        }
+
+        //Enable MyRenderer component
+        if (!rend.enabled)
+            rend.enabled = true;
+
+        //Do the actual fading
+        while (counter < duration)
+        {
+            counter += Time.deltaTime;
+            float alpha = Mathf.Lerp(a, b, counter / duration);
+            //Debug.Log(alpha);
+
+            rend.color = new Color(spriteColor.r, spriteColor.g, spriteColor.b, alpha);
+            yield return null;
+        }
+
+        if (!fadeIn)
+        {
+            //Disable Mesh Renderer
+            rend.enabled = false;
+
+        }
+        fading = false; //So that we can call this function next time
+
+        StartCoroutine(FadeTo(!fadeIn, duration));
     }
 }

@@ -65,7 +65,7 @@ public class EnemyController : MonoBehaviour
                 blink[1] = bm.blinkCrossOrange;
                 break;
             case "mine_boss":
-                blink[0] = bm.blinkCrossRed;
+                blink[0] = bm.blinkCrossRedLong;
                 blink[1] = bm.blinkCrossOrange;
                 break;
             case "rocket":
@@ -200,6 +200,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void HandleMineBossDestroy()
+    {
+        bm.CreateBlink(blinkType[1], transform.position);
+        transform.position = Vector3.zero;
+        rb.isKinematic = true;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         // если обломок сталкивается с другими врагами - взорви их
@@ -207,6 +214,12 @@ public class EnemyController : MonoBehaviour
         {
             other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
             lvlManager.ResetArrays();
+        }
+
+        // если мина босса сталкивается с перпятсвием
+        if (other.gameObject.tag == "obstacle" && gameObject.tag == "mine_boss")
+        {
+            HandleMineBossDestroy();
         }
 
         //// если обломок сталкивается с генератором
@@ -219,7 +232,7 @@ public class EnemyController : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision)
-    {
+    {     
         // если обломок сталкивается с обломком - покажи его
         if (collision.gameObject.tag == "sunken" && gameObject.tag == "sunken")
         {

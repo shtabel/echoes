@@ -13,6 +13,7 @@ public class BossRadarController : MonoBehaviour
 
     public LayerMask playerMask;
     public LayerMask obstacleMask;
+    public LayerMask mineMask;
     public LayerMask rocketMask;
     public LayerMask sunkenMask;
 
@@ -71,6 +72,7 @@ public class BossRadarController : MonoBehaviour
     void Raycast(Vector3 vector)
     {
         RaycastPlayer(vector);
+        RaycastMine(vector);
         RaycastRocket(vector);
         RaycastSunken(vector);
     }
@@ -85,6 +87,22 @@ public class BossRadarController : MonoBehaviour
         }
         else
             rayLineRenderer.SetPosition(1, endCoord2); // end of the ray coords
+    }
+
+    void RaycastMine(Vector3 upVec)
+    {
+        RaycastHit hitInfo;
+        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, mineMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
+            // && (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
+            {
+                //Debug.Log("покажи мину");
+                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+            }
+        }
     }
 
     void RaycastPlayer(Vector3 upVec)

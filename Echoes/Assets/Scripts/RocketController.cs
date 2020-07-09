@@ -61,7 +61,7 @@ public class RocketController : EnemyController
         {
             //BlowUpRocket();
         }
-        else if (other.tag == "mine")
+        else if (other.tag == "mine" || other.tag == "mine_boss")
         {
             BlowUpEnemy();
             other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();

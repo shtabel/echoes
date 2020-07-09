@@ -4,25 +4,45 @@ using UnityEngine;
 
 public class BossBatleManager : MonoBehaviour
 {
+    // GENERATORS: phases 2, 4, 6
     [SerializeField]
-    GeneratorController[] generators;
-
+    BossRotationController generatorsParent;    // parent of generators that we rotate
     [SerializeField]
-    RocketSpawner[] rocketLaunchers;
+    GeneratorController[] generators;           // array of generators
+    int numberOfGenerators;                     // nuber of generators (3)
+    int generatorsCounter = 0;                  // how much generators are destroyed
 
+    // STATIC MINES: phase 3
     [SerializeField]
-    BossRadarController[] radars;
+    BossRotationController minessParent;            // parent of  static mines
 
-    PlayerController thePlayer;
+    // EMITTERS: phase 3
+    [SerializeField]
+    BossRotationController emittersParent;          // parent of emitters
 
-    int numberOfGenerators;
-    int generatorsCounter = 0;
+    // ROCKET LAUNCHERS: phases 2, 4, 6
+    [SerializeField]
+    RocketSpawner[] rocketLaunchers;                // array of rocket launchers
 
-    public int currentPhase = 0;
+    // BOSS'S RADARS (SEARCHERS): phases 1, ???
+    [SerializeField]
+    BossRadarController[] radars;                   // array of radars (boss's searchers)
 
+    
 
-    public float angleToPlayer;
+    PlayerController thePlayer;                     // the player 
 
+    
+
+    public int currentPhase = 0;    // current phase of the boss fight
+    
+    // TIMING
+    [SerializeField]
+    float phaseOneTime;     // how long to survive during phase 1
+    [SerializeField]
+    float phaseThreeTime;     // how long to survive during phase 3
+    [SerializeField]
+    float gapTime;          // gap btw generator is destroyed and start of next phase
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +52,29 @@ public class BossBatleManager : MonoBehaviour
 
         DeactivateRadars();
     }
+    void Update()
+    {
+        Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
+        //angleToPlayer = Vector3.Angle(Vector3.up, dir);
+
+        if (Input.GetKeyDown(KeyCode.Space))    // switch to the next phase of the boss
+        {
+            NextPhase();
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))    // launch a rocket
+        {
+            LaunchNewRocket();
+        }
+
+
+        //// check emitters angle to the playre
+        //Vector3 dirToPlayer = emittersParent.transform.position - thePlayer.transform.position;
+        //Debug.Log("dirToPlayer = " + dirToPlayer);
+        //float angle = Vector3.Angle(Vector3.up, dirToPlayer);
+        //Debug.Log("angle = " + angle);
+    }
+
 
     void DeactivateRadars()
     {
@@ -42,6 +85,40 @@ public class BossBatleManager : MonoBehaviour
         }
     }
 
+    void ActivateGenerators(float speed)
+    {
+        generatorsParent.gameObject.SetActive(true);
+        generatorsParent.SetRotationSpeed(speed);
+    }
+
+    void ActivateStaticMines()
+    {
+        minessParent.gameObject.SetActive(true);
+        minessParent.SetRotationSpeed(0);
+
+        Vector3 dirToPlayer = minessParent.transform.position - thePlayer.transform.position;
+
+        float angle = Vector3.Angle(Vector3.up, dirToPlayer);
+        Debug.Log("angle = " + angle);
+
+        //emittersParent.transform.LookAt(thePlayer.transform);
+        minessParent.transform.Rotate(new Vector3(0, 0, 1), angle, Space.Self);
+    }
+
+    void ActivateEmitters(float speed)
+    {
+        emittersParent.gameObject.SetActive(true);
+        emittersParent.SetRotationSpeed(speed);
+
+        Vector3 dirToPlayer = emittersParent.transform.position - thePlayer.transform.position;
+
+        float angle = Vector3.Angle(Vector3.up, dirToPlayer);
+        Debug.Log("angle = " + angle);
+
+        //emittersParent.transform.LookAt(thePlayer.transform);
+        emittersParent.transform.Rotate(new Vector3(0, 0, 1), angle + 20, Space.Self);        
+    }
+
     void ActivateRadarWithRotation(int numberOfRadarToActivate, float offsetInDeg)
     {
         for (int i = 0; i < radars.Length; i++)
@@ -50,27 +127,48 @@ public class BossBatleManager : MonoBehaviour
             if (i == numberOfRadarToActivate)
             {
                 radar.SetActive(true);
+
+                if (thePlayer.transform.position.x == transform.position.x)
+                {
+                    // так как неправльно вращается
+                    radar.transform.LookAt(new Vector3
+                        (thePlayer.transform.position.x+1, thePlayer.transform.position.y, thePlayer.transform.position.z));
+                } else
+                    radar.transform.LookAt(thePlayer.transform);
+
                 //radar.transform.Rotate(new Vector3(0, 0, 1), 30, Space.Self);   
-                radar.transform.Rotate(new Vector3(0, 0, 1), angleToPlayer - offsetInDeg, Space.Self);
+                radar.transform.Rotate(new Vector3(0, 1, 0), offsetInDeg, Space.Self);
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
-        angleToPlayer = Vector3.Angle(Vector3.up, dir);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextPhase();
-        }
-    }
+    }        
 
     public void MinusGenerator()
     {
-        NextPhase();
+        GeneratorBlink();
+        StartCoroutine(ExecuteNextPhaseAfterTime(gapTime));
+        //NextPhase();
+    }
+
+    void GeneratorBlink()
+    {
+        bool generatorDestroyed = false;
+
+        for (int i = 0; i < generators.Length; i++)
+        {
+            if (generators[i] == null)
+                generatorDestroyed = true;
+        }
+
+        if (!generatorDestroyed)
+        {
+            for (int i = 0; i < generators.Length; i++)
+            {
+                if (generators[i].GetComponent<GeneratorController>())
+                {
+                    generators[i].GetComponent<GeneratorController>().Fade(false);
+                }
+            }
+        }
     }
 
     public void NextPhase()
@@ -91,41 +189,70 @@ public class BossBatleManager : MonoBehaviour
             case 4:
                 StartPhase4();
                 break;
+            case 5:
+                StartPhase5();
+                break;
         }
     }
 
     public void StartPhase1()
     {
-        LaunchNewRocket();
-        //Debug.Log("Phase 1");
+        //LaunchNewRocket();
+        Debug.Log("Phase 1");
+        currentPhase = 1;
 
+        ActivateRadarWithRotation(0, -90);
+
+        StartCoroutine(ExecuteNextPhaseAfterTime(phaseOneTime));
+    }
+
+    IEnumerator ExecuteNextPhaseAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        NextPhase();
     }
 
     public void StartPhase2()
     {
+        Debug.Log("Phase 2");
         LaunchNewRocket();
         DeactivateRadars();
-        ActivateRadarWithRotation(0, 120);
-        //Debug.Log("Phase 2");
+        ActivateGenerators(0);        
     }
 
     public void StartPhase3()
     {
-        LaunchNewRocket();
-        DeactivateRadars();
-        ActivateRadarWithRotation(3, -120);
-        ActivateRadarWithRotation(4, -120);
-        //Debug.Log("Phase 3");
+        Debug.Log("Phase 3");
+        // deactivate previous objects
+        generatorsParent.gameObject.SetActive(false);
+        // activate new objects
+        ActivateStaticMines();
+        ActivateEmitters(20);
+
+        StartCoroutine(ExecuteNextPhaseAfterTime(phaseThreeTime));
+
     }
 
     public void StartPhase4()
     {
-        //LaunchNewRocket();
-        DeactivateRadars();
-        //ActivateRadarWithRotation(5, 120);
-        //ActivateRadarWithRotation(6, 120);
-        //ActivateRadarWithRotation(7, 120);
-        //Debug.Log("You can plant a bomb");
+        Debug.Log("Phase 4");
+        // deactivate previous objects
+        emittersParent.gameObject.SetActive(false);
+        minessParent.gameObject.SetActive(false);
+
+        ActivateGenerators(10);
+        LaunchNewRocket();
+    }
+
+    public void StartPhase5()
+    {
+        Debug.Log("Phase 5");
+        // deactivate previous objects
+        generatorsParent.gameObject.SetActive(false);
+        
+
+        //StartCoroutine(ExecuteNextPhaseAfterTime(phaseThreeTime));
+
     }
 
     public void LaunchNewRocket()
