@@ -14,11 +14,15 @@ public class BossBatleManager : MonoBehaviour
 
     // STATIC MINES: phase 3
     [SerializeField]
-    BossRotationController minessParent;            // parent of  static mines
+    BossRotationController minesStParent;            // parent of static mines
 
     // EMITTERS: phase 3
     [SerializeField]
     BossRotationController emittersParent;          // parent of emitters
+
+    // MOVING MINES: phase 5
+    [SerializeField]
+    GameObject minesMovParent;                      // parent of moving mines
 
     // ROCKET LAUNCHERS: phases 2, 4, 6
     [SerializeField]
@@ -40,7 +44,11 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     float phaseOneTime;     // how long to survive during phase 1
     [SerializeField]
-    float phaseThreeTime;     // how long to survive during phase 3
+    float phaseThreeTime;   // how long to survive during phase 3
+    [SerializeField]
+    float phaseFiveTime;    // how long to survive during phase 5
+    [SerializeField]
+    float phaseFiveMinesTime;    // how long to survive during phase 5 (only mines)
     [SerializeField]
     float gapTime;          // gap btw generator is destroyed and start of next phase
 
@@ -93,16 +101,16 @@ public class BossBatleManager : MonoBehaviour
 
     void ActivateStaticMines()
     {
-        minessParent.gameObject.SetActive(true);
-        minessParent.SetRotationSpeed(0);
+        minesStParent.gameObject.SetActive(true);
+        minesStParent.SetRotationSpeed(0);
 
-        Vector3 dirToPlayer = minessParent.transform.position - thePlayer.transform.position;
-
+        // вычисляем угол до игрока
+        Vector3 dirToPlayer = minesStParent.transform.position - thePlayer.transform.position;
         float angle = Vector3.Angle(Vector3.up, dirToPlayer);
-        Debug.Log("angle = " + angle);
-
-        //emittersParent.transform.LookAt(thePlayer.transform);
-        minessParent.transform.Rotate(new Vector3(0, 0, 1), angle, Space.Self);
+        angle = (thePlayer.transform.position.x >= transform.position.x) ? angle : -angle;
+        //Debug.Log("angle = " + angle);
+        
+        minesStParent.transform.Rotate(new Vector3(0, 0, 1), angle, Space.Self);
     }
 
     void ActivateEmitters(float speed)
@@ -110,12 +118,12 @@ public class BossBatleManager : MonoBehaviour
         emittersParent.gameObject.SetActive(true);
         emittersParent.SetRotationSpeed(speed);
 
+        // вычисляем угол до игрока
         Vector3 dirToPlayer = emittersParent.transform.position - thePlayer.transform.position;
-
         float angle = Vector3.Angle(Vector3.up, dirToPlayer);
-        Debug.Log("angle = " + angle);
-
-        //emittersParent.transform.LookAt(thePlayer.transform);
+        angle = (thePlayer.transform.position.x >= transform.position.x) ? angle : -angle;
+        //Debug.Log("angle = " + angle);
+        
         emittersParent.transform.Rotate(new Vector3(0, 0, 1), angle + 20, Space.Self);        
     }
 
@@ -124,20 +132,17 @@ public class BossBatleManager : MonoBehaviour
         for (int i = 0; i < radars.Length; i++)
         {
             GameObject radar = radars[i].gameObject;
-            if (i == numberOfRadarToActivate)
+            if (i == numberOfRadarToActivate)       // активируем нужный радар
             {
                 radar.SetActive(true);
 
-                if (thePlayer.transform.position.x == transform.position.x)
-                {
-                    // так как неправльно вращается
-                    radar.transform.LookAt(new Vector3
-                        (thePlayer.transform.position.x+1, thePlayer.transform.position.y, thePlayer.transform.position.z));
-                } else
-                    radar.transform.LookAt(thePlayer.transform);
-
-                //radar.transform.Rotate(new Vector3(0, 0, 1), 30, Space.Self);   
-                radar.transform.Rotate(new Vector3(0, 1, 0), offsetInDeg, Space.Self);
+                // вычисляем угол до игрока
+                Vector3 dirToPlayer = radar.transform.position - thePlayer.transform.position;
+                float angle = Vector3.Angle(Vector3.up, dirToPlayer);
+                angle = (thePlayer.transform.position.x >= transform.position.x) ? angle : -angle;
+                
+                // задаем начальный поворот радара с учетом оффсета
+                radar.transform.Rotate(new Vector3(0, 0, 1), angle + offsetInDeg, Space.Self);
             }
         }
     }        
@@ -192,29 +197,28 @@ public class BossBatleManager : MonoBehaviour
             case 5:
                 StartPhase5();
                 break;
+            case 6:
+                StartPhase6();
+                break;
         }
     }
 
     public void StartPhase1()
     {
-        //LaunchNewRocket();
+        // просто убегаем от радара в течении заданного времени
         Debug.Log("Phase 1");
         currentPhase = 1;
-
-        ActivateRadarWithRotation(0, -90);
+        
+        ActivateRadarWithRotation(0, -90);       
 
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseOneTime));
-    }
-
-    IEnumerator ExecuteNextPhaseAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-        NextPhase();
-    }
+    }   
 
     public void StartPhase2()
     {
+        // надо уничтожить один из трех статичных генераторов за сче ракеты
         Debug.Log("Phase 2");
+        
         LaunchNewRocket();
         DeactivateRadars();
         ActivateGenerators(0);        
@@ -222,12 +226,20 @@ public class BossBatleManager : MonoBehaviour
 
     public void StartPhase3()
     {
+        // надо убегать от эмиттеров и уклоняться от мин в течении заданного времени
         Debug.Log("Phase 3");
+
         // deactivate previous objects
         generatorsParent.gameObject.SetActive(false);
         // activate new objects
         ActivateStaticMines();
         ActivateEmitters(20);
+
+        /*  TO DO:
+         *  надо сделать чтобы сначала появились мины
+        *   потом не движующиеся эмиттеры, потом они начинают медленно перемещаться
+        *   взатем они разгоняются до предела и начинается отчет выживания
+        */
 
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseThreeTime));
 
@@ -235,10 +247,12 @@ public class BossBatleManager : MonoBehaviour
 
     public void StartPhase4()
     {
+        // неоьходимо уничтожить один из двух движущихся генераторов за счет ракеты
         Debug.Log("Phase 4");
+
         // deactivate previous objects
         emittersParent.gameObject.SetActive(false);
-        minessParent.gameObject.SetActive(false);
+        minesStParent.gameObject.SetActive(false);
 
         ActivateGenerators(10);
         LaunchNewRocket();
@@ -249,10 +263,41 @@ public class BossBatleManager : MonoBehaviour
         Debug.Log("Phase 5");
         // deactivate previous objects
         generatorsParent.gameObject.SetActive(false);
-        
 
-        //StartCoroutine(ExecuteNextPhaseAfterTime(phaseThreeTime));
+        // activate new objects
+        minesMovParent.SetActive(true);
 
+        StartCoroutine(ActivateRadarAfterTime(phaseFiveMinesTime));
+
+        StartCoroutine(ExecuteNextPhaseAfterTime(phaseFiveTime));
+    }
+
+    public void StartPhase6()
+    {
+        // неоьходимо уничтожить последний движущийся генератор за счет ракеты
+        Debug.Log("Phase 6");
+
+        // deactivate previous objects
+        DeactivateRadars();
+        minesMovParent.gameObject.SetActive(false);
+
+        ActivateGenerators(-10);
+        LaunchNewRocket();
+    }
+
+    IEnumerator ActivateRadarAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        ActivateRadarWithRotation(5, -90);        
+    }
+
+
+
+    IEnumerator ExecuteNextPhaseAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        NextPhase();
     }
 
     public void LaunchNewRocket()
