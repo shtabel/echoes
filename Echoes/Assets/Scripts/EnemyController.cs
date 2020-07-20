@@ -170,6 +170,15 @@ public class EnemyController : MonoBehaviour
             camShake.MediumShake();
         }
 
+        // отделяем дочерний блинк если есть
+        if (gameObject.transform.childCount > 0)
+        {
+            //Debug.Log("Дочерних объектов: " + gameObject.transform.childCount);
+            GameObject childBlink = gameObject.transform.GetChild(0).gameObject;
+            childBlink.transform.parent = null;
+            childBlink.transform.position = Vector3.zero;
+        }
+
         // потом уничтожаем сам объект
         Destroy(gameObject);
         //gameObject.SetActive(false);

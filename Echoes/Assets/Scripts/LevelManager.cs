@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrSunkens;   // массив беглецов
     GameObject[] arrDoors;   // массив беглецов
     GameObject[] arrSafeZones; // массив безопасных зон
+    GameObject[] arrTriggers; // массив триггеров
 
     [SerializeField]
     GameObject radarForeground;
@@ -48,6 +49,7 @@ public class LevelManager : MonoBehaviour
         arrSunkens = null;
         arrDoors = null;
         arrSafeZones = null;
+        arrTriggers = null;
     }
 
     void VisibleObjects(bool makeVisible)
@@ -76,6 +78,9 @@ public class LevelManager : MonoBehaviour
         if (arrSafeZones == null)
             arrSafeZones = GameObject.FindGameObjectsWithTag("safe_zone");
 
+        if (arrTriggers == null)
+            arrTriggers = GameObject.FindGameObjectsWithTag("trigger");
+
         objectsVisible = makeVisible;
 
         SetVisible(arrObstacles);
@@ -86,6 +91,7 @@ public class LevelManager : MonoBehaviour
         SetVisible(arrSunkens);
         SetVisible(arrDoors);
         SetVisible(arrSafeZones);
+        SetVisible(arrTriggers);
     }
 
     void VisibleRadar(bool isVisible)

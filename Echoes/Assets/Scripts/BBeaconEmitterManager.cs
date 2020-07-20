@@ -104,10 +104,10 @@ public class BBeaconEmitterManager : MonoBehaviour
     {
         for (int i = 0; i < beacons.Length; i++)
         {
-            if (beacons[i].activationBeacon)
-            {
-                beacons[i].Fade(false);
-            }
+            //if (beacons[i].activationBeacon)
+            //{
+            beacons[i].Fade(false);
+            //}
         }
     }
 }

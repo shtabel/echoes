@@ -32,7 +32,7 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     BossRadarController[] radars;                   // array of radars (boss's searchers)
 
-    
+    Collider bossCollider;
 
     PlayerController thePlayer;                     // the player 
 
@@ -59,15 +59,17 @@ public class BossBatleManager : MonoBehaviour
         thePlayer = FindObjectOfType<PlayerController>();
 
         DeactivateRadars();
+
+        bossCollider = transform.parent.GetComponent<BoxCollider>();
     }
     void Update()
     {
         Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
         //angleToPlayer = Vector3.Angle(Vector3.up, dir);
 
-        if (Input.GetKeyDown(KeyCode.Space))    // switch to the next phase of the boss
+        if (Input.GetKeyDown(KeyCode.Space))    // switch to the 1st phase of the boss
         {
-            NextPhase();
+            StartPhase1();
         }
 
         if (Input.GetKeyDown(KeyCode.B))    // launch a rocket
@@ -151,7 +153,6 @@ public class BossBatleManager : MonoBehaviour
     {
         GeneratorBlink();
         StartCoroutine(ExecuteNextPhaseAfterTime(gapTime));
-        //NextPhase();
     }
 
     void GeneratorBlink()
@@ -200,13 +201,16 @@ public class BossBatleManager : MonoBehaviour
             case 6:
                 StartPhase6();
                 break;
+            case 7:
+                FinishBattle();
+                break;
         }
     }
 
     public void StartPhase1()
     {
         // просто убегаем от радара в течении заданного времени
-        Debug.Log("Phase 1");
+        //Debug.Log("Phase 1");
         currentPhase = 1;
         
         ActivateRadarWithRotation(0, -90);       
@@ -217,7 +221,7 @@ public class BossBatleManager : MonoBehaviour
     public void StartPhase2()
     {
         // надо уничтожить один из трех статичных генераторов за сче ракеты
-        Debug.Log("Phase 2");
+        //Debug.Log("Phase 2");
         
         LaunchNewRocket();
         DeactivateRadars();
@@ -227,7 +231,7 @@ public class BossBatleManager : MonoBehaviour
     public void StartPhase3()
     {
         // надо убегать от эмиттеров и уклоняться от мин в течении заданного времени
-        Debug.Log("Phase 3");
+        //Debug.Log("Phase 3");
 
         // deactivate previous objects
         generatorsParent.gameObject.SetActive(false);
@@ -248,7 +252,7 @@ public class BossBatleManager : MonoBehaviour
     public void StartPhase4()
     {
         // неоьходимо уничтожить один из двух движущихся генераторов за счет ракеты
-        Debug.Log("Phase 4");
+        //Debug.Log("Phase 4");
 
         // deactivate previous objects
         emittersParent.gameObject.SetActive(false);
@@ -260,9 +264,11 @@ public class BossBatleManager : MonoBehaviour
 
     public void StartPhase5()
     {
-        Debug.Log("Phase 5");
+        //Debug.Log("Phase 5");
         // deactivate previous objects
         generatorsParent.gameObject.SetActive(false);
+
+        bossCollider.enabled = false;
 
         // activate new objects
         minesMovParent.SetActive(true);
@@ -275,14 +281,24 @@ public class BossBatleManager : MonoBehaviour
     public void StartPhase6()
     {
         // неоьходимо уничтожить последний движущийся генератор за счет ракеты
-        Debug.Log("Phase 6");
+        //Debug.Log("Phase 6");
+
+        bossCollider.enabled = true;        
 
         // deactivate previous objects
         DeactivateRadars();
         minesMovParent.gameObject.SetActive(false);
 
+        // activate new objects
         ActivateGenerators(-10);
+        ActivateRadarWithRotation(3, -90);
         LaunchNewRocket();
+    }
+
+    void FinishBattle()
+    {
+        // deativate old objects
+        DeactivateRadars();
     }
 
     IEnumerator ActivateRadarAfterTime(float time)
@@ -291,8 +307,6 @@ public class BossBatleManager : MonoBehaviour
 
         ActivateRadarWithRotation(5, -90);        
     }
-
-
 
     IEnumerator ExecuteNextPhaseAfterTime(float time)
     {
