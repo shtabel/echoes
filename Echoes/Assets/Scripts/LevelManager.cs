@@ -32,6 +32,8 @@ public class LevelManager : MonoBehaviour
         VisibleObjects(false);
         VisibleRadar(radarVisible);
         radarLayout.SetActive(false);
+
+        HideSliderDoorSystem();
     }
 
     // Update is called once per frame
@@ -125,5 +127,15 @@ public class LevelManager : MonoBehaviour
             VisibleRadar(!radarVisible);
         }
 #endif
+    }
+
+    void HideSliderDoorSystem()
+    {
+        GameObject[] arrSDS = GameObject.FindGameObjectsWithTag("slider_door_system");
+
+        foreach (GameObject obj in arrSDS)
+        {
+            obj.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 }

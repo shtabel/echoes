@@ -21,6 +21,8 @@ TagManager:
   - BBeaconMEmitter
   - mine_boss
   - destroyer
+  - trigger
+  - slider_door_system
   layers:
   - Default
   - TransparentFX
