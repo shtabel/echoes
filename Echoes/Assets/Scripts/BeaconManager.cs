@@ -10,8 +10,11 @@ public class BeaconManager : MonoBehaviour
     int lastBeaconActivated;    // номер последнего активированного маячка
     int counter;                // счетчик активированных маячков
 
+    //[SerializeField]
+    //DoorController theDoor;
+
     [SerializeField]
-    DoorController theDoor;
+    SliderDoorController[] sliderDoors;
 
     [SerializeField]
     GameObject emitterBase;
@@ -58,7 +61,11 @@ public class BeaconManager : MonoBehaviour
 
         BeaconBlink();
         // OPEN THE DOOR
-        theDoor.OpenTheDoor();
+        //theDoor.OpenTheDoor();
+        for (int i = 0; i < sliderDoors.Length; i++)
+        {
+            sliderDoors[i].OpenTheDoor();
+        }
 
         // отключаем эмиттер
         if (emitterBase != null)

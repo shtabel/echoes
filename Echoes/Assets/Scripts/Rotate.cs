@@ -197,7 +197,8 @@ public class Rotate : MonoBehaviour
             RaycastHit hit = hitInfo[i];
 
             float dstToTarget = Vector3.Distance(transform.position, hit.point);
-            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask))
+            if (!Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask) 
+                && !Physics.Raycast(transform.position, vector, dstToTarget, doorMask))
             {
                 string tag = "";
 

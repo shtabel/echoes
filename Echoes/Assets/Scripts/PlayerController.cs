@@ -205,6 +205,16 @@ public class PlayerController : MonoBehaviour
 
         lvlManager.ResetArrays();
 
+        // dark setion
+        if (other.tag == "dark_start")
+        {
+            radarRay.SetActive(false);
+        }
+        if (other.tag == "dark_stop")
+        {
+            radarRay.SetActive(true);
+        }
+
         // туннель вслепую
         if (other.tag == "tunnel_start")
         {

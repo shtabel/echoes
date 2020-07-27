@@ -25,6 +25,8 @@ TagManager:
   - slider_door_system
   - tunnel_start
   - tunnel_stop
+  - dark_start
+  - dark_stop
   layers:
   - Default
   - TransparentFX

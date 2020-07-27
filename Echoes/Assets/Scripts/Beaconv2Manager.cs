@@ -12,8 +12,11 @@ public class Beaconv2Manager : MonoBehaviour
 
     public bool puzzleSolved;
 
+    //[SerializeField]
+    //DoorController theDoor;
+
     [SerializeField]
-    DoorController theDoor;
+    SliderDoorController[] sliderDoors;
 
     [SerializeField]
     GameObject emitterBase;
@@ -117,7 +120,12 @@ public class Beaconv2Manager : MonoBehaviour
 
         BeaconBlink();
 
-        theDoor.OpenTheDoor();
+        // Open the door
+        //theDoor.OpenTheDoor();
+        for (int i = 0; i < sliderDoors.Length; i++)
+        {
+            sliderDoors[i].OpenTheDoor();
+        }
 
         // отключаем эмиттер
         if (emitterBase != null)

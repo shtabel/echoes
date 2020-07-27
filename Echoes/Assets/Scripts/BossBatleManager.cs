@@ -36,6 +36,8 @@ public class BossBatleManager : MonoBehaviour
 
     PlayerController thePlayer;                     // the player 
 
+    [SerializeField]
+    GameObject[] arches;
     
 
     public int currentPhase = 0;    // current phase of the boss fight
@@ -61,6 +63,8 @@ public class BossBatleManager : MonoBehaviour
         DeactivateRadars();
 
         bossCollider = transform.parent.GetComponent<BoxCollider>();
+
+        SetArch(0);
     }
     void Update()
     {
@@ -212,6 +216,7 @@ public class BossBatleManager : MonoBehaviour
         // просто убегаем от радара в течении заданного времени
         //Debug.Log("Phase 1");
         currentPhase = 1;
+        SetArch(1);
         
         ActivateRadarWithRotation(0, -90);       
 
@@ -299,6 +304,7 @@ public class BossBatleManager : MonoBehaviour
     {
         // deativate old objects
         DeactivateRadars();
+        SetArch(2);
     }
 
     IEnumerator ActivateRadarAfterTime(float time)
@@ -338,4 +344,18 @@ public class BossBatleManager : MonoBehaviour
         return closestSpawner;
     }
 
+    void SetArch(int number)
+    {
+        for (int i = 0; i < arches.Length; i++)
+        {
+            if (i == number)
+            {
+                arches[i].SetActive(true);
+            }
+            else
+            {
+                arches[i].SetActive(false);
+            }
+        }
+    }
 }
