@@ -23,6 +23,8 @@ TagManager:
   - destroyer
   - trigger
   - slider_door_system
+  - tunnel_start
+  - tunnel_stop
   layers:
   - Default
   - TransparentFX

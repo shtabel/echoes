@@ -204,6 +204,16 @@ public class PlayerController : MonoBehaviour
         }
 
         lvlManager.ResetArrays();
+
+        // туннель вслепую
+        if (other.tag == "tunnel_start")
+        {
+            FindObjectOfType<TunnelEmittersManager>().ActivateEmitters();
+        }
+        if (other.tag == "tunnel_stop")
+        {
+            FindObjectOfType<TunnelEmittersManager>().DeactivateEmitters();
+        }
     }
 
     void OnTriggerExit(Collider other)

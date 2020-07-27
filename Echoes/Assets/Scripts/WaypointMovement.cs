@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaypointMovement : MonoBehaviour
 {
     [SerializeField]
-    float speed;                // speed of the object
+    public float speed;                // speed of the object
 
     [SerializeField]
     Vector3[] localWaypoints;   // local waypoints (relative to the object)
