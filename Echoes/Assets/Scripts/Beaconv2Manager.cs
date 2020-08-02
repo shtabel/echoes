@@ -30,6 +30,11 @@ public class Beaconv2Manager : MonoBehaviour
         requiredAmmount = CountActivationBeacons(beacons);
 
         beacons = SetIDs(beacons);
+
+        //if (FindObjectOfType<SaveManager>().CheckLeftPuzzleSolved())
+        //{
+        //    PuzzleSolved();
+        //}
     }
 
     int CountActivationBeacons(Beaconv2Controller[] bb)
@@ -132,5 +137,7 @@ public class Beaconv2Manager : MonoBehaviour
             Instantiate(emitterBase, emitter.transform.position, emitter.transform.rotation);
         if (emitter != null)
             emitter.SetActive(false);
+
+        FindObjectOfType<SaveManager>().SetLeftPuzzleSolved();
     }
 }

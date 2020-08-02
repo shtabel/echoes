@@ -25,6 +25,11 @@ public class BeaconManager : MonoBehaviour
     void Start()
     {
         Reset();
+
+        //if (FindObjectOfType<SaveManager>().CheckRightPuzzleSolved())
+        //{
+        //    PuzzleSolved();
+        //}
     }
 
     public void HandleOrder(int beaconNumber)
@@ -72,6 +77,8 @@ public class BeaconManager : MonoBehaviour
             Instantiate(emitterBase, emitter.transform.position, emitter.transform.rotation);
         if (emitter != null)
             emitter.SetActive(false);
+
+        FindObjectOfType<SaveManager>().SetRightPuzzleSolved();
     }
 
     void Reset()    // обнуляем прогресс

@@ -54,6 +54,10 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     float gapTime;          // gap btw generator is destroyed and start of next phase
 
+    // doors before the boss
+    [SerializeField]
+    SliderDoorController[] theDoorsBefore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,21 +69,27 @@ public class BossBatleManager : MonoBehaviour
         bossCollider = transform.parent.GetComponent<BoxCollider>();
 
         SetArch(0);
+
+        CheckLeftPuzzle();
+        CheckRightPuzzle();
+
+        CheckBossBattle();
+        
     }
     void Update()
     {
-        Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
+        //Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
         //angleToPlayer = Vector3.Angle(Vector3.up, dir);
 
-        if (Input.GetKeyDown(KeyCode.Space))    // switch to the 1st phase of the boss
-        {
-            StartPhase1();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))    // switch to the 1st phase of the boss
+        //{
+        //    StartPhase1();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.B))    // launch a rocket
-        {
-            LaunchNewRocket();
-        }
+        //if (Input.GetKeyDown(KeyCode.B))    // launch a rocket
+        //{
+        //    LaunchNewRocket();
+        //}
 
 
         //// check emitters angle to the playre
@@ -261,7 +271,8 @@ public class BossBatleManager : MonoBehaviour
 
         // deactivate previous objects
         emittersParent.gameObject.SetActive(false);
-        minesStParent.gameObject.SetActive(false);
+        //minesStParent.gameObject.SetActive(false);
+        minesStParent.gameObject.transform.Translate(new Vector3(-50, 0, 0));
 
         ActivateGenerators(10);
         LaunchNewRocket();
@@ -305,6 +316,10 @@ public class BossBatleManager : MonoBehaviour
         // deativate old objects
         DeactivateRadars();
         SetArch(2);
+
+        FindObjectOfType<TimerManager>().StartTimer();
+
+        FindObjectOfType<SaveManager>().SetBossBattleWon();
     }
 
     IEnumerator ActivateRadarAfterTime(float time)
@@ -351,6 +366,8 @@ public class BossBatleManager : MonoBehaviour
             if (i == number)
             {
                 arches[i].SetActive(true);
+                MeshRenderer mr = arches[i].GetComponent<MeshRenderer>();
+                mr.enabled = false;
             }
             else
             {
@@ -358,4 +375,41 @@ public class BossBatleManager : MonoBehaviour
             }
         }
     }
+
+    // not a battle but manager - door manager
+    void CheckBossBattle()
+    {
+        // if the boss battle won
+        if (FindObjectOfType<SaveManager>().CheckBossBattleWon())
+        {
+            FinishBattle();
+        }
+           
+    }
+
+    void CheckLeftPuzzle()
+    {
+        // if left puzzle is solved - handle doors
+        if (FindObjectOfType<SaveManager>().CheckLeftPuzzleSolved())
+        {
+            // close the door to the puzzle
+            theDoorsBefore[0].CloseTheDoor();
+            // open the door to the boss
+            theDoorsBefore[1].OpenTheDoor();
+        }
+    }
+
+    void CheckRightPuzzle()
+    {
+        // if right puzzle is solved - handle doors
+        if (FindObjectOfType<SaveManager>().CheckRightPuzzleSolved())
+        {
+            // close the door to the puzzle
+            theDoorsBefore[2].CloseTheDoor();
+            // open the door to the boss
+            theDoorsBefore[3].OpenTheDoor();
+        }
+    }
+
+
 }

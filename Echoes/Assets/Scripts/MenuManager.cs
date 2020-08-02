@@ -30,8 +30,10 @@ public class MenuManager : MonoBehaviour
     PlayerController thePlayer;
     Vector3 playersVelocity;
 
-    EnemyController[] enemies;
-    Vector3[] enemiesVelocity;
+    //EnemyController[] enemies;
+    //Vector3[] enemiesVelocity;
+    RocketController[] rockets;
+    Vector3[] rocketsVelocity;
     
 
     // Start is called before the first frame update
@@ -40,13 +42,21 @@ public class MenuManager : MonoBehaviour
         curLevel = SceneManager.GetActiveScene().name;
         thePlayer = FindObjectOfType<PlayerController>();
 
-        enemies = FindObjectsOfType<EnemyController>();
-        enemiesVelocity = new Vector3[enemies.Length];
+        //enemies = FindObjectsOfType<EnemyController>();
+        //enemiesVelocity = new Vector3[enemies.Length];
+
+        ReassignRockets();
 
         if (curLevel == "lvl1")
         {
             DisplayInfoCor();
         }
+    }
+
+    public void ReassignRockets()
+    {
+        rockets = FindObjectsOfType<RocketController>();
+        rocketsVelocity = new Vector3[rockets.Length];
     }
 
     public void DisplayInfoCor()
@@ -156,17 +166,16 @@ public class MenuManager : MonoBehaviour
             thePlayer.GetComponent<Rigidbody>().isKinematic = isKinematic;
             thePlayer.rb.AddForce(playersVelocity, ForceMode.VelocityChange);
         }
-        
 
-        if (enemies != null)
+        if (rockets != null)
         {
             if (isKinematic) // поставили на паузу
             {
                 int counter = 0;
-                foreach (EnemyController e in enemies)
+                foreach (EnemyController e in rockets)
                 {
                     // сохранить скорость
-                    enemiesVelocity[counter] = e.rb.velocity;
+                    rocketsVelocity[counter] = e.rb.velocity;
                     counter++;
 
                     // сделать кинематик
@@ -176,16 +185,44 @@ public class MenuManager : MonoBehaviour
             else
             {
                 int counter = 0;
-                foreach (EnemyController e in enemies)
+                foreach (EnemyController e in rockets)
                 {
                     // сделать НЕ кинематик
                     e.SetKinematic(isKinematic);
 
                     // добавить силу
-                    e.rb.AddForce(enemiesVelocity[counter], ForceMode.VelocityChange);
+                    e.rb.AddForce(rocketsVelocity[counter], ForceMode.VelocityChange);
                     counter++;
                 }
             }
+            //if (enemies != null)
+            //{
+            //    if (isKinematic) // поставили на паузу
+            //    {
+            //        int counter = 0;
+            //        foreach (EnemyController e in enemies)
+            //        {
+            //            // сохранить скорость
+            //            enemiesVelocity[counter] = e.rb.velocity;
+            //            counter++;
+
+            //            // сделать кинематик
+            //            e.SetKinematic(isKinematic);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        int counter = 0;
+            //        foreach (EnemyController e in enemies)
+            //        {
+            //            // сделать НЕ кинематик
+            //            e.SetKinematic(isKinematic);
+
+            //            // добавить силу
+            //            e.rb.AddForce(enemiesVelocity[counter], ForceMode.VelocityChange);
+            //            counter++;
+            //        }
+            //    }
         }
     }
 
@@ -194,6 +231,7 @@ public class MenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            ReassignRockets();
             OpenPauseMenu();
         }
 

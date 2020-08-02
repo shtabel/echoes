@@ -205,7 +205,7 @@ public class PlayerController : MonoBehaviour
 
         lvlManager.ResetArrays();
 
-        // dark setion
+        // dark section
         if (other.tag == "dark_start")
         {
             radarRay.SetActive(false);
@@ -213,6 +213,14 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "dark_stop")
         {
             radarRay.SetActive(true);
+        }
+
+        // boss setion
+        if (other.tag == "boss_start")
+        {
+            // start boss battle
+            FindObjectOfType<BossBatleManager>().StartPhase1();
+            other.gameObject.SetActive(false);        
         }
 
         // туннель вслепую

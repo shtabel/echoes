@@ -27,6 +27,7 @@ TagManager:
   - tunnel_stop
   - dark_start
   - dark_stop
+  - boss_start
   layers:
   - Default
   - TransparentFX
