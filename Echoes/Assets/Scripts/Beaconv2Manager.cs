@@ -138,6 +138,6 @@ public class Beaconv2Manager : MonoBehaviour
         if (emitter != null)
             emitter.SetActive(false);
 
-        FindObjectOfType<SaveManager>().SetLeftPuzzleSolved();
+        FindObjectOfType<SaveManager>().SetLeftPuzzleSolved(1);
     }
 }

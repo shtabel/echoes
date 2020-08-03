@@ -78,7 +78,7 @@ public class BeaconManager : MonoBehaviour
         if (emitter != null)
             emitter.SetActive(false);
 
-        FindObjectOfType<SaveManager>().SetRightPuzzleSolved();
+        FindObjectOfType<SaveManager>().SetRightPuzzleSolved(1);
     }
 
     void Reset()    // обнуляем прогресс

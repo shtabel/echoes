@@ -5,12 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
-    // PUBLIC INIT
-    public string startScene;
 
     public void StartGame()
     {
-        SceneManager.LoadScene(startScene);
+        FindObjectOfType<SaveManager>().SetStartFromBegining(1);
+        SceneManager.LoadScene(1);
     }
 
     public void QuitGame()

@@ -28,6 +28,7 @@ TagManager:
   - dark_start
   - dark_stop
   - boss_start
+  - game_finish
   layers:
   - Default
   - TransparentFX

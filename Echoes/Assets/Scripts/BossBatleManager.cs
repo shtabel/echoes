@@ -166,6 +166,10 @@ public class BossBatleManager : MonoBehaviour
     public void MinusGenerator()
     {
         GeneratorBlink();
+
+        if (currentPhase == 6)
+            gapTime = 0;
+
         StartCoroutine(ExecuteNextPhaseAfterTime(gapTime));
     }
 
@@ -319,7 +323,7 @@ public class BossBatleManager : MonoBehaviour
 
         FindObjectOfType<TimerManager>().StartTimer();
 
-        FindObjectOfType<SaveManager>().SetBossBattleWon();
+        FindObjectOfType<SaveManager>().SetBossBattleWon(1);
     }
 
     IEnumerator ActivateRadarAfterTime(float time)

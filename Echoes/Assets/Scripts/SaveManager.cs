@@ -17,6 +17,8 @@ public class SaveManager : MonoBehaviour
 
     void Awake()
     {
+        startFromBeginning = CheckStartFromBegining();
+
         if (startFromBeginning) //  new game
         {
             // to place the player in the beginning
@@ -25,11 +27,14 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetFloat("lastCheckpointPosZ", startPos.z);
 
             // didn't solve boss's puzzles
-            PlayerPrefs.SetInt("bossLPuzzleSolved", 0);
-            PlayerPrefs.SetInt("bossRPuzzleSolved", 0);
+            SetLeftPuzzleSolved(0);
+            SetRightPuzzleSolved(0);
 
             // didn't won the boss battle
-            PlayerPrefs.SetInt("bossDone", 0);
+            SetBossBattleWon(0);
+
+            // didn't complete the game
+            SetStartFromBegining(0);
         }
 
         // place the player at he last checkpoint
@@ -41,7 +46,10 @@ public class SaveManager : MonoBehaviour
         if (CheckBossBattleWon())
         {
             bossBattleWon = true;
-            FindObjectOfType<PlayerController>().transform.Translate(new Vector3(255.75f, -207, 0));
+            lastChackpointPos.x = 255.75f;
+            lastChackpointPos.y = -207;
+            lastChackpointPos.z = 0;
+            //FindObjectOfType<PlayerController>().transform.Translate(new Vector3(255.75f, -207, 0));
         }
             
 
@@ -52,10 +60,23 @@ public class SaveManager : MonoBehaviour
             rightPuzzle = true;
     }
 
-
-    public void SetBossBattleWon()
+    public void SetStartFromBegining(int fromBegining)
     {
-        PlayerPrefs.SetInt("bossDone", 1);
+        PlayerPrefs.SetInt("startFromBegining", fromBegining);
+    }
+
+    public bool CheckStartFromBegining()
+    {
+        int binarBool = PlayerPrefs.GetInt("startFromBegining");
+        if (binarBool == 1)
+            return true;
+        else
+            return false;
+    }
+
+    public void SetBossBattleWon(int isDefited)
+    {
+        PlayerPrefs.SetInt("bossDone", isDefited);
     }
 
     public bool CheckBossBattleWon()
@@ -67,9 +88,9 @@ public class SaveManager : MonoBehaviour
             return false;
     }
 
-    public void SetLeftPuzzleSolved()
+    public void SetLeftPuzzleSolved(int isSolved)
     {
-        PlayerPrefs.SetInt("bossLPuzzleSolved", 1);
+        PlayerPrefs.SetInt("bossLPuzzleSolved", isSolved);
     }
 
     public bool CheckLeftPuzzleSolved()
@@ -81,9 +102,9 @@ public class SaveManager : MonoBehaviour
             return false;        
     }
 
-    public void SetRightPuzzleSolved()
+    public void SetRightPuzzleSolved(int isSolved)
     {
-        PlayerPrefs.SetInt("bossRPuzzleSolved", 1);
+        PlayerPrefs.SetInt("bossRPuzzleSolved", isSolved);
     }
 
     public bool CheckRightPuzzleSolved()

@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject deadMenu;         // ссылка на dead menu
     public GameObject infoMenu;
+    public GameObject endMenu;
 
     public Animator animator;
 
@@ -32,8 +33,8 @@ public class MenuManager : MonoBehaviour
 
     //EnemyController[] enemies;
     //Vector3[] enemiesVelocity;
-    RocketController[] rockets;
-    Vector3[] rocketsVelocity;
+    //RocketController[] rockets;
+    //Vector3[] rocketsVelocity;
     
 
     // Start is called before the first frame update
@@ -45,7 +46,7 @@ public class MenuManager : MonoBehaviour
         //enemies = FindObjectsOfType<EnemyController>();
         //enemiesVelocity = new Vector3[enemies.Length];
 
-        ReassignRockets();
+        //ReassignRockets();
 
         if (curLevel == "lvl1")
         {
@@ -55,8 +56,8 @@ public class MenuManager : MonoBehaviour
 
     public void ReassignRockets()
     {
-        rockets = FindObjectsOfType<RocketController>();
-        rocketsVelocity = new Vector3[rockets.Length];
+        //rockets = FindObjectsOfType<RocketController>();
+        //rocketsVelocity = new Vector3[rockets.Length];
     }
 
     public void DisplayInfoCor()
@@ -79,8 +80,6 @@ public class MenuManager : MonoBehaviour
             SetKinObjects(true);
 
             Time.timeScale = 0f;
-
-
         }
     }
 
@@ -142,6 +141,13 @@ public class MenuManager : MonoBehaviour
         //Time.timeScale = 0f;
     }
 
+    public void GameCompleted()
+    {
+        endMenu.SetActive(true);
+        Time.timeScale = 0f;
+        FindObjectOfType<SaveManager>().SetStartFromBegining(1);
+    }
+
     public void LevelCompleted()
     {
         levelToLoad = nextLevel;
@@ -167,63 +173,64 @@ public class MenuManager : MonoBehaviour
             thePlayer.rb.AddForce(playersVelocity, ForceMode.VelocityChange);
         }
 
-        if (rockets != null)
-        {
-            if (isKinematic) // поставили на паузу
-            {
-                int counter = 0;
-                foreach (EnemyController e in rockets)
-                {
-                    // сохранить скорость
-                    rocketsVelocity[counter] = e.rb.velocity;
-                    counter++;
+        //if (rockets != null)
+        //{
+        //    if (isKinematic) // поставили на паузу
+        //    {
+        //        int counter = 0;
+        //        foreach (EnemyController e in rockets)
+        //        {
+        //            // сохранить скорость
+        //            rocketsVelocity[counter] = e.rb.velocity;
+        //            counter++;
 
-                    // сделать кинематик
-                    e.SetKinematic(isKinematic);
-                }
-            }
-            else
-            {
-                int counter = 0;
-                foreach (EnemyController e in rockets)
-                {
-                    // сделать НЕ кинематик
-                    e.SetKinematic(isKinematic);
+        //            // сделать кинематик
+        //            e.SetKinematic(isKinematic);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        int counter = 0;
+        //        foreach (EnemyController e in rockets)
+        //        {
+        //            // сделать НЕ кинематик
+        //            e.SetKinematic(isKinematic);
 
-                    // добавить силу
-                    e.rb.AddForce(rocketsVelocity[counter], ForceMode.VelocityChange);
-                    counter++;
-                }
-            }
-            //if (enemies != null)
-            //{
-            //    if (isKinematic) // поставили на паузу
-            //    {
-            //        int counter = 0;
-            //        foreach (EnemyController e in enemies)
-            //        {
-            //            // сохранить скорость
-            //            enemiesVelocity[counter] = e.rb.velocity;
-            //            counter++;
+        //            // добавить силу
+        //            e.rb.AddForce(rocketsVelocity[counter], ForceMode.VelocityChange);
+        //            counter++;
+        //        }
+        //    }
 
-            //            // сделать кинематик
-            //            e.SetKinematic(isKinematic);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        int counter = 0;
-            //        foreach (EnemyController e in enemies)
-            //        {
-            //            // сделать НЕ кинематик
-            //            e.SetKinematic(isKinematic);
+        //    //if (enemies != null)
+        //    //{
+        //    //    if (isKinematic) // поставили на паузу
+        //    //    {
+        //    //        int counter = 0;
+        //    //        foreach (EnemyController e in enemies)
+        //    //        {
+        //    //            // сохранить скорость
+        //    //            enemiesVelocity[counter] = e.rb.velocity;
+        //    //            counter++;
 
-            //            // добавить силу
-            //            e.rb.AddForce(enemiesVelocity[counter], ForceMode.VelocityChange);
-            //            counter++;
-            //        }
-            //    }
-        }
+        //    //            // сделать кинематик
+        //    //            e.SetKinematic(isKinematic);
+        //    //        }
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        int counter = 0;
+        //    //        foreach (EnemyController e in enemies)
+        //    //        {
+        //    //            // сделать НЕ кинематик
+        //    //            e.SetKinematic(isKinematic);
+
+        //    //            // добавить силу
+        //    //            e.rb.AddForce(enemiesVelocity[counter], ForceMode.VelocityChange);
+        //    //            counter++;
+        //    //        }
+        //    //    }
+        //}
     }
 
     // Update is called once per frame
@@ -231,7 +238,7 @@ public class MenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ReassignRockets();
+            //ReassignRockets();
             OpenPauseMenu();
         }
 

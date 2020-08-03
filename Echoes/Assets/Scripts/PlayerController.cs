@@ -232,6 +232,13 @@ public class PlayerController : MonoBehaviour
         {
             FindObjectOfType<TunnelEmittersManager>().DeactivateEmitters();
         }
+
+        // finish the game
+        if (other.tag == "game_finish")
+        {
+            //Debug.Log("Game completed!");
+            menuManager.GameCompleted();
+        }
     }
 
     void OnTriggerExit(Collider other)
