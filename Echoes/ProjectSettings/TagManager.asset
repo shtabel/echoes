@@ -8,8 +8,6 @@ TagManager:
   - obstacle
   - end
   - rocket
-  - persuer
-  - runaway
   - blink_green
   - sunken
   - generator
@@ -20,7 +18,6 @@ TagManager:
   - SBeaconMEmitter
   - BBeaconMEmitter
   - mine_boss
-  - destroyer
   - trigger
   - slider_door_system
   - tunnel_start
@@ -29,6 +26,7 @@ TagManager:
   - dark_stop
   - boss_start
   - game_finish
+  - msg_trigger
   layers:
   - Default
   - TransparentFX

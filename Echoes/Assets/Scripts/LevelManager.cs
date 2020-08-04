@@ -11,12 +11,13 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrObstacles;  // массив препядствий
     GameObject[] arrMines;      // массив мин
     GameObject[] arrRockets;    // массив ракет
-    GameObject[] arrPersuers;   // массив преследователей
-    GameObject[] arrRunaways;   // массив беш=глецов
+    //GameObject[] arrPersuers;   // массив преследователей
+    //GameObject[] arrRunaways;   // массив беш=глецов
     GameObject[] arrSunkens;   // массив беглецов
     GameObject[] arrDoors;   // массив беглецов
     GameObject[] arrSafeZones; // массив безопасных зон
     GameObject[] arrTriggers; // массив триггеров
+    GameObject[] arrMsgTriggers; // массив триггеров для сообщений
 
     [SerializeField]
     GameObject radarForeground;
@@ -46,12 +47,13 @@ public class LevelManager : MonoBehaviour
     {
         arrMines = null;
         arrRockets = null;
-        arrPersuers = null;
-        arrRunaways = null;
+        //arrPersuers = null;
+        //arrRunaways = null;
         arrSunkens = null;
         arrDoors = null;
         arrSafeZones = null;
         arrTriggers = null;
+        arrMsgTriggers = null;
     }
 
     void VisibleObjects(bool makeVisible)
@@ -65,11 +67,11 @@ public class LevelManager : MonoBehaviour
         if (arrRockets == null)
             arrRockets = GameObject.FindGameObjectsWithTag("rocket");
 
-        if (arrPersuers == null)
-            arrPersuers = GameObject.FindGameObjectsWithTag("persuer");
+        //if (arrPersuers == null)
+        //    arrPersuers = GameObject.FindGameObjectsWithTag("persuer");
 
-        if (arrRunaways == null)
-            arrRunaways = GameObject.FindGameObjectsWithTag("runaway");
+        //if (arrRunaways == null)
+        //    arrRunaways = GameObject.FindGameObjectsWithTag("runaway");
 
         if (arrSunkens == null)
             arrSunkens = GameObject.FindGameObjectsWithTag("sunken");
@@ -83,17 +85,22 @@ public class LevelManager : MonoBehaviour
         if (arrTriggers == null)
             arrTriggers = GameObject.FindGameObjectsWithTag("trigger");
 
+        if (arrMsgTriggers == null)
+            arrMsgTriggers = GameObject.FindGameObjectsWithTag("msg_trigger");
+
+
         objectsVisible = makeVisible;
 
         SetVisible(arrObstacles);
         SetVisible(arrMines);
         SetVisible(arrRockets);
-        SetVisible(arrPersuers);
-        SetVisible(arrRunaways);
+        //SetVisible(arrPersuers);
+        //SetVisible(arrRunaways);
         SetVisible(arrSunkens);
         SetVisible(arrDoors);
         SetVisible(arrSafeZones);
         SetVisible(arrTriggers);
+        SetVisible(arrMsgTriggers);
     }
 
     void VisibleRadar(bool isVisible)

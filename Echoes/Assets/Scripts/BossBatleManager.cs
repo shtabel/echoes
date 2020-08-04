@@ -35,6 +35,8 @@ public class BossBatleManager : MonoBehaviour
     Collider bossCollider;
 
     PlayerController thePlayer;                     // the player 
+    ChatManager chatManager;
+    SaveManager sm;
 
     [SerializeField]
     GameObject[] arches;
@@ -63,6 +65,9 @@ public class BossBatleManager : MonoBehaviour
     {
         numberOfGenerators = generators.Length;
         thePlayer = FindObjectOfType<PlayerController>();
+
+        chatManager = FindObjectOfType<ChatManager>();
+        sm = FindObjectOfType<SaveManager>();
 
         DeactivateRadars();
 
@@ -232,7 +237,9 @@ public class BossBatleManager : MonoBehaviour
         currentPhase = 1;
         SetArch(1);
         
-        ActivateRadarWithRotation(0, -90);       
+        ActivateRadarWithRotation(0, -90);
+
+        chatManager.TypeMessage(11);   
 
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseOneTime));
     }   
@@ -319,11 +326,14 @@ public class BossBatleManager : MonoBehaviour
     {
         // deativate old objects
         DeactivateRadars();
-        SetArch(2);
+        SetArch(2);        
 
         FindObjectOfType<TimerManager>().StartTimer();
 
-        FindObjectOfType<SaveManager>().SetBossBattleWon(1);
+        sm.SetBossBattleWon(1);
+        sm.SetMessageID(11);
+
+        chatManager.TypeMessage(12);
     }
 
     IEnumerator ActivateRadarAfterTime(float time)

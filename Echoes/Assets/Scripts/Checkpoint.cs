@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    [SerializeField]
+    int lastMassageID;
+
     SaveManager sm;
 
     void Start()
@@ -15,9 +18,18 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerPrefs.SetFloat("lastCheckpointPosX", transform.position.x);
-            PlayerPrefs.SetFloat("lastCheckpointPosY", transform.position.y);
-            PlayerPrefs.SetFloat("lastCheckpointPosZ", transform.position.z);
+            sm.SetCheckpointPos(transform.position);
+            //PlayerPrefs.SetFloat("lastCheckpointPosX", transform.position.x);
+            //PlayerPrefs.SetFloat("lastCheckpointPosY", transform.position.y);
+            //PlayerPrefs.SetFloat("lastCheckpointPosZ", transform.position.z);
+
+            if (lastMassageID != 0) 
+            {
+                sm.SetMessageID(lastMassageID);
+            }
+            
         }
+
+
     }
 }

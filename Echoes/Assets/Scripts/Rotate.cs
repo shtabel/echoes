@@ -224,10 +224,14 @@ public class Rotate : MonoBehaviour
                 // создаем блинк
                 hit.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
 
-                if (hit.collider.gameObject.tag == "mine")
-                    chatMng.DisplayMessage("mine");
+                // отображаем сообщение о минах
+                if (hit.collider.gameObject.tag == "mine")                
+                    chatMng.TypeMessage(3);
+                // отображаем сообщение о ракетах
+                if (hit.collider.gameObject.tag == "rocket")
+                    chatMng.TypeMessage(5);
 
-                ShowInfo(tag);
+                //ShowInfo(tag);
 
                 // активируем ракету и передаем ей позицию игрока во время детектирования
                 if (chasePlayer)

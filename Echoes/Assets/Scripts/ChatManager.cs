@@ -8,87 +8,129 @@ public class ChatManager : MonoBehaviour
     [SerializeField]
     Text chatText;
 
-    bool sawMine;
+    int lastId;
 
-    bool startMarkup;
-    int closedBracket;
+    SaveManager saveManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        saveManager = FindObjectOfType<SaveManager>();
+
         chatText.supportRichText = true;
 
+        DisplayOldMessages();
+        
     }
 
-    // Update is called once per frame
-    void Update()
+    void DisplayOldMessages()
     {
+        // get last message id
+        lastId = saveManager.GetLastMessageID();
 
+        // display all the messages from the 1st one to the last one
+        if (lastId != 0)
+        {
+            for (int i = 1; i <= lastId; i++)
+            {
+                // display the message
+                string msg = GetMessage(i);
+                AddText(msg);
+            }
+        }
     }
+    
 
     void AddText(string txt)
     {
-        chatText.text += "\n" + txt;
+        chatText.text += "\n......" + txt;
     }
 
-    IEnumerator TypeText(string txt)
+    IEnumerator TypeText(string txt) // actually typing the text
     {
-        chatText.text += "\n";
-
-        //string tempText = "";    // text to store <>...</>
-
+        chatText.text += "\n......";
+        
         var charArray = txt.ToCharArray();
 
         foreach (char letter in txt.ToCharArray())
         {
-            //if (letter == '<')
-            //{
-            //    startMarkup = true;
-            //}            
-            //if (letter == '>')
-            //{
-            //    closedBracket++;
-            //    if (closedBracket == 2)
-            //    {
-            //        startMarkup = false;
-            //        closedBracket = 0;
-            //        chatText.text += tempText;
-            //    }
-            //}
-
-            //if (startMarkup)
-            //{
-            //    tempText += letter.ToString();
-            //}
-            //else
-            //{
-            //    chatText.text += letter;
-            //}
-
             chatText.text += letter;
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.07f);
         }
     }
 
-    public void DisplayMessage(string message_name)
+    public void TypeMessage(int id) // to start typing the message 
     {
-        switch (message_name)
+        // если сообщение еще не напечатано
+        if (lastId < id)
         {
-            case "intro":
-                AddText(@"Hello, this is Dr. Hui.
-You was chosen to be a pilot of this submarine.");
+            string text = GetMessage(id);            
+
+            StartCoroutine(TypeText(text));
+
+            lastId = id;
+            //saveManager.SetMessageID(id);
+        }       
+    }
+    
+
+    string GetMessage(int id)
+    {
+        string msg = "";    // to store message 
+
+        switch (id)         // get the message with id
+        {
+            case 1:
+                msg = @"
+Приветствую, пилот! Я - echOS, твой бортовой компьютер.
+Я отвечаю за работу радара и других систем подводной лодки.";
                 break;
-            case "mine":
-                if (!sawMine)
-                {
-                    //                    AddText(@"Be carefull these <color=red>red crosses</color> are <color=red>mines</color>.
-                    //You touch them - you dead!");
-                    StartCoroutine(TypeText(@"Be carefull these <color=red>red crosses</color> are <color=red>mines</color>.
-You touch them - you dead!"));
-                    sawMine = true;
-                }                
+            case 2:
+                msg = @"
+Этот желтый круг - радиомаячек. Активируй его для сохранения прогресса.";
+                break;
+            case 3:
+                msg = @"
+Внимание, опасность! Красные крестики обозначают мины. Держись от них подальше, иначе они потопят лодку.";
+                break;
+            case 4:
+                msg = @"
+Похоже, генератор питает дверь. Необходимо найти способ уничтожить его, чтобы пройти дальше.";
+                break;
+            case 5:
+                msg = @"
+Берегись! Это самонаводящаяся ракета, она ловит излуение радара и следует в место, где ты ее засек.";
+                break;
+            case 7:
+                msg = @"
+Эти радары сканируют местноть вокруг себя. Не попадайся на красный луч.";
+                break;
+            case 8:
+                msg = @"
+Похоже, необходимо включить определенные маяки, чтобы открыть дверь.";
+                break;
+            case 9:
+                msg = @"
+Ошибка 0x34243! Программный сбой .... отключение радара.
+Мне нужно время на воостановление, придется тебе двигаться дальше вслепую.";
+                break;
+            case 10:
+                msg = @"
+Радар воостановлен";
+                break;
+            case 11:
+                msg = @"
+А вот и главный босс этой качалки. Уничтожь его!";
+                break;
+            case 12:
+                msg = @"
+Похоже, был запущен протокол самоликвидации.
+Успей выбраться пока время не истекло!";
                 break;
         }
+
+        return msg;
     }
 }

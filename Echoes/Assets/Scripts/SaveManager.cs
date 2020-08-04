@@ -10,10 +10,10 @@ public class SaveManager : MonoBehaviour
 
     public Vector3 lastChackpointPos;       // position of the last checkpoint
 
-    public bool leftPuzzle;
+    public bool leftPuzzle;                 // if the player solved puzzles before the boss
     public bool rightPuzzle;
 
-    public bool bossBattleWon;
+    public int msgID;                       // id of the last message
 
     void Awake()
     {
@@ -22,9 +22,10 @@ public class SaveManager : MonoBehaviour
         if (startFromBeginning) //  new game
         {
             // to place the player in the beginning
-            PlayerPrefs.SetFloat("lastCheckpointPosX", startPos.x);
-            PlayerPrefs.SetFloat("lastCheckpointPosY", startPos.y);
-            PlayerPrefs.SetFloat("lastCheckpointPosZ", startPos.z);
+            SetCheckpointPos(startPos);
+            //PlayerPrefs.SetFloat("lastCheckpointPosX", startPos.x);
+            //PlayerPrefs.SetFloat("lastCheckpointPosY", startPos.y);
+            //PlayerPrefs.SetFloat("lastCheckpointPosZ", startPos.z);
 
             // didn't solve boss's puzzles
             SetLeftPuzzleSolved(0);
@@ -35,6 +36,9 @@ public class SaveManager : MonoBehaviour
 
             // didn't complete the game
             SetStartFromBegining(0);
+
+            // didn't show any messages
+            SetMessageID(0);            
         }
 
         // place the player at he last checkpoint
@@ -45,11 +49,10 @@ public class SaveManager : MonoBehaviour
         // check boss battle won 
         if (CheckBossBattleWon())
         {
-            bossBattleWon = true;
+            // position the player above boss to start escaping
             lastChackpointPos.x = 255.75f;
             lastChackpointPos.y = -207;
             lastChackpointPos.z = 0;
-            //FindObjectOfType<PlayerController>().transform.Translate(new Vector3(255.75f, -207, 0));
         }
             
 
@@ -59,6 +62,25 @@ public class SaveManager : MonoBehaviour
         if (CheckRightPuzzleSolved())
             rightPuzzle = true;
     }
+
+    public void SetCheckpointPos(Vector3 pos)
+    {
+        PlayerPrefs.SetFloat("lastCheckpointPosX", pos.x);
+        PlayerPrefs.SetFloat("lastCheckpointPosY", pos.y);
+        PlayerPrefs.SetFloat("lastCheckpointPosZ", pos.z);
+    }
+
+    public int GetLastMessageID()
+    {
+        int id = PlayerPrefs.GetInt("messagesShowed");
+        return id;
+    }
+
+    public void SetMessageID(int lastMessageID)
+    {
+        PlayerPrefs.SetInt("messagesShowed", lastMessageID);
+    }
+
 
     public void SetStartFromBegining(int fromBegining)
     {
