@@ -146,15 +146,22 @@ public class PlayerController : MonoBehaviour
     }
 
     void HandleObstacleCollision(Collision collision)
-    {    
+    {
         // если игрок сталкивается с препятстием - покажи точку соприкосновение и потряси
-        if (collision.gameObject.tag == "obstacle" && (Time.time >= nextTimeblink))
+        if ((collision.gameObject.tag == "obstacle" || collision.gameObject.tag == "door"
+            || collision.gameObject.tag == "generator") && (Time.time >= nextTimeblink))
         {
             camShake.SmallShake();
 
+            audioManager.Play("wall_hit");
+
             foreach (ContactPoint contact in collision.contacts)
             {
-                blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
+                if (collision.gameObject.tag == "obstacle")                
+                    blinkManager.CreateBlink(blinkManager.blinkGreen, contact.point);
+                if (collision.gameObject.tag == "door")
+                    blinkManager.CreateBlink(blinkManager.blinkGray, collision.transform.position);
+
             }
 
             nextTimeblink = Time.time + blinkDelay;

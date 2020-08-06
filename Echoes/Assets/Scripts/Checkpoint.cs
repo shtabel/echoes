@@ -8,16 +8,24 @@ public class Checkpoint : MonoBehaviour
     int lastMassageID;
 
     SaveManager sm;
+    AudioManager am;
 
     void Start()
     {
         sm = FindObjectOfType<SaveManager>();
+        am = FindObjectOfType<AudioManager>();
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            if (transform.position != sm.GetCheckpointPos())
+            {
+                am.Play("save");
+            }
+            
+
             sm.SetCheckpointPos(transform.position);
             //PlayerPrefs.SetFloat("lastCheckpointPosX", transform.position.x);
             //PlayerPrefs.SetFloat("lastCheckpointPosY", transform.position.y);
@@ -27,6 +35,8 @@ public class Checkpoint : MonoBehaviour
             {
                 sm.SetMessageID(lastMassageID);
             }
+
+            
             
         }
 

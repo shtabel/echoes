@@ -70,6 +70,17 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetFloat("lastCheckpointPosZ", pos.z);
     }
 
+    public Vector3 GetCheckpointPos()
+    {
+        Vector3 pos;
+
+        pos.x = PlayerPrefs.GetFloat("lastCheckpointPosX");
+        pos.y = PlayerPrefs.GetFloat("lastCheckpointPosY");
+        pos.z = PlayerPrefs.GetFloat("lastCheckpointPosZ");
+
+        return pos;
+    }
+
     public int GetLastMessageID()
     {
         int id = PlayerPrefs.GetInt("messagesShowed");

@@ -18,8 +18,12 @@ public class SliderDoorController : MonoBehaviour
     
     public bool doorOpened;
 
+    AudioManager am;
+
     void Start()
     {
+        am = FindObjectOfType<AudioManager>();
+
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
         //endDestination += transform.position;        
 
@@ -31,6 +35,7 @@ public class SliderDoorController : MonoBehaviour
 
     public void CloseTheDoor()
     {
+        am.Play("slider_close");
         //.Log("activate the door");
 
         Sequence mySequence = DOTween.Sequence();

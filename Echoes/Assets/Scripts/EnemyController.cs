@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     int explosionRadius;
 
     LevelManager lvlManager;
-
+    AudioManager audioManager;
     CameraShake camShake;
 
     float initDrag;
@@ -45,6 +45,7 @@ public class EnemyController : MonoBehaviour
         bm = FindObjectOfType<BlinkManager>();
         lvlManager = FindObjectOfType<LevelManager>();        
         camShake = FindObjectOfType<CameraShake>();
+        audioManager = FindObjectOfType<AudioManager>();
 
         blinkType = AssignIcon();
         
@@ -161,6 +162,8 @@ public class EnemyController : MonoBehaviour
     {      
         if (Vector3.Distance(FindObjectOfType<PlayerController>().transform.position, transform.position) < 20)
         {
+            audioManager.Play("blowup_enemy");
+
             // создаем взрыв
             CreateExplosion(explosionRadius);
 

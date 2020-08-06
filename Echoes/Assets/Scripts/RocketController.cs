@@ -13,12 +13,17 @@ public class RocketController : EnemyController
     public float diactivateDistance;  // расстояние до точки, где был замечен игрок, на котором на ракету перестает действовать сила
 
     // PRIVATE INIT   
+    bool detected1;             // засекли мину ракету первый раз
+    bool detected;
+
+    AudioManager am;
 
     new void Start()
     {
         base.Start();
 
         gameObject.GetComponent<MeshRenderer>().enabled = false;
+        am = FindObjectOfType<AudioManager>();
     }
 
     public void BeginChasing(Vector3 targetPos)
@@ -38,6 +43,9 @@ public class RocketController : EnemyController
     {
         if (startChasing)
         {
+            MakeSound();
+            detected = true;         
+
             FaceTarget(targetPosition);
 
             Vector3 force = transform.right * thrust;
@@ -48,12 +56,28 @@ public class RocketController : EnemyController
             if (curDistancToPoint < diactivateDistance)
             {
                 startChasing = false;
+                detected = false;
                 rb.velocity = rb.velocity / divInertia;
-
             }
+
+
         }
          
     }      
+
+    void MakeSound()
+    {
+        if (!detected1)
+        {
+            am.Play("rocket_spot1");
+            detected1 = true;
+            return;
+        }
+        else if (!detected)
+        {
+            am.Play("rocket_spot");
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {

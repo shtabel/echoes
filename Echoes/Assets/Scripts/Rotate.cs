@@ -38,12 +38,14 @@ public class Rotate : MonoBehaviour
     MenuManager mm;
     BlinkManager bm;            // blink manager для создания блинков
     ChatManager chatMng;
+    AudioManager am;
 
     void Start()
     {
         mm = FindObjectOfType<MenuManager>();
         bm = FindObjectOfType<BlinkManager>();
         chatMng = FindObjectOfType<ChatManager>();
+        am = FindObjectOfType<AudioManager>();
 
         // setting the line renderer
         rayLineRenderer = GetComponent<LineRenderer>();
@@ -229,7 +231,11 @@ public class Rotate : MonoBehaviour
                     chatMng.TypeMessage(3);
                 // отображаем сообщение о ракетах
                 if (hit.collider.gameObject.tag == "rocket")
+                {
                     chatMng.TypeMessage(5);
+                    //am.Play("rocket_spot");
+                }
+                    
 
                 //ShowInfo(tag);
 
