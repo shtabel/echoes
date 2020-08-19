@@ -36,6 +36,12 @@ public class EnemyController : MonoBehaviour
     float nextTimeChangeDrag;
     float dragChangeDelay = 1;
 
+
+    // time to next explosion for sunken
+    float explGap = 0.2f;
+    float nextExpl;
+
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -158,11 +164,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void BlowUpEnemy()
+    public void BlowUpEnemy(bool playSound)
     {      
         if (Vector3.Distance(FindObjectOfType<PlayerController>().transform.position, transform.position) < 20)
         {
-            audioManager.Play("blowup_enemy");
+            if (playSound)
+                audioManager.Play("blowup_enemy");
 
             // создаем взрыв
             CreateExplosion(explosionRadius);
@@ -212,6 +219,26 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void CreateExplosion(float radiusOfExplosion, Vector3 explosionPos)
+    {
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, radiusOfExplosion);
+        foreach (Collider nearbyObject in colliders)
+        {
+            Rigidbody rigidBody = nearbyObject.GetComponent<Rigidbody>();
+            if (rigidBody != null && (rigidBody.tag == "sunken" || rigidBody.tag == "Player") && (Time.time >= nextExpl))
+            {
+                // apply explosion force
+                rigidBody.AddExplosionForce(explosionForce, explosionPos, radiusOfExplosion);
+
+                // show blinks    
+                if (rigidBody.tag == "sunken")
+                    bm.CreateBlinkFollow(rigidBody.gameObject.GetComponent<EnemyController>().blinkType[1], rigidBody.transform.position, rigidBody.gameObject);
+                //Debug.Log("boom!");
+                nextExpl = Time.time + explGap;
+            }                      
+        }
+    }
+
     void HandleMineBossDestroy()
     {
         bm.CreateBlink(blinkType[1], transform.position);
@@ -224,7 +251,7 @@ public class EnemyController : MonoBehaviour
         // если обломок сталкивается с другими врагами - взорви их
         if (gameObject.tag == "sunken" && (other.tag == "mine"))//|| other.tag == "rocket" || other.tag == "persuer"))
         {
-            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
+            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy(true);
             lvlManager.ResetArrays();
         }
 
@@ -240,7 +267,6 @@ public class EnemyController : MonoBehaviour
         //    other.GetComponent<GeneratorController>().DestroyGenerator();
         //    Debug.Log("обломок сталкивается с генератором ");
         //}
-
     }
 
     void OnCollisionEnter(Collision collision)
@@ -260,9 +286,21 @@ public class EnemyController : MonoBehaviour
         }
 
         // если обломок сталкивается со стеной - показываем значек
-        if (collision.gameObject.tag == "obstacle" && gameObject.tag == "sunken")
+        if ((collision.gameObject.tag == "obstacle" || collision.gameObject.tag == "BBeaconEmitter" || collision.gameObject.tag == "emitter") 
+            && gameObject.tag == "sunken")
         {
             bm.CreateBlinkFollow(blinkType[0], transform.position, gameObject);
+
+            // отталкиваем обломок
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (collision.gameObject.tag == "obstacle")
+                    bm.CreateBlink(bm.blinkGreen, contact.point);
+
+                rb.velocity = Vector3.zero;
+                CreateExplosion(0.5f, contact.point);
+            }
+                
         }
 
         //if (gameObject.tag == "sunken")

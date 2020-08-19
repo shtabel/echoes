@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 8766592521200440283}
   m_Layer: 17
   m_Name: Emitter
-  m_TagString: Untagged
+  m_TagString: emitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

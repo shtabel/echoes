@@ -241,10 +241,11 @@ public class MenuManager : MonoBehaviour
             //ReassignRockets();
             OpenPauseMenu();
         }
-
+#if (UNITY_EDITOR)
         if (Input.GetKeyDown(KeyCode.I))
         {
             StartCoroutine(DisplayInfo());
         }
+#endif
     }
 }

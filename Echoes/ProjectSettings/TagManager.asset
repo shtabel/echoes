@@ -27,6 +27,7 @@ TagManager:
   - boss_start
   - game_finish
   - msg_trigger
+  - emitter
   layers:
   - Default
   - TransparentFX

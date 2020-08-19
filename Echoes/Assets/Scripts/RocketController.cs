@@ -42,16 +42,25 @@ public class RocketController : EnemyController
     void FixedUpdate()
     {
         if (startChasing)
-        {
-            MakeSound();
-            detected = true;         
+        {            
+            float curDistancToPoint = Vector3.Distance(targetPosition, transform.position); // current distance to point
+
+            if(!detected)
+                Debug.Log("dist = " + curDistancToPoint);
 
             FaceTarget(targetPosition);
 
             Vector3 force = transform.right * thrust;
+            if (curDistancToPoint < 6 && !detected1)
+                force = transform.right * thrust / 2;
+
+            if (!detected)
+                Debug.Log("force = " + Mathf.Pow(force.x*force.x + force.y*force.y, 0.5f));
+
             rb.AddForce(force);
 
-            float curDistancToPoint = Vector3.Distance(targetPosition, transform.position); // current distance to point
+            MakeSound();
+            detected = true;       
 
             if (curDistancToPoint < diactivateDistance)
             {
@@ -87,17 +96,17 @@ public class RocketController : EnemyController
         }
         else if (other.tag == "mine" )//|| other.tag == "mine_boss")
         {
-            BlowUpEnemy();
-            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
+            BlowUpEnemy(true);
+            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy(false);
         }
         else if (other.tag == "rocket")
         {
-            BlowUpEnemy();
+            BlowUpEnemy(true);
         }
         else if (other.tag == "generator")
         {
             other.GetComponent<GeneratorController>().DestroyGenerator();
-            BlowUpEnemy();
+            BlowUpEnemy(false);
         }
 
         //lvlManager.ResetArrays();

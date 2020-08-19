@@ -140,7 +140,7 @@ public class BossRadarController : MonoBehaviour
             {
                 bossManager.LaunchNewRocket();
 
-                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
+                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy(true);
             }
         }
     }

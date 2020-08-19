@@ -22,11 +22,14 @@ public class GeneratorController : MonoBehaviour // генератор, кото
     float duration = 0.5f;
 
 
+    AudioManager am;
+
     // Start is called before the first frame update
     void Start()
     {
         //genMng = FindObjectOfType<GeneratorManager>();
         bm = FindObjectOfType<BlinkManager>();
+        am = FindObjectOfType<AudioManager>();
 
         rend = GetComponent<SpriteRenderer>();
         rend.sprite = spriteYellow;
@@ -35,6 +38,7 @@ public class GeneratorController : MonoBehaviour // генератор, кото
     
     public void DestroyGenerator()
     {
+        am.Play("blowup_gen");
         CreateExplosion(explosForce, explosRadius);
         HandleManager();    // tell the particular manager that we've destroyed one generator
         bm.CreateBlink(bm.blinkCircleOrange, transform.position);

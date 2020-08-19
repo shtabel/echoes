@@ -85,7 +85,6 @@ public class BBeaconEmitterManager : MonoBehaviour
         //    // keep the door closed
         //    Debug.Log("Close the door");
         //    theDoor.CloseTheDoor();
-
         //}
         //else 
         if (counter == requiredAmmount && !puzzleSolved && CheckNumberOfActive())

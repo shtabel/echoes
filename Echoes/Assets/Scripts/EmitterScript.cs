@@ -94,9 +94,7 @@ public class EmitterScript : MonoBehaviour
 
                     lastBlinkPosition = hitInfo2.point;
                 }
-
             }
-
         }
 
         // check player hit
@@ -142,7 +140,7 @@ public class EmitterScript : MonoBehaviour
                 && !Physics.Raycast(transform.position, vector, dstToTarget, obstacleMask)) // Если на пути нет обломков
             {
                 //Debug.Log(gameObject.name + " killed the player!");
-                hitInfo2.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
+                hitInfo2.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy(true);
 
                 if (GetComponent<EmitterToSpawner>())
                 {

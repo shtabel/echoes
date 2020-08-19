@@ -25,6 +25,8 @@ public class Rotate : MonoBehaviour
     public LayerMask beaconMask;   // маска маячка
     public LayerMask doorMask;   // маска двери
     public LayerMask emitterMask;   // маска эмиттеров
+    public LayerMask generatorMask;   // маска эмиттеров
+
 
     Vector3 endCoord;               // cordinates of the end of the ray when hitting obstacles
     LineRenderer rayLineRenderer;
@@ -138,7 +140,8 @@ public class Rotate : MonoBehaviour
 
             if (dstToLastBlink >= distanceBetweenBlinks 
                 && (!Physics.Raycast(transform.position, vector, dstToTarget, doorMask) 
-                && !Physics.Raycast(transform.position, vector, dstToTarget, emitterMask)))
+                && !Physics.Raycast(transform.position, vector, dstToTarget, emitterMask)
+                && !Physics.Raycast(transform.position, vector, dstToTarget, generatorMask)))
             {
                 // создаем блинк 
                 bm.CreateBlink(bm.blinkGreen, hitInfo.point);

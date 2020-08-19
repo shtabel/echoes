@@ -78,13 +78,14 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("dst to click: " + dst);
 
         // if player controlles with mouse - move towards mouse
-        if (Input.GetMouseButton(1) && dst < radarRadius)
-        {
-            Vector3 force = transform.up * thrust * 1.5f;
-            rb.AddForce(force);
-            //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
-        }
-        else if (Input.GetMouseButton(0) && dst < radarRadius)
+        ////if (Input.GetMouseButton(1) && dst < radarRadius)
+        ////{
+        ////    Vector3 force = transform.up * thrust * 1.5f;
+        ////    rb.AddForce(force);
+        ////    //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
+        ////}
+        ////else 
+        if (Input.GetMouseButton(0) && dst < radarRadius)
         {
             Vector3 force = transform.up * thrust;
             rb.AddForce(force) ;
@@ -116,6 +117,7 @@ public class PlayerController : MonoBehaviour
 
     void OtherInput()
     {
+#if (UNITY_EDITOR)
         if (Input.GetKeyDown(KeyCode.E))    // turn on/off radar
         {
             isRadarOn = !isRadarOn;
@@ -128,8 +130,6 @@ public class PlayerController : MonoBehaviour
         }
 
         // проверка трясущейся камеры: слабое и сильное трясение
-#if (UNITY_EDITOR)
-
         if (Input.GetKeyDown(KeyCode.Z))    
         {
             camShake.SmallShake();
@@ -195,12 +195,12 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "end")
         {
             menuManager.LevelCompleted();
-            Debug.Log("Level completed!");
+            //Debug.Log("Level completed!");
         }
 
         if (other.tag == "mine"|| other.tag == "mine_boss" || other.tag == "rocket" || other.tag == "persuer")
         {
-            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy();
+            other.gameObject.GetComponent<EnemyController>().BlowUpEnemy(false);
             
             DestroyPlayer();
         }

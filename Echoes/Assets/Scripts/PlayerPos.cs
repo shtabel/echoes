@@ -16,9 +16,11 @@ public class PlayerPos : MonoBehaviour
 
     void Update()
     {
+#if (UNITY_EDITOR)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+#endif
     }
 }

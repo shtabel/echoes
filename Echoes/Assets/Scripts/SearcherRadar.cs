@@ -47,6 +47,8 @@ public class SearcherRadar : MonoBehaviour
         Vector3[] initRayPositions = new Vector3[2] { Vector3.zero, Vector3.zero };
         rayLineRenderer.SetPositions(initRayPositions);
         rayLineRenderer.SetWidth(rayWidth, rayWidth);
+
+        showBlinksDst += rayLength;
     }
 
     // Update is called once per frame
@@ -71,12 +73,12 @@ public class SearcherRadar : MonoBehaviour
 
     void Raycast(Vector3 vector)
     {
-        RaycastPlayer(vector);
+        //RaycastPlayer(vector);
         RaycastMine(vector);
         RaycastRocket(vector);
-        RaycastSunken(vector);
+        //RaycastSunken(vector);
     }
-
+   
     void DrawRay(Vector3 endCoord1, Vector3 endCoord2)
     {
         // draw the ray
@@ -150,7 +152,7 @@ public class SearcherRadar : MonoBehaviour
 
                 DestroySelf();
 
-                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy();
+                hitInfo.collider.gameObject.GetComponent<RocketController>().BlowUpEnemy(true);
             }
         }
     }
@@ -204,30 +206,55 @@ public class SearcherRadar : MonoBehaviour
         //Debug.DrawRay(transform.position, upVec * rayLength, Color.red);
 
         RaycastHit hitInfo;
+        RaycastHit hitInfo2;
+
         float distanceBetweenBlinks = 0.5f;
         if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, obstacleMask))
         {
             float dstToLastBlink = Vector3.Distance(lastBlinkPosition, hitInfo.point);
-            if (dstToLastBlink >= distanceBetweenBlinks)
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
+
+            if (!Physics.Raycast(transform.position, upVec, out hitInfo2, dstToTarget, sunkenMask))
             {
-                if (showObstacles )//&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
+                if (dstToLastBlink >= distanceBetweenBlinks)
                 {
-                    // создаем блинк 
-                    bm.CreateBlink(bm.blinkGreen, hitInfo.point);
-
-                    lastBlinkPosition = hitInfo.point;
+                    if (showObstacles)//&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst)) 
+                    {
+                        // создаем блинк 
+                        bm.CreateBlink(bm.blinkGreen, hitInfo.point);
+                        lastBlinkPosition = hitInfo.point;
+                        return hitInfo.point;
+                    }
                 }
-                               
             }
-
+            else
+            {
+                // если обломок перекрывает стену - останавливаем им луч
+                hitInfo2.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+                return hitInfo2.point;
+            }         
         }
-        
+
+        // check player hit
+        if (Physics.Raycast(transform.position, upVec, out hitInfo2, rayLength, playerMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
+
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, sunkenMask)
+                && !Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask)) // Если на пути нет обломков
+            {
+                //Debug.Log(gameObject.name + " killed the player!");
+                if (thePlayer.DestroyPlayer());
+                return hitInfo2.point;
+            }
+        }
+
         // if we hited obstacle - return hit's coordinates
         if (hitInfo.point != null)  
         {            
             return hitInfo.point;
         }
 
-        return Vector3.zero;
+        return transform.position;
     }
 }
