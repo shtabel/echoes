@@ -13,7 +13,7 @@ public class RocketController : EnemyController
     public float diactivateDistance;  // расстояние до точки, где был замечен игрок, на котором на ракету перестает действовать сила
 
     // PRIVATE INIT   
-    bool detected1;             // засекли мину ракету первый раз
+    public bool detected1;             // засекли мину ракету первый раз
     bool detected;
 
     AudioManager am;
@@ -24,6 +24,10 @@ public class RocketController : EnemyController
 
         gameObject.GetComponent<MeshRenderer>().enabled = false;
         am = FindObjectOfType<AudioManager>();
+
+        // если это ракета босса
+        if (transform.position.y > -229)
+            MakeSound();
     }
 
     public void BeginChasing(Vector3 targetPos)
@@ -45,8 +49,8 @@ public class RocketController : EnemyController
         {            
             float curDistancToPoint = Vector3.Distance(targetPosition, transform.position); // current distance to point
 
-            if(!detected)
-                Debug.Log("dist = " + curDistancToPoint);
+            //if(!detected)
+            //    Debug.Log("dist = " + curDistancToPoint);
 
             FaceTarget(targetPosition);
 
@@ -54,8 +58,8 @@ public class RocketController : EnemyController
             if (curDistancToPoint < 6 && !detected1)
                 force = transform.right * thrust / 2;
 
-            if (!detected)
-                Debug.Log("force = " + Mathf.Pow(force.x*force.x + force.y*force.y, 0.5f));
+            //if (!detected)
+            //    Debug.Log("force = " + Mathf.Pow(force.x*force.x + force.y*force.y, 0.5f));
 
             rb.AddForce(force);
 
@@ -74,7 +78,7 @@ public class RocketController : EnemyController
          
     }      
 
-    void MakeSound()
+    public void MakeSound()
     {
         if (!detected1)
         {

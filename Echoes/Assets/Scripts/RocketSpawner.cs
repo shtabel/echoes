@@ -36,8 +36,7 @@ public class RocketSpawner : MonoBehaviour
         Sequence s = DOTween.Sequence();
         s.AppendInterval(lauchDelay).AppendCallback(() => rocket = Instantiate(rocketPrefab, transform.position, Quaternion.identity));
         s.AppendCallback(() => rocket.GetComponent<Rigidbody>().AddForce(transform.up * launchForce));
-
-
+        
         //rocket.GetComponent<Rigidbody>().AddForce(transform.up * launchForce);
     }
 }

@@ -24,9 +24,13 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     GameObject minesMovParent;                      // parent of moving mines
 
-    // ROCKET LAUNCHERS: phases 2, 4, 6
+    //// ROCKET LAUNCHERS: phases 2, 4, 6
+    //[SerializeField]
+    //RocketSpawner[] rocketLaunchers;                // array of rocket launchers
+
+    // ROCKET SPAWNER: phases 2, 4, 6
     [SerializeField]
-    RocketSpawner[] rocketLaunchers;                // array of rocket launchers
+    RocketSpawner rocketSpawner;
 
     // BOSS'S RADARS (SEARCHERS): phases 1, ???
     [SerializeField]
@@ -56,6 +60,15 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     float gapTime;          // gap btw generator is destroyed and start of next phase
 
+    // boss bar slider
+    [SerializeField]
+    BossBarScript slider;
+    bool startCountdown;    // когда показываем прогресс
+    float initTime;         // начальное время
+    [SerializeField]
+    GameObject[] genIcons;  // иконки генераторов
+    int numberOfGen;        // количество генераторов
+
     // doors before the boss
     [SerializeField]
     SliderDoorController[] theDoorsBefore;
@@ -79,31 +92,12 @@ public class BossBatleManager : MonoBehaviour
         CheckRightPuzzle();
 
         CheckBossBattle();
-        
+
+        // скрываем инфу по боссу
+        numberOfGen = genIcons.Length;
+        ShowBossUI(false);
     }
-    void Update()
-    {
-        //Vector3 dir = (gameObject.transform.position - thePlayer.transform.position).normalized;
-        //angleToPlayer = Vector3.Angle(Vector3.up, dir);
-
-        //if (Input.GetKeyDown(KeyCode.Space))    // switch to the 1st phase of the boss
-        //{
-        //    StartPhase1();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.B))    // launch a rocket
-        //{
-        //    LaunchNewRocket();
-        //}
-
-
-        //// check emitters angle to the playre
-        //Vector3 dirToPlayer = emittersParent.transform.position - thePlayer.transform.position;
-        //Debug.Log("dirToPlayer = " + dirToPlayer);
-        //float angle = Vector3.Angle(Vector3.up, dirToPlayer);
-        //Debug.Log("angle = " + angle);
-    }
-
+   
 
     void DeactivateRadars()
     {
@@ -170,6 +164,10 @@ public class BossBatleManager : MonoBehaviour
 
     public void MinusGenerator()
     {
+        // убираем иконку генератора
+        numberOfGen--;
+        genIcons[numberOfGen].SetActive(false);
+
         GeneratorBlink();
 
         if (currentPhase == 6)
@@ -230,16 +228,34 @@ public class BossBatleManager : MonoBehaviour
         }
     }
 
+    void ShowBossUI(bool show)
+    {
+        for (int i = 0; i < numberOfGen; i++)
+        {
+            genIcons[i].SetActive(show);
+        }
+        slider.gameObject.SetActive(show);
+    }
+
     public void StartPhase1()
     {
         // просто убегаем от радара в течении заданного времени
         //Debug.Log("Phase 1");
         currentPhase = 1;
         SetArch(1);
+
+        // активируем инфу по боссу
+        ShowBossUI(true);
         
+        // активируем радар 0 
         ActivateRadarWithRotation(0, -90);
 
-        chatManager.TypeMessage(11);   
+        chatManager.TypeMessage(11);
+        
+        // засекаем время
+        slider.SetSliderMaxValue(phaseOneTime);
+        startCountdown = true;
+        initTime = phaseOneTime + Time.time;
 
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseOneTime));
     }   
@@ -248,6 +264,8 @@ public class BossBatleManager : MonoBehaviour
     {
         // надо уничтожить один из трех статичных генераторов за сче ракеты
         //Debug.Log("Phase 2");
+        startCountdown = false;
+
         
         LaunchNewRocket();
         DeactivateRadars();
@@ -271,6 +289,11 @@ public class BossBatleManager : MonoBehaviour
         *   взатем они разгоняются до предела и начинается отчет выживания
         */
 
+        // засекаем время
+        slider.SetSliderMaxValue(phaseThreeTime);
+        startCountdown = true;
+        initTime = phaseThreeTime + Time.time;
+
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseThreeTime));
 
     }
@@ -279,6 +302,7 @@ public class BossBatleManager : MonoBehaviour
     {
         // неоьходимо уничтожить один из двух движущихся генераторов за счет ракеты
         //Debug.Log("Phase 4");
+        startCountdown = false;
 
         // deactivate previous objects
         emittersParent.gameObject.SetActive(false);
@@ -300,6 +324,11 @@ public class BossBatleManager : MonoBehaviour
         // activate new objects
         minesMovParent.SetActive(true);
 
+        // засекаем время
+        slider.SetSliderMaxValue(phaseFiveTime);
+        startCountdown = true;
+        initTime = phaseFiveTime + Time.time;
+
         StartCoroutine(ActivateRadarAfterTime(phaseFiveMinesTime));
 
         StartCoroutine(ExecuteNextPhaseAfterTime(phaseFiveTime));
@@ -309,6 +338,7 @@ public class BossBatleManager : MonoBehaviour
     {
         // неоьходимо уничтожить последний движущийся генератор за счет ракеты
         //Debug.Log("Phase 6");
+        startCountdown = false;
 
         bossCollider.enabled = true;        
 
@@ -326,7 +356,9 @@ public class BossBatleManager : MonoBehaviour
     {
         // deativate old objects
         DeactivateRadars();
-        SetArch(2);        
+        SetArch(2);
+
+        ShowBossUI(false);
 
         FindObjectOfType<TimerManager>().StartTimer();
 
@@ -344,34 +376,62 @@ public class BossBatleManager : MonoBehaviour
     }
 
     IEnumerator ExecuteNextPhaseAfterTime(float time)
-    {
+    {        
         yield return new WaitForSeconds(time);
         NextPhase();
     }
 
-    public void LaunchNewRocket()
+    void Update()
     {
-        RocketSpawner rs = ClosestLauncher();
-        rs.LaunchRocket();
-    }
 
-    RocketSpawner ClosestLauncher()
-    {
-        float dstToPlayer = 1000;
-        RocketSpawner closestSpawner = null;
-
-        for (int i = 0; i < rocketLaunchers.Length; i++)
+        if (startCountdown)
         {
-            float currentDst = Vector3.Distance(thePlayer.transform.position, rocketLaunchers[i].transform.position);
-            if (currentDst < dstToPlayer)
-            {
-                dstToPlayer = currentDst;
-                closestSpawner = rocketLaunchers[i];
-            }
+            slider.SetSliderValue(initTime - Time.time);
         }
 
-        return closestSpawner;
+#if (UNITY_EDITOR)
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            LaunchNewRocket();
+        }
+#endif
     }
+    
+    public void LaunchNewRocket()
+    {
+        //RocketSpawner rs = ClosestLauncher();
+        //rs.LaunchRocket();
+
+        //вычисляем угол до игрока
+        GameObject rsParent = rocketSpawner.transform.parent.gameObject;
+        Vector3 dirToPlayer = rsParent.transform.position - thePlayer.transform.position;
+        float angle = Vector3.Angle(Vector3.up, dirToPlayer);
+        angle = (thePlayer.transform.position.x >= transform.position.x) ? angle : -angle;
+
+        // задаем начальный поворот радара с учетом оффсета
+        rsParent.transform.rotation = Quaternion.identity;
+        rsParent.transform.Rotate(new Vector3(0, 0, 1), angle, Space.Self);
+
+        rocketSpawner.LaunchRocket();
+    }
+
+    //RocketSpawner ClosestLauncher()
+    //{
+    //    float dstToPlayer = 1000;
+    //    RocketSpawner closestSpawner = null;
+
+    //    for (int i = 0; i < rocketLaunchers.Length; i++)
+    //    {
+    //        float currentDst = Vector3.Distance(thePlayer.transform.position, rocketLaunchers[i].transform.position);
+    //        if (currentDst < dstToPlayer)
+    //        {
+    //            dstToPlayer = currentDst;
+    //            closestSpawner = rocketLaunchers[i];
+    //        }
+    //    }
+
+    //    return closestSpawner;
+    //}
 
     void SetArch(int number)
     {
