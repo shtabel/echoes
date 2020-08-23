@@ -16,6 +16,7 @@ public class SearcherRadar : MonoBehaviour
     public LayerMask mineMask;
     public LayerMask rocketMask;
     public LayerMask sunkenMask;
+    public LayerMask rayStopMask;
 
     float showBlinksDst = 20;       // дистанция у игроку, на которой отображаем блинки препятствий
 
@@ -57,7 +58,7 @@ public class SearcherRadar : MonoBehaviour
         // rotate ray
         transform.Rotate(0.0f, 0.0f, -rotationDegree * Time.deltaTime);
 
-        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < 20))
+        if ((Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
         {
             // crate vector that we will allign our ray to
             Vector3 upVec = transform.TransformDirection(Vector3.up);
@@ -193,7 +194,7 @@ public class SearcherRadar : MonoBehaviour
                     bm.CreateBlinkFollow(rb.gameObject.GetComponent<EnemyController>().blinkType[1], rb.transform.position, rb.gameObject);                
 
                 // если далеко от игрока - не трасем камеру
-                if (Vector3.Distance(thePlayer.transform.position, transform.position) < 20)                
+                if (Vector3.Distance(thePlayer.transform.position, transform.position) < showBlinksDst)                
                     camShake.MediumShake();
                 
             }
@@ -230,7 +231,11 @@ public class SearcherRadar : MonoBehaviour
             else
             {
                 // если обломок перекрывает стену - останавливаем им луч
-                hitInfo2.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+                if (hitInfo2.collider.gameObject.GetComponent<EnemyController>())
+                {
+                    hitInfo2.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+                }
+                
                 return hitInfo2.point;
             }         
         }
@@ -244,10 +249,22 @@ public class SearcherRadar : MonoBehaviour
                 && !Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask)) // Если на пути нет обломков
             {
                 //Debug.Log(gameObject.name + " killed the player!");
-                if (thePlayer.DestroyPlayer());
-                return hitInfo2.point;
+                thePlayer.DestroyPlayer();
+
+                //return hitInfo2.point;
             }
         }
+
+        //if (Physics.Raycast(transform.position, upVec, out hitInfo2, rayLength, rayStopMask))
+        //{
+        //    float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
+
+        //    if (!Physics.Raycast(transform.position, upVec, dstToTarget, sunkenMask)
+        //        && !Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask)) // Если на пути нет обломков
+        //    {
+        //        return hitInfo2.point;
+        //    }
+        //}
 
         // if we hited obstacle - return hit's coordinates
         if (hitInfo.point != null)  

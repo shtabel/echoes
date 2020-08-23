@@ -50,13 +50,13 @@ public class BossBatleManager : MonoBehaviour
     
     // TIMING
     [SerializeField]
-    float phaseOneTime;     // how long to survive during phase 1
+    float phaseOneTime;     // how long to survive during phase 1 (15)
     [SerializeField]
-    float phaseThreeTime;   // how long to survive during phase 3
+    float phaseThreeTime;   // how long to survive during phase 3 (27)
     [SerializeField]
-    float phaseFiveTime;    // how long to survive during phase 5
+    float phaseFiveTime;    // how long to survive during phase 5 (45)
     [SerializeField]
-    float phaseFiveMinesTime;    // how long to survive during phase 5 (only mines)
+    float phaseFiveMinesTime;    // how long to survive during phase 5 (only mines) (20)
     [SerializeField]
     float gapTime;          // gap btw generator is destroyed and start of next phase
 
@@ -170,7 +170,7 @@ public class BossBatleManager : MonoBehaviour
 
         GeneratorBlink();
 
-        if (currentPhase == 6)
+        if (currentPhase == 7)
             gapTime = 0;
 
         StartCoroutine(ExecuteNextPhaseAfterTime(gapTime));
@@ -179,21 +179,31 @@ public class BossBatleManager : MonoBehaviour
     void GeneratorBlink()
     {
         bool generatorDestroyed = false;
+        int missingGen = 100;
 
         for (int i = 0; i < generators.Length; i++)
         {
             if (generators[i] == null)
+            {
                 generatorDestroyed = true;
+                missingGen = i;
+            }
+                
         }
 
-        if (!generatorDestroyed)
+        if (currentPhase != 7)
         {
             for (int i = 0; i < generators.Length; i++)
+            {
+            if(i != missingGen)
             {
                 if (generators[i].GetComponent<GeneratorController>())
                 {
                     generators[i].GetComponent<GeneratorController>().Fade(false);
+
                 }
+            }
+                
             }
         }
     }
@@ -223,6 +233,9 @@ public class BossBatleManager : MonoBehaviour
                 StartPhase6();
                 break;
             case 7:
+                StartPhase7();
+                break;
+            case 8:
                 FinishBattle();
                 break;
         }
@@ -230,10 +243,10 @@ public class BossBatleManager : MonoBehaviour
 
     void ShowBossUI(bool show)
     {
-        for (int i = 0; i < numberOfGen; i++)
-        {
-            genIcons[i].SetActive(show);
-        }
+        //for (int i = 0; i < numberOfGen; i++)
+        //{
+        //    genIcons[i].SetActive(show);
+        //}
         slider.gameObject.SetActive(show);
     }
 
@@ -265,6 +278,7 @@ public class BossBatleManager : MonoBehaviour
         // надо уничтожить один из трех статичных генераторов за сче ракеты
         //Debug.Log("Phase 2");
         startCountdown = false;
+        ShowBossUI(false);
 
         
         LaunchNewRocket();
@@ -290,6 +304,7 @@ public class BossBatleManager : MonoBehaviour
         */
 
         // засекаем время
+        ShowBossUI(true);
         slider.SetSliderMaxValue(phaseThreeTime);
         startCountdown = true;
         initTime = phaseThreeTime + Time.time;
@@ -303,6 +318,7 @@ public class BossBatleManager : MonoBehaviour
         // неоьходимо уничтожить один из двух движущихся генераторов за счет ракеты
         //Debug.Log("Phase 4");
         startCountdown = false;
+        ShowBossUI(false);
 
         // deactivate previous objects
         emittersParent.gameObject.SetActive(false);
@@ -325,6 +341,7 @@ public class BossBatleManager : MonoBehaviour
         minesMovParent.SetActive(true);
 
         // засекаем время
+        ShowBossUI(true);
         slider.SetSliderMaxValue(phaseFiveTime);
         startCountdown = true;
         initTime = phaseFiveTime + Time.time;
@@ -336,15 +353,23 @@ public class BossBatleManager : MonoBehaviour
 
     public void StartPhase6()
     {
-        // неоьходимо уничтожить последний движущийся генератор за счет ракеты
-        //Debug.Log("Phase 6");
         startCountdown = false;
+        ShowBossUI(false);
 
-        bossCollider.enabled = true;        
+        bossCollider.enabled = true;
 
         // deactivate previous objects
         DeactivateRadars();
         minesMovParent.gameObject.SetActive(false);
+
+        StartCoroutine(ExecuteNextPhaseAfterTime(6));
+    }
+
+    public void StartPhase7()
+    {
+        // неоьходимо уничтожить последний движущийся генератор за счет ракеты
+        //Debug.Log("Phase 6");
+       
 
         // activate new objects
         ActivateGenerators(-10);
@@ -358,7 +383,7 @@ public class BossBatleManager : MonoBehaviour
         DeactivateRadars();
         SetArch(2);
 
-        ShowBossUI(false);
+        
 
         FindObjectOfType<TimerManager>().StartTimer();
 

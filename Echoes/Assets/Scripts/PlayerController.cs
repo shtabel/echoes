@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float blinkDelay = 0.5f;
 
-    bool inSafeZone;    // if player in safe zone
+    public bool inSafeZone;    // if player in safe zone
 
     void Start()
     {

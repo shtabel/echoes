@@ -48,8 +48,8 @@ TagManager:
   - door
   - emitter
   - generatorv2
-  - 
-  - 
+  - ray_stop
+  - sunken_stop
   - 
   - 
   - 

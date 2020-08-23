@@ -18,6 +18,10 @@ public class LevelManager : MonoBehaviour
     GameObject[] arrSafeZones; // массив безопасных зон
     GameObject[] arrTriggers; // массив триггеров
     GameObject[] arrMsgTriggers; // массив триггеров для сообщений
+    GameObject[] arrTriggersDarkStart; // массив триггеров dark_start
+    GameObject[] arrTriggersDarkStop; // массив триггеров dark_stop
+    GameObject[] arrTriggersBossStart; // массив триггеров boss_start
+    GameObject[] arrTriggersGameFinish; // массив триггеров game_finishs
 
     [SerializeField]
     GameObject radarForeground;
@@ -54,6 +58,10 @@ public class LevelManager : MonoBehaviour
         arrSafeZones = null;
         arrTriggers = null;
         arrMsgTriggers = null;
+        arrTriggersDarkStart = null;
+        arrTriggersDarkStop = null;
+        arrTriggersBossStart = null;
+        arrTriggersGameFinish = null; 
     }
 
     void VisibleObjects(bool makeVisible)
@@ -88,6 +96,17 @@ public class LevelManager : MonoBehaviour
         if (arrMsgTriggers == null)
             arrMsgTriggers = GameObject.FindGameObjectsWithTag("msg_trigger");
 
+        if (arrTriggersDarkStart == null)
+            arrTriggersDarkStart = GameObject.FindGameObjectsWithTag("dark_start");
+
+        if (arrTriggersDarkStop == null)
+            arrTriggersDarkStop = GameObject.FindGameObjectsWithTag("dark_stop");
+
+        if (arrTriggersBossStart == null)
+            arrTriggersBossStart = GameObject.FindGameObjectsWithTag("boss_start");
+
+        if (arrTriggersGameFinish == null)
+            arrTriggersGameFinish = GameObject.FindGameObjectsWithTag("game_finish");
 
         objectsVisible = makeVisible;
 
@@ -101,6 +120,10 @@ public class LevelManager : MonoBehaviour
         SetVisible(arrSafeZones);
         SetVisible(arrTriggers);
         SetVisible(arrMsgTriggers);
+        SetVisible(arrTriggersDarkStart);
+        SetVisible(arrTriggersDarkStop);
+        SetVisible(arrTriggersBossStart);
+        SetVisible(arrTriggersGameFinish);
     }
 
     void VisibleRadar(bool isVisible)

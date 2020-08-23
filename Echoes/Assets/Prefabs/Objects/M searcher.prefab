@@ -220,6 +220,9 @@ MonoBehaviour:
   sunkenMask:
     serializedVersion: 2
     m_Bits: 16384
+  rayStopMask:
+    serializedVersion: 2
+    m_Bits: 524288
   explosionForce: 200
 --- !u!120 &4966261808122272542
 LineRenderer:
