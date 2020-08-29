@@ -33,9 +33,10 @@ public class SliderDoorController : MonoBehaviour
         doorOpened = (transform.localPosition == closePosition) ? false : true;
     }
 
-    public void CloseTheDoor()
+    public void CloseTheDoor(bool playSound)
     {
-        am.Play("slider_close");
+        if (playSound)
+            am.Play("slider_close");
         //.Log("activate the door");
 
         Sequence mySequence = DOTween.Sequence();

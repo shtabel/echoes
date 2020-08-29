@@ -89,13 +89,13 @@ public class BossBatleManager : MonoBehaviour
         SetArch(0);
 
         CheckLeftPuzzle();
-        CheckRightPuzzle();
-
-        CheckBossBattle();
+        CheckRightPuzzle();        
 
         // скрываем инфу по боссу
         numberOfGen = genIcons.Length;
         ShowBossUI(false);
+
+        CheckBossBattle();
     }
    
 
@@ -417,7 +417,7 @@ public class BossBatleManager : MonoBehaviour
 #if (UNITY_EDITOR)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            LaunchNewRocket();
+            //LaunchNewRocket();
         }
 #endif
     }
@@ -482,8 +482,13 @@ public class BossBatleManager : MonoBehaviour
         if (FindObjectOfType<SaveManager>().CheckBossBattleWon())
         {
             FinishBattle();
+
+            for (int i = 0; i < numberOfGen; i++)
+            {
+                genIcons[i].SetActive(false);
+            }
         }
-           
+
     }
 
     void CheckLeftPuzzle()
@@ -492,7 +497,7 @@ public class BossBatleManager : MonoBehaviour
         if (FindObjectOfType<SaveManager>().CheckLeftPuzzleSolved())
         {
             // close the door to the puzzle
-            theDoorsBefore[0].CloseTheDoor();
+            theDoorsBefore[0].CloseTheDoor(false);
             // open the door to the boss
             theDoorsBefore[1].OpenTheDoor();
         }
@@ -504,7 +509,7 @@ public class BossBatleManager : MonoBehaviour
         if (FindObjectOfType<SaveManager>().CheckRightPuzzleSolved())
         {
             // close the door to the puzzle
-            theDoorsBefore[2].CloseTheDoor();
+            theDoorsBefore[2].CloseTheDoor(false);
             // open the door to the boss
             theDoorsBefore[3].OpenTheDoor();
         }

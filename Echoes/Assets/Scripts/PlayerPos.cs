@@ -14,13 +14,13 @@ public class PlayerPos : MonoBehaviour
         transform.position = sm.lastChackpointPos;
     }
 
-    void Update()
-    {
-#if (UNITY_EDITOR)
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-#endif
-    }
+//    void Update()
+//    {
+//#if (UNITY_EDITOR)
+//        if (Input.GetKeyDown(KeyCode.Space))
+//        {
+//            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+//        }
+//#endif
+//    }
 }

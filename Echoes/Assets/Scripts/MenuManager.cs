@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour
     public GameObject deadMenu;         // ссылка на dead menu
     public GameObject infoMenu;
     public GameObject endMenu;
+    public GameObject LoadingScreen;
+    public GameObject SavingText;
 
     public Animator animator;
 
@@ -31,11 +33,13 @@ public class MenuManager : MonoBehaviour
     PlayerController thePlayer;
     Vector3 playersVelocity;
 
+    bool checkForRestart;       // когда игрок умер "пробел" - рестарт
+
     //EnemyController[] enemies;
     //Vector3[] enemiesVelocity;
     //RocketController[] rockets;
     //Vector3[] rocketsVelocity;
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,12 +52,14 @@ public class MenuManager : MonoBehaviour
 
         //ReassignRockets();
 
+        checkForRestart = false;
+
         if (curLevel == "lvl1")
         {
             DisplayInfoCor();
         }
     }
-
+    
     public void ReassignRockets()
     {
         //rockets = FindObjectsOfType<RocketController>();
@@ -83,12 +89,30 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void DisplaySaving(bool show)
+    {
+        SavingText.SetActive(show);
+
+        if (show)
+        {
+            StartCoroutine(DeactivateSavingText(1));
+        }
+
+    }
+
+    IEnumerator DeactivateSavingText(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        DisplaySaving(false);
+    }
+
     public void NewGame()
     {
         //PlayerPrefs.SetFloat("lastCheckpointPosX", startPos.x);
         //PlayerPrefs.SetFloat("lastCheckpointPosY", startPos.y);
         //PlayerPrefs.SetFloat("lastCheckpointPosZ", startPos.z);
-
+        LoadingScreen.SetActive(true);
 
         levelToLoad = SceneManager.GetActiveScene().name;
         animator.SetTrigger("fadeOut");
@@ -109,7 +133,13 @@ public class MenuManager : MonoBehaviour
 
         SetKinObjects(false);
 
-        thePlayer.MakeVisible(true);
+        //thePlayer.MakeVisible(true);
+    }
+
+    public void MainMenu()
+    {
+        ResumeGame();
+        SceneManager.LoadScene(0);
     }
 
     public void QuitGame()
@@ -125,7 +155,7 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            thePlayer.MakeVisible(false);
+            //thePlayer.MakeVisible(false);
 
             isPaused = true;
             SetKinObjects(true);
@@ -138,6 +168,7 @@ public class MenuManager : MonoBehaviour
     public void PlayerDead()
     {
         deadMenu.SetActive(true);
+        checkForRestart = true;
         //Time.timeScale = 0f;
     }
 
@@ -146,6 +177,7 @@ public class MenuManager : MonoBehaviour
         endMenu.SetActive(true);
         Time.timeScale = 0f;
         FindObjectOfType<SaveManager>().SetStartFromBegining(1);
+        FindObjectOfType<SaveManager>().SetGamePlayed(0);
     }
 
     public void LevelCompleted()
@@ -240,6 +272,10 @@ public class MenuManager : MonoBehaviour
         {
             //ReassignRockets();
             OpenPauseMenu();
+        }
+        if (deadMenu.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        {
+            NewGame();   
         }
 #if (UNITY_EDITOR)
         if (Input.GetKeyDown(KeyCode.I))

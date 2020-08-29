@@ -15,6 +15,8 @@ public class SaveManager : MonoBehaviour
 
     public int msgID;                       // id of the last message
 
+    public bool gamePlayed;                 // играли ли в игру
+
     void Awake()
     {
         startFromBeginning = CheckStartFromBegining();
@@ -115,6 +117,20 @@ public class SaveManager : MonoBehaviour
     public bool CheckBossBattleWon()
     {
         int binarBool = PlayerPrefs.GetInt("bossDone");
+        if (binarBool == 1)
+            return true;
+        else
+            return false;
+    }
+
+    public void SetGamePlayed(int isPlayed)
+    {
+        PlayerPrefs.SetInt("gamePlayed", isPlayed);
+    }
+
+    public bool CheckGamePlayed()
+    {
+        int binarBool = PlayerPrefs.GetInt("gamePlayed");
         if (binarBool == 1)
             return true;
         else

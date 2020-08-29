@@ -23,8 +23,8 @@ public class Checkpoint : MonoBehaviour
             if (transform.position != sm.GetCheckpointPos())
             {
                 am.Play("save");
-            }
-            
+                FindObjectOfType<MenuManager>().DisplaySaving(true);
+            }            
 
             sm.SetCheckpointPos(transform.position);
             //PlayerPrefs.SetFloat("lastCheckpointPosX", transform.position.x);

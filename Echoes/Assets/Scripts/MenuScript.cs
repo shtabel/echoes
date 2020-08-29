@@ -5,10 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
+    [SerializeField]
+    GameObject continueButton;
 
-    public void StartGame()
+    [SerializeField]
+    GameObject loadingText;
+
+    SaveManager sm;
+
+    void Start()
     {
-        FindObjectOfType<SaveManager>().SetStartFromBegining(1);
+        sm = FindObjectOfType<SaveManager>();
+
+        if (!sm.CheckGamePlayed())
+        {
+            continueButton.SetActive(false);
+        }
+    }
+
+    public void StartGame() // start new game
+    {
+        loadingText.SetActive(true);
+        sm.SetStartFromBegining(1);
+        sm.SetGamePlayed(1);
+        SceneManager.LoadScene(1);
+    }
+
+    public void ContinueGame()
+    {
+        loadingText.SetActive(true);
         SceneManager.LoadScene(1);
     }
 
