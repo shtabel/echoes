@@ -15,7 +15,7 @@ public class SliderDoorTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == tagOfProvocator)
+        if (other.tag == tagOfProvocator && tag == "trigger")
         {
             if (toOpen && !sliderDoor.doorOpened)   // если триггер открывает дверь и дверь закрыта
             {

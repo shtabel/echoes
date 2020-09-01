@@ -216,6 +216,11 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "dark_start")
         {
             radarRay.SetActive(false);
+            if (other.GetComponent<BlowUpMine>() != null)
+            {
+                other.GetComponent<BlowUpMine>().BlowMine();
+                other.gameObject.SetActive(false);
+            }
         }
         if (other.tag == "dark_stop")
         {

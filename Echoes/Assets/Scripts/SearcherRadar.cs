@@ -157,26 +157,7 @@ public class SearcherRadar : MonoBehaviour
             }
         }
     }
-
-    void RaycastSunken(Vector3 upVec)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position, upVec, out hitInfo, rayLength, sunkenMask))
-        {
-            float dstToTarget = Vector3.Distance(transform.position, hitInfo.point);
-
-            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask) && (dstToTarget <= rayLength))
-                //&& (Vector3.Distance(transform.position, thePlayer.transform.position) < showBlinksDst))
-            {
-                // поисковик засек игрока
-                //Debug.Log("Sunken spottet");             
-
-                //DestroySelf();    
-
-                hitInfo.collider.gameObject.GetComponent<EnemyController>().CreateBlink();            
-            }
-        }
-    }
+      
 
     void CreateExplosion(float explosionRadius)
     {
@@ -238,6 +219,19 @@ public class SearcherRadar : MonoBehaviour
                 
                 return hitInfo2.point;
             }         
+        }
+
+        // check sunken hit
+        if (Physics.Raycast(transform.position, upVec, out hitInfo2, rayLength, sunkenMask))
+        {
+            float dstToTarget = Vector3.Distance(transform.position, hitInfo2.point);
+
+            if (!Physics.Raycast(transform.position, upVec, dstToTarget, obstacleMask))
+            {
+                hitInfo2.collider.gameObject.GetComponent<EnemyController>().CreateBlink();
+
+                return hitInfo2.point;
+            }
         }
 
         // check player hit

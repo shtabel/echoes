@@ -45,7 +45,11 @@ public class TimerManager : MonoBehaviour
         {
             DisplayTime();
         }
-        
+
+        if (timer < 10)
+        {
+            speedUp = 0.7f;
+        }
     }
 
     public void StartTimer()
@@ -73,6 +77,8 @@ public class TimerManager : MonoBehaviour
 
     void DisplayTime()
     {
+
+
         timer -= Time.deltaTime * speedUp;
 
         // get time in format mm:ss

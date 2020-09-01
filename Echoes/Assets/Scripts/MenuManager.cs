@@ -271,7 +271,11 @@ public class MenuManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //ReassignRockets();
-            OpenPauseMenu();
+            if (!deadMenu.activeSelf)
+            {
+                OpenPauseMenu();
+            }
+            
         }
         if (deadMenu.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {

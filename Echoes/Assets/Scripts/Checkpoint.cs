@@ -20,17 +20,19 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            // if we have not saved here - indication about saving
             if (transform.position != sm.GetCheckpointPos())
             {
                 am.Play("save");
                 FindObjectOfType<MenuManager>().DisplaySaving(true);
+
+                GameObject child = gameObject.transform.GetChild(0).gameObject;
             }            
 
+            // set checkpoint position to load from
             sm.SetCheckpointPos(transform.position);
-            //PlayerPrefs.SetFloat("lastCheckpointPosX", transform.position.x);
-            //PlayerPrefs.SetFloat("lastCheckpointPosY", transform.position.y);
-            //PlayerPrefs.SetFloat("lastCheckpointPosZ", transform.position.z);
 
+            // desplay last messages
             if (lastMassageID != 0) 
             {
                 sm.SetMessageID(lastMassageID);
