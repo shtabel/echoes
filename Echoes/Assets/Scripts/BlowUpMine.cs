@@ -9,6 +9,6 @@ public class BlowUpMine : MonoBehaviour
 
     public void BlowMine()
     {
-        mine.BlowUpEnemy(true);
+        mine.BlowUpEnemy(false);
     }
 }

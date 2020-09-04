@@ -35,22 +35,35 @@ public class SliderDoorController : MonoBehaviour
 
     public void CloseTheDoor(bool playSound)
     {
-        if (playSound)
-            am.Play("slider_close");
+        
         //.Log("activate the door");
 
         Sequence mySequence = DOTween.Sequence();
-        mySequence.AppendInterval(delay).Append(transform.DOLocalMove(closePosition, duration));
+        if (playSound)
+        {
+            mySequence.AppendInterval(delay).AppendCallback(() => am.Play("slider_close"));
+            mySequence.Append(transform.DOLocalMove(closePosition, duration));
+            //am.Play("slider_close");
+        }
+        else
+            mySequence.AppendInterval(delay).Append(transform.DOLocalMove(closePosition, duration));
 
         doorOpened = false;
     }
 
-    public void OpenTheDoor()
+    public void OpenTheDoor(bool playSound)
     {
         //Debug.Log("activate the door");
 
         Sequence mySequence = DOTween.Sequence();
-        mySequence.AppendInterval(delay).Append(transform.DOLocalMove(openPosition, duration));
+
+        if (playSound)
+        {
+            mySequence.AppendInterval(delay).AppendCallback(() => am.Play("door_open"));
+            mySequence.Append(transform.DOLocalMove(openPosition, duration));
+        }
+        else
+            mySequence.AppendInterval(delay).Append(transform.DOLocalMove(openPosition, duration));
 
         doorOpened = true;
     }

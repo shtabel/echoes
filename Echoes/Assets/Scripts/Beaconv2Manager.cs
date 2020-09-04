@@ -117,7 +117,7 @@ public class Beaconv2Manager : MonoBehaviour
         }
     }
 
-    void PuzzleSolved()
+    public void PuzzleSolved()
     {
         //Debug.Log("Puzzle solved");
 
@@ -129,7 +129,7 @@ public class Beaconv2Manager : MonoBehaviour
         //theDoor.OpenTheDoor();
         for (int i = 0; i < sliderDoors.Length; i++)
         {
-            sliderDoors[i].OpenTheDoor();
+            sliderDoors[i].OpenTheDoor(true);
         }
 
         // отключаем эмиттер

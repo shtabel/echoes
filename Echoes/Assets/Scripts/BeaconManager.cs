@@ -60,7 +60,7 @@ public class BeaconManager : MonoBehaviour
         }
     }
 
-    void PuzzleSolved()
+    public void PuzzleSolved()
     {
         //Debug.Log("Quest Solved!");
 
@@ -69,7 +69,7 @@ public class BeaconManager : MonoBehaviour
         //theDoor.OpenTheDoor();
         for (int i = 0; i < sliderDoors.Length; i++)
         {
-            sliderDoors[i].OpenTheDoor();
+            sliderDoors[i].OpenTheDoor(true);
         }
 
         // отключаем эмиттер

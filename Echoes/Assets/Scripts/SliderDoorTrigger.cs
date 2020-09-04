@@ -19,7 +19,7 @@ public class SliderDoorTrigger : MonoBehaviour
         {
             if (toOpen && !sliderDoor.doorOpened)   // если триггер открывает дверь и дверь закрыта
             {
-                sliderDoor.OpenTheDoor();
+                sliderDoor.OpenTheDoor(true);
                 gameObject.SetActive(false);
             }               
             else if (!toOpen && sliderDoor.doorOpened) // если закрываем дверь и она открыта

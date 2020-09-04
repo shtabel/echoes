@@ -9,13 +9,17 @@ public class MessageTrigger : MonoBehaviour
 
     ChatManager chatMng;
 
+    AudioManager am;
+
     void Start()
     {
+        am = FindObjectOfType<AudioManager>();
         chatMng = FindObjectOfType<ChatManager>();
     }
 
     public void CallMessage()
     {
+        am.Play("msg_show");
         chatMng.TypeMessage(messageId);
     }
 

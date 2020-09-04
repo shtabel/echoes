@@ -16,8 +16,12 @@ public class DoorController : MonoBehaviour
 
     Vector3 initRotation;
 
+    AudioManager am;
+
     void Start()
     {
+        am = FindObjectOfType<AudioManager>();
+
         DOTween.Init(true, true, LogBehaviour.ErrorsOnly);
 
         initRotation = transform.rotation.eulerAngles;
@@ -26,7 +30,11 @@ public class DoorController : MonoBehaviour
     public void OpenTheDoor()
     {
         Sequence mySequence = DOTween.Sequence();
-        mySequence.AppendInterval(delay).Append(transform.DORotate(endRotation, duration));
+        //mySequence.AppendInterval(delay).Append(transform.DORotate(endRotation, duration));
+        mySequence.AppendInterval(delay).AppendCallback(() => am.Play("door_open"));
+        mySequence.Append(transform.DORotate(endRotation, duration));
+
+
     }
 
     public void CloseTheDoor()

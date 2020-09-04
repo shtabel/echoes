@@ -218,12 +218,15 @@ public class PlayerController : MonoBehaviour
             radarRay.SetActive(false);
             if (other.GetComponent<BlowUpMine>() != null)
             {
+                audioManager.Play("radar_off");
+
                 other.GetComponent<BlowUpMine>().BlowMine();
                 other.gameObject.SetActive(false);
             }
         }
         if (other.tag == "dark_stop")
         {
+            audioManager.Play("radar_on");
             radarRay.SetActive(true);
         }
 
@@ -238,10 +241,14 @@ public class PlayerController : MonoBehaviour
         // туннель вслепую
         if (other.tag == "tunnel_start")
         {
+            other.gameObject.SetActive(false);
+            audioManager.Play("laser_on");
             FindObjectOfType<TunnelEmittersManager>().ActivateEmitters();
         }
         if (other.tag == "tunnel_stop")
         {
+            other.gameObject.SetActive(false);
+            audioManager.Play("radar_off");
             FindObjectOfType<TunnelEmittersManager>().DeactivateEmitters();
         }
 

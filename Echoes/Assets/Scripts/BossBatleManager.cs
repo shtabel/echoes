@@ -73,6 +73,9 @@ public class BossBatleManager : MonoBehaviour
     [SerializeField]
     SliderDoorController[] theDoorsBefore;
 
+
+    AudioManager am;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -81,6 +84,7 @@ public class BossBatleManager : MonoBehaviour
 
         chatManager = FindObjectOfType<ChatManager>();
         sm = FindObjectOfType<SaveManager>();
+        am = FindObjectOfType<AudioManager>();
 
         DeactivateRadars();
 
@@ -130,6 +134,8 @@ public class BossBatleManager : MonoBehaviour
 
     void ActivateEmitters(float speed)
     {
+        am.Play("laser_on");
+
         emittersParent.gameObject.SetActive(true);
         emittersParent.SetRotationSpeed(speed);
 
@@ -144,6 +150,8 @@ public class BossBatleManager : MonoBehaviour
 
     void ActivateRadarWithRotation(int numberOfRadarToActivate, float offsetInDeg)
     {
+        am.Play("laser_on");
+
         for (int i = 0; i < radars.Length; i++)
         {
             GameObject radar = radars[i].gameObject;
@@ -496,10 +504,12 @@ public class BossBatleManager : MonoBehaviour
         // if left puzzle is solved - handle doors
         if (FindObjectOfType<SaveManager>().CheckLeftPuzzleSolved())
         {
+            //FindObjectOfType<Beaconv2Manager>().PuzzleSolved();
+
             // close the door to the puzzle
             theDoorsBefore[0].CloseTheDoor(false);
             // open the door to the boss
-            theDoorsBefore[1].OpenTheDoor();
+            theDoorsBefore[1].OpenTheDoor(true);            
         }
     }
 
@@ -508,10 +518,12 @@ public class BossBatleManager : MonoBehaviour
         // if right puzzle is solved - handle doors
         if (FindObjectOfType<SaveManager>().CheckRightPuzzleSolved())
         {
+            //FindObjectOfType<BeaconManager>().PuzzleSolved();
+
             // close the door to the puzzle
             theDoorsBefore[2].CloseTheDoor(false);
             // open the door to the boss
-            theDoorsBefore[3].OpenTheDoor();
+            theDoorsBefore[3].OpenTheDoor(true);           
         }
     }
 
