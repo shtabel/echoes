@@ -49,6 +49,12 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         isRadarOn = true;
+        boost = false;
+        booster = 1f;  // thrust multiplier
+        boostCd = 0;
+        boostCdMax = 2000;
+        boostLen = 0;
+        boostLenMax = 600;
 
         //rb = GetComponent<Rigidbody>();
         var radar = FindObjectOfType<Rotate>();
@@ -82,6 +88,12 @@ public class PlayerController : MonoBehaviour
 
         Booster();
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Jump"))
+            Booster(true);
     }
 
     void Booster(bool turnON=false){
@@ -146,10 +158,6 @@ public class PlayerController : MonoBehaviour
             Vector3 force = new Vector3(inputX, inputY, 0f);
             rb.AddForce(Vector3.ClampMagnitude(force, 1) * realThrust);
         }
-
-        if (Input.GetButtonDown("Jump"))
-            Booster(true);
-        
     }
 
     void FaceMouse(Vector3 mousePosition)
