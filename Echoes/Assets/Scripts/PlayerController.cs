@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     BlinkManager blinkManager;
     AudioManager audioManager;
     TimerManager timerManager;
+    ChatManager chatManager;
 
     float nextTimeblink;
     float nextTimeblinkSunken;
@@ -36,6 +37,14 @@ public class PlayerController : MonoBehaviour
     float blinkDelay = 0.5f;
 
     public bool inSafeZone;    // if player in safe zone
+
+    private bool boost = false;
+    private float booster = 1f;  // thrust multiplier
+    private int boostCd = 0;
+    private int boostCdMax = 2000;
+    private int boostLen = 0;
+    private int boostLenMax = 600;
+
 
     void Start()
     {
@@ -51,6 +60,7 @@ public class PlayerController : MonoBehaviour
         blinkManager = FindObjectOfType<BlinkManager>();
         audioManager = FindObjectOfType<AudioManager>();
         timerManager = FindObjectOfType<TimerManager>();
+        chatManager = FindObjectOfType<ChatManager>();
 
         direction = Vector3.up;
 
@@ -69,10 +79,41 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
 
         OtherInput();
+
+        Booster();
+
+    }
+
+    void Booster(bool turnON=false){
+        booster = boost? 2.5f : 1f; // not optimal but readable and editable
+        if (turnON){
+            if (!boost && boostCd == 0){
+                chatManager.AddText("BOOSTER ACTIVATED!");
+                boost = true;
+                boostLen = boostLenMax;
+            }
+        }
+        else{
+            if (boost){
+                if (boostLen > 0)
+                    boostLen -=1;
+                if (boostLen <= 0){
+                    boost = false;
+                    boostCd = boostCdMax;
+                    chatManager.AddText("BOOSTER DEPLETED!");
+                }
+            }
+            else if (boostCd > 0){
+                boostCd -= 1;
+                if (boostCd == 0)
+                    chatManager.AddText("BOOSTER READY!");
+            }
+        }
     }
 
     void MovePlayer()
     {
+        float realThrust = thrust * booster;
         // считаем расстояние от камеры до игрока, чтоб перемещаться только если курсор внутри ИКО
         float dst = Vector3.Distance(mousePos, transform.position) - Mathf.Abs(Camera.main.transform.position.z);
         //Debug.Log("dst to click: " + dst);
@@ -87,7 +128,7 @@ public class PlayerController : MonoBehaviour
         ////else 
         if (Input.GetMouseButton(0) && dst < radarRadius)
         {
-            Vector3 force = transform.up * thrust;
+            Vector3 force = transform.up * realThrust;
             rb.AddForce(force) ;
             //Debug.Log("Velocity: x = " + rb.velocity.x + "; y = " + rb.velocity.y + "; z = " + rb.velocity.z);
         }
@@ -103,9 +144,11 @@ public class PlayerController : MonoBehaviour
             float inputX = Input.GetAxisRaw("Horizontal");
             float inputY = Input.GetAxisRaw("Vertical");
             Vector3 force = new Vector3(inputX, inputY, 0f);
-
-            rb.AddForce(Vector3.ClampMagnitude(force, 1) * thrust);
+            rb.AddForce(Vector3.ClampMagnitude(force, 1) * realThrust);
         }
+
+        if (Input.GetButtonDown("Jump"))
+            Booster(true);
         
     }
 
